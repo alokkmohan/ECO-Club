@@ -6,6 +6,9 @@ A read-only Streamlit dashboard for monitoring school notification uploads.
 import streamlit as st
 import pandas as pd
 from data_service import DataService
+import os
+import json
+from datetime import datetime
 
 
 # Page configuration
@@ -43,6 +46,91 @@ def load_eco_data():
     data_service = DataService(data_folder=".")
     df, success, error_message = data_service.load_data()
     return df, success, error_message, data_service
+
+
+def get_visitor_count():
+    """Get and update visitor count with active users tracking."""
+    counter_file = 'visitor_count.json'
+    active_threshold_minutes = 5  # Consider users active if seen in last 5 minutes
+    
+    # Initialize counter if file doesn't exist
+    if not os.path.exists(counter_file):
+        counter_data = {
+            'total_visits': 0,
+            'unique_visitors': set(),
+            'active_sessions': {},  # session_id: last_active_timestamp
+            'last_updated': None
+        }
+    else:
+        try:
+            with open(counter_file, 'r') as f:
+                counter_data = json.load(f)
+                # Convert list back to set for unique visitors
+                counter_data['unique_visitors'] = set(counter_data.get('unique_visitors', []))
+                # Get active sessions (default to empty dict if not present)
+                counter_data['active_sessions'] = counter_data.get('active_sessions', {})
+        except:
+            counter_data = {
+                'total_visits': 0,
+                'unique_visitors': set(),
+                'active_sessions': {},
+                'last_updated': None
+            }
+    
+    # Get session ID (unique per browser session)
+    if 'session_id' not in st.session_state:
+        import uuid
+        st.session_state.session_id = str(uuid.uuid4())
+    
+    session_id = st.session_state.session_id
+    current_time = datetime.now()
+    
+    # Increment total visits only once per session
+    if 'visit_counted' not in st.session_state:
+        counter_data['total_visits'] += 1
+        st.session_state.visit_counted = True
+    
+    # Add unique visitor
+    counter_data['unique_visitors'].add(session_id)
+    
+    # Update active session timestamp
+    counter_data['active_sessions'][session_id] = current_time.isoformat()
+    
+    # Clean up stale sessions (inactive for more than threshold)
+    stale_sessions = []
+    for sid, last_active in counter_data['active_sessions'].items():
+        try:
+            last_active_time = datetime.fromisoformat(last_active)
+            time_diff = (current_time - last_active_time).total_seconds() / 60  # in minutes
+            if time_diff > active_threshold_minutes:
+                stale_sessions.append(sid)
+        except:
+            stale_sessions.append(sid)
+    
+    # Remove stale sessions
+    for sid in stale_sessions:
+        del counter_data['active_sessions'][sid]
+    
+    # Update timestamp
+    counter_data['last_updated'] = current_time.isoformat()
+    
+    # Calculate active users
+    active_users = len(counter_data['active_sessions'])
+    
+    # Save counter (convert set to list for JSON serialization)
+    try:
+        with open(counter_file, 'w') as f:
+            save_data = {
+                'total_visits': counter_data['total_visits'],
+                'unique_visitors': list(counter_data['unique_visitors']),
+                'active_sessions': counter_data['active_sessions'],
+                'last_updated': counter_data['last_updated']
+            }
+            json.dump(save_data, f, indent=2)
+    except:
+        pass  # Silently fail if can't write
+    
+    return counter_data['total_visits'], len(counter_data['unique_visitors']), active_users
 
 
 def main():
@@ -579,9 +667,25 @@ def main():
                     key="download_complete_summary"
                 )
     
-    # Footer
+    # Footer with visitor counter
     st.markdown("---")
-    st.caption(f"Last updated: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')} | Developed by Alok Mohan")
+    
+    # Get visitor count
+    total_visits, unique_visitors, active_users = get_visitor_count()
+    
+    # Footer with stats
+    st.markdown(f"""
+        <div style='text-align: center; padding: 10px; background-color: #f0f2f6; border-radius: 10px;'>
+            <p style='margin: 0; color: #666; font-size: 0.9em;'>
+                Last updated: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')} | Developed by Alok Mohan
+            </p>
+            <p style='margin: 5px 0 0 0; font-size: 1em; font-weight: 600;'>
+                🟢 <span style='color: #4CAF50;'>Active Now: {active_users}</span> | 
+                👁️ Total Visits: {total_visits:,} | 
+                👥 Unique Visitors: {unique_visitors:,}
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
