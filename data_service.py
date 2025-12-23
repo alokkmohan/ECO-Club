@@ -21,15 +21,18 @@ class DataService:
         """
         self.data_folder = Path(data_folder)
         
-        # Try CSV first (faster), fallback to Excel
-        self.school_master_file = self.data_folder / "School Master.csv"
-        self.school_master_file_xlsx = self.data_folder / "School Master.xlsx"
+        # CSV files (faster)
+        self.school_master_csv = self.data_folder / "School Master.csv"
+        self.notifications_csv = self.data_folder / "Notifications.csv"
+        self.tree_csv = self.data_folder / "Tree_Data.csv"
         
-        self.notifications_file = self.data_folder / "Notifications.csv"
-        self.notifications_file_xlsx = self.data_folder / "All_Schools_with_Notifications_UTTAR PRADESH.xlsx"
+        # Excel files (fallback)
+        self.school_master_xlsx = self.data_folder / "School Master.xlsx"
+        self.notifications_xlsx = self.data_folder / "All_Schools_with_Notifications_UTTAR PRADESH.xlsx"
+        self.tree_xlsx = self.data_folder / "UTTAR PRADESH.xlsx"
         
-        self.tree_file = self.data_folder / "Tree_Data.csv"
-        self.tree_file_xlsx = self.data_folder / "UTTAR PRADESH.xlsx"
+        # Auto-convert Excel to CSV if CSV doesn't exist or is older
+        self._auto_convert_to_csv()
     
     def normalize_udise(self, s: pd.Series, width: int = 11) -> pd.Series:
         """Normalize UDISE codes to standard format - optimized version."""
@@ -39,6 +42,35 @@ class DataService:
                  .str.replace('.0', '', regex=False)
                  .str.replace(r'\D', '', regex=True)
                  .str.zfill(width))
+    
+    def _auto_convert_to_csv(self):
+        """Auto-convert Excel files to CSV if needed for faster loading."""
+        try:
+            # Convert School Master if needed
+            if self.school_master_xlsx.exists() and (
+                not self.school_master_csv.exists() or 
+                self.school_master_xlsx.stat().st_mtime > self.school_master_csv.stat().st_mtime
+            ):
+                df = pd.read_excel(self.school_master_xlsx, dtype=str)
+                df.to_csv(self.school_master_csv, index=False)
+            
+            # Convert Notifications if needed
+            if self.notifications_xlsx.exists() and (
+                not self.notifications_csv.exists() or 
+                self.notifications_xlsx.stat().st_mtime > self.notifications_csv.stat().st_mtime
+            ):
+                df = pd.read_excel(self.notifications_xlsx, dtype=str)
+                df.to_csv(self.notifications_csv, index=False)
+            
+            # Convert Tree Data if needed
+            if self.tree_xlsx.exists() and (
+                not self.tree_csv.exists() or 
+                self.tree_xlsx.stat().st_mtime > self.tree_csv.stat().st_mtime
+            ):
+                df = pd.read_excel(self.tree_xlsx, dtype=str)
+                df.to_csv(self.tree_csv, index=False)
+        except:
+            pass  # Silently fail, will use Excel if CSV conversion fails
     
     def load_data(self) -> Tuple[pd.DataFrame, bool, str]:
         """
@@ -51,65 +83,36 @@ class DataService:
                 - Error message (empty string if successful)
         """
         try:
-            # Check if CSV files exist (faster), otherwise use Excel
-            use_csv = self.school_master_file.exists() and self.notifications_file.exists() and self.tree_file.exists()
-            
-            if use_csv:
-                # Load from CSV (much faster)
+            # Use CSV if available (10-20x faster)
+            if self.school_master_csv.exists() and self.notifications_csv.exists() and self.tree_csv.exists():
+                # Load from CSV - super fast!
                 school_master_df = pd.read_csv(
-                    self.school_master_file, 
+                    self.school_master_csv,
                     dtype=str,
                     usecols=['District Name', 'School Name', 'UDISE Code', 'School Management', 'School Category']
                 )
                 
-                # Load Notifications
-                notifications_df = pd.read_csv(self.notifications_file, dtype=str)
+                notifications_df = pd.read_csv(self.notifications_csv, dtype=str)
                 
-                # Load Tree data
                 tree_df = pd.read_csv(
-                    self.tree_file, 
+                    self.tree_csv,
                     dtype=str,
                     usecols=['UDISE ID', 'Saplings']
                 )
             else:
                 # Fallback to Excel
-                if not self.school_master_file_xlsx.exists():
-                    return pd.DataFrame(), False, f"School Master.xlsx not found in {self.data_folder} folder"
+                if not self.school_master_xlsx.exists():
+                    return pd.DataFrame(), False, f"Data files not found in {self.data_folder} folder"
                 
-                if not self.notifications_file_xlsx.exists():
-                    return pd.DataFrame(), False, f"All_Schools_with_Notifications_UTTAR PRADESH.xlsx not found in {self.data_folder} folder"
-                
-                if not self.tree_file_xlsx.exists():
-                    return pd.DataFrame(), False, f"UTTAR PRADESH.xlsx not found in {self.data_folder} folder"
-                
-                # Load School Master data - only required columns with optimized engine
                 school_master_df = pd.read_excel(
-                    self.school_master_file_xlsx, 
+                    self.school_master_xlsx,
                     dtype=str,
                     usecols=['District Name', 'School Name', 'UDISE Code', 'School Management', 'School Category'],
                     engine='openpyxl'
                 )
                 
-                # Load Notifications data
-                try:
-                    notif_cols = pd.read_excel(self.notifications_file_xlsx, nrows=0).columns.tolist()
-                    udise_col = [col for col in notif_cols if 'UDISE' in str(col).upper()][0]
-                    notifications_df = pd.read_excel(
-                        self.notifications_file_xlsx, 
-                        dtype=str, 
-                        usecols=[udise_col],
-                        engine='openpyxl'
-                    )
-                except:
-                    notifications_df = pd.read_excel(self.notifications_file_xlsx, dtype=str, engine='openpyxl')
-                
-                # Load Tree data
-                tree_df = pd.read_excel(
-                    self.tree_file_xlsx, 
-                    dtype=str,
-                    usecols=['UDISE ID', 'Saplings'],
-                    engine='openpyxl'
-                )
+                notifications_df = pd.read_excel(self.notifications_xlsx, dtype=str, engine='openpyxl')
+                tree_df = pd.read_excel(self.tree_xlsx, dtype=str, usecols=['UDISE ID', 'Saplings'], engine='openpyxl')
             
             # Process and merge data
             processed_df = self._process_data(school_master_df, notifications_df, tree_df)

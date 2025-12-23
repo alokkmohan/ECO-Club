@@ -37,9 +37,9 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-@st.cache_data(ttl=600, show_spinner=False)  # Cache for 10 minutes
+@st.cache_data(ttl=3600, show_spinner=False, max_entries=1)  # Cache for 1 hour
 def load_eco_data():
-    """Load and cache data."""
+    """Load and cache data with automatic CSV conversion."""
     data_service = DataService(data_folder=".")
     df, success, error_message = data_service.load_data()
     return df, success, error_message, data_service
