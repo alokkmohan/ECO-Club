@@ -165,7 +165,7 @@ def main():
     st.markdown("---")
     
     # Create tabs
-    tab1, tab2 = st.tabs(["📋 Notification Report", "🌳 Tree Planted Report"])
+    tab1, tab2, tab3 = st.tabs(["📋 Notification Report", "🌳 Tree Planted Report", "📊 Summary Report"])
     
     # Tab 1: Notification Report
     with tab1:
@@ -364,6 +364,177 @@ def main():
             mime="text/csv",
             key="download_tree"
         )
+    
+    # Tab 3: Summary Report
+    with tab3:
+        st.subheader("📊 Summary Reports")
+        
+        # 1. District-wise Summary Report
+        st.markdown("### 📍 District-wise Summary Report")
+        
+        # Calculate district-wise statistics
+        district_summary = df.groupby('District').agg({
+            'UDISE Code': 'count',
+            'Notification Uploaded': lambda x: (x == 'Yes').sum()
+        }).reset_index()
+        
+        district_summary.columns = ['District', 'Total Schools', 'Eco-Club Notification Uploaded']
+        district_summary['Percentage (%)'] = (
+            (district_summary['Eco-Club Notification Uploaded'] / district_summary['Total Schools'] * 100)
+            .round(2)
+        )
+        
+        # Sort by district name
+        district_summary = district_summary.sort_values('District')
+        
+        st.dataframe(
+            district_summary,
+            column_config={
+                "District": st.column_config.TextColumn("District", width="medium"),
+                "Total Schools": st.column_config.NumberColumn("Total Schools", width="small", format="%d"),
+                "Eco-Club Notification Uploaded": st.column_config.NumberColumn(
+                    "Notification Uploaded", 
+                    width="small", 
+                    format="%d"
+                ),
+                "Percentage (%)": st.column_config.NumberColumn(
+                    "Percentage (%)", 
+                    width="small", 
+                    format="%.2f%%"
+                ),
+            },
+            use_container_width=True,
+            hide_index=True,
+            height=400
+        )
+        
+        # Download button
+        st.download_button(
+            label="📥 Download District Summary",
+            data=district_summary.to_csv(index=False).encode('utf-8'),
+            file_name=f"district_summary_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
+            mime="text/csv",
+            key="download_district_summary"
+        )
+        
+        st.markdown("---")
+        
+        # 2. Top 10 Best Performing Districts
+        st.markdown("### 🏆 Top 10 Best Performing Districts")
+        
+        top_10 = district_summary.nlargest(10, 'Percentage (%)')
+        
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.dataframe(
+                top_10,
+                column_config={
+                    "District": st.column_config.TextColumn("District", width="medium"),
+                    "Total Schools": st.column_config.NumberColumn("Total Schools", width="small", format="%d"),
+                    "Eco-Club Notification Uploaded": st.column_config.NumberColumn(
+                        "Uploaded", 
+                        width="small", 
+                        format="%d"
+                    ),
+                    "Percentage (%)": st.column_config.NumberColumn(
+                        "Percentage (%)", 
+                        width="small", 
+                        format="%.2f%%"
+                    ),
+                },
+                use_container_width=True,
+                hide_index=True
+            )
+        
+        with col2:
+            # Show top 3 as metrics
+            if len(top_10) >= 3:
+                st.metric("🥇 1st Place", top_10.iloc[0]['District'], 
+                         f"{top_10.iloc[0]['Percentage (%)']}%")
+                st.metric("🥈 2nd Place", top_10.iloc[1]['District'], 
+                         f"{top_10.iloc[1]['Percentage (%)']}%")
+                st.metric("🥉 3rd Place", top_10.iloc[2]['District'], 
+                         f"{top_10.iloc[2]['Percentage (%)']}%")
+        
+        st.markdown("---")
+        
+        # 3. Bottom 10 Worst Performing Districts
+        st.markdown("### ⚠️ Bottom 10 Districts (Need Attention)")
+        
+        bottom_10 = district_summary.nsmallest(10, 'Percentage (%)')
+        
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.dataframe(
+                bottom_10,
+                column_config={
+                    "District": st.column_config.TextColumn("District", width="medium"),
+                    "Total Schools": st.column_config.NumberColumn("Total Schools", width="small", format="%d"),
+                    "Eco-Club Notification Uploaded": st.column_config.NumberColumn(
+                        "Uploaded", 
+                        width="small", 
+                        format="%d"
+                    ),
+                    "Percentage (%)": st.column_config.NumberColumn(
+                        "Percentage (%)", 
+                        width="small", 
+                        format="%.2f%%"
+                    ),
+                },
+                use_container_width=True,
+                hide_index=True
+            )
+        
+        with col2:
+            # Show bottom 3 as warning metrics
+            if len(bottom_10) >= 3:
+                st.metric("⚠️ Needs Most Attention", bottom_10.iloc[0]['District'], 
+                         f"{bottom_10.iloc[0]['Percentage (%)']}%", delta_color="inverse")
+                st.metric("⚠️ Second Priority", bottom_10.iloc[1]['District'], 
+                         f"{bottom_10.iloc[1]['Percentage (%)']}%", delta_color="inverse")
+                st.metric("⚠️ Third Priority", bottom_10.iloc[2]['District'], 
+                         f"{bottom_10.iloc[2]['Percentage (%)']}%", delta_color="inverse")
+        
+        # Combined download for all summary reports
+        st.markdown("---")
+        
+        col_d1, col_d2, col_d3 = st.columns(3)
+        
+        with col_d1:
+            st.download_button(
+                label="📥 Download Top 10",
+                data=top_10.to_csv(index=False).encode('utf-8'),
+                file_name=f"top_10_districts_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv",
+                key="download_top_10"
+            )
+        
+        with col_d2:
+            st.download_button(
+                label="📥 Download Bottom 10",
+                data=bottom_10.to_csv(index=False).encode('utf-8'),
+                file_name=f"bottom_10_districts_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv",
+                key="download_bottom_10"
+            )
+        
+        with col_d3:
+            # Create comprehensive report
+            with pd.ExcelWriter('summary_reports.xlsx', engine='openpyxl') as writer:
+                district_summary.to_excel(writer, sheet_name='All Districts', index=False)
+                top_10.to_excel(writer, sheet_name='Top 10', index=False)
+                bottom_10.to_excel(writer, sheet_name='Bottom 10', index=False)
+            
+            with open('summary_reports.xlsx', 'rb') as f:
+                st.download_button(
+                    label="📥 Download Complete Report (Excel)",
+                    data=f,
+                    file_name=f"complete_summary_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    key="download_complete_summary"
+                )
     
     # Footer
     st.markdown("---")
