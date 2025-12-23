@@ -8,7 +8,8 @@ import pandas as pd
 from data_service import DataService
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
+from pathlib import Path
 
 
 # Page configuration
@@ -203,8 +204,16 @@ def main():
         </style>
     """, unsafe_allow_html=True)
     
-    # Title
-    st.title("🌱 UP Secondary Schools Eco Club Monitoring Dashboard")
+    # Home button and Title
+    col_home, col_title = st.columns([1, 9])
+    
+    with col_home:
+        if st.button("🏠 Home", use_container_width=True):
+            st.rerun()
+    
+    with col_title:
+        st.title("🌱 UP Secondary Schools Eco Club Monitoring Dashboard")
+    
     st.markdown("---")
     
     # Load cached data
@@ -657,6 +666,140 @@ def main():
                     ]
                 })
                 summary_sheet.to_excel(writer, sheet_name='Overall Summary', index=False)
+            
+            with open('summary_reports.xlsx', 'rb') as f:
+                st.download_button(
+                    label="📥 Download Complete Report (Excel)",
+                    data=f,
+                    file_name=f"complete_summary_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    key="download_complete_summary"
+                )
+        
+        st.markdown("---")
+        
+        # 4. Time-based Analytics Section
+        st.markdown("### ⏰ Time-based Analytics")
+        
+        # Get data file information
+        data_files_info = []
+        data_folder = Path(".")
+        
+        # Check for notification file
+        notif_files = [
+            data_folder / "All_Schools_with_Notifications_UTTAR PRADESH.xlsx",
+            data_folder / "Notifications.csv"
+        ]
+        
+        tree_files = [
+            data_folder / "UTTAR PRADESH.xlsx",
+            data_folder / "Tree_Data.csv"
+        ]
+        
+        # Get last modified time for notification data
+        notif_last_update = None
+        for file in notif_files:
+            if file.exists():
+                mod_time = datetime.fromtimestamp(file.stat().st_mtime)
+                notif_last_update = mod_time
+                break
+        
+        # Get last modified time for tree data
+        tree_last_update = None
+        for file in tree_files:
+            if file.exists():
+                mod_time = datetime.fromtimestamp(file.stat().st_mtime)
+                tree_last_update = mod_time
+                break
+        
+        # Display last update times
+        col_time1, col_time2, col_time3 = st.columns(3)
+        
+        with col_time1:
+            if notif_last_update:
+                days_ago = (datetime.now() - notif_last_update).days
+                st.metric(
+                    "📅 Notification Data Last Updated",
+                    f"{days_ago} days ago",
+                    notif_last_update.strftime('%Y-%m-%d %H:%M')
+                )
+            else:
+                st.metric("📅 Notification Data", "Not Available")
+        
+        with col_time2:
+            if tree_last_update:
+                days_ago = (datetime.now() - tree_last_update).days
+                st.metric(
+                    "🌳 Tree Data Last Updated",
+                    f"{days_ago} days ago",
+                    tree_last_update.strftime('%Y-%m-%d %H:%M')
+                )
+            else:
+                st.metric("🌳 Tree Data", "Not Available")
+        
+        with col_time3:
+            # Calculate data freshness indicator
+            if notif_last_update:
+                days_since_update = (datetime.now() - notif_last_update).days
+                if days_since_update <= 7:
+                    freshness = "🟢 Fresh"
+                    freshness_color = "green"
+                elif days_since_update <= 30:
+                    freshness = "🟡 Moderate"
+                    freshness_color = "orange"
+                else:
+                    freshness = "🔴 Stale"
+                    freshness_color = "red"
+                
+                st.markdown(f"""
+                    <div style='padding: 10px; background-color: #f0f2f6; border-radius: 10px; text-align: center;'>
+                        <p style='margin: 0; font-size: 0.8em; color: #666;'>Data Freshness</p>
+                        <p style='margin: 5px 0 0 0; font-size: 1.5em; font-weight: 600; color: {freshness_color};'>{freshness}</p>
+                    </div>
+                """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Week-over-week tracking (based on visitor data)
+        st.markdown("### 📈 Dashboard Activity Tracking")
+        
+        # Load visitor history if exists
+        counter_file = 'visitor_count.json'
+        if os.path.exists(counter_file):
+            try:
+                with open(counter_file, 'r') as f:
+                    counter_data = json.load(f)
+                    total_visits = counter_data.get('total_visits', 0)
+                    unique_visitors = len(counter_data.get('unique_visitors', []))
+                    last_updated = counter_data.get('last_updated')
+                    
+                    col_activity1, col_activity2, col_activity3 = st.columns(3)
+                    
+                    with col_activity1:
+                        st.metric("👁️ Total Dashboard Visits", f"{total_visits:,}")
+                    
+                    with col_activity2:
+                        st.metric("👥 Unique Visitors", f"{unique_visitors:,}")
+                    
+                    with col_activity3:
+                        if last_updated:
+                            last_visit = datetime.fromisoformat(last_updated)
+                            time_diff = datetime.now() - last_visit
+                            if time_diff.total_seconds() < 60:
+                                time_str = "Just now"
+                            elif time_diff.total_seconds() < 3600:
+                                time_str = f"{int(time_diff.total_seconds() / 60)} min ago"
+                            elif time_diff.total_seconds() < 86400:
+                                time_str = f"{int(time_diff.total_seconds() / 3600)} hours ago"
+                            else:
+                                time_str = f"{int(time_diff.days)} days ago"
+                            
+                            st.metric("🕐 Last Visit", time_str)
+                
+            except:
+                st.info("📊 Dashboard activity tracking will appear here after first few visits")
+        else:
+            st.info("📊 Dashboard activity tracking will appear here after first few visits")
             
             with open('summary_reports.xlsx', 'rb') as f:
                 st.download_button(
