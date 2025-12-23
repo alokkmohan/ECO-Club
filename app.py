@@ -204,16 +204,8 @@ def main():
         </style>
     """, unsafe_allow_html=True)
     
-    # Home button and Title
-    col_home, col_title = st.columns([1, 9])
-    
-    with col_home:
-        if st.button("🏠 Home", use_container_width=True):
-            st.rerun()
-    
-    with col_title:
-        st.title("🌱 UP Secondary Schools Eco Club Monitoring Dashboard")
-    
+    # Title
+    st.title("🌱 UP Secondary Schools Eco Club Monitoring Dashboard")
     st.markdown("---")
     
     # Load cached data
@@ -260,6 +252,10 @@ def main():
         st.metric("Total Trees", f"{total_trees:,}")
     
     st.markdown("---")
+    
+    # Home button
+    if st.button("🏠 Home"):
+        st.rerun()
     
     # Create tabs
     tab1, tab2, tab3 = st.tabs(["📋 Notification Report", "🌳 Tree Planted Report", "📊 Summary Report"])
