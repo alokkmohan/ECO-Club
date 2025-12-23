@@ -10,11 +10,31 @@ from data_service import DataService
 
 # Page configuration
 st.set_page_config(
-    page_title="Eco Club Monitoring Dashboard",
+    page_title="UP Secondary Schools Eco Club Monitoring Dashboard",
     page_icon="🌱",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': 'https://github.com/alokkmohan/ECO-Club',
+        'Report a bug': 'mailto:alokmohann@gmail.com',
+        'About': '''
+        ## UP Secondary Schools Eco Club Dashboard
+        
+        Monitor notification uploads and tree plantation activities across UP secondary schools.
+        
+        **Developed by:** Alok Mohan
+        '''
+    }
 )
+
+# Add meta tags for social media sharing
+st.markdown("""
+    <meta property="og:title" content="UP Secondary Schools Eco Club Dashboard" />
+    <meta property="og:description" content="Monitor Eco Club activities, notification uploads, and tree plantation across Uttar Pradesh secondary schools" />
+    <meta property="og:type" content="website" />
+    <meta name="description" content="Real-time monitoring dashboard for UP Secondary Schools Eco Club activities" />
+    <meta name="keywords" content="Eco Club, UP Schools, Tree Plantation, Environmental Monitoring" />
+""", unsafe_allow_html=True)
 
 
 @st.cache_data(ttl=600, show_spinner=False)  # Cache for 10 minutes
