@@ -206,34 +206,39 @@ def main():
                 key="notif_status_filter"
             )
         
-        # Apply filters
+        # Apply filters - separate for metrics and table display
         with st.spinner('Applying filters...'):
-            notif_filtered_df = df.copy()
+            # For metrics: only district and school type filter (not status)
+            notif_base_df = df.copy()
             
             if selected_district != "All":
-                notif_filtered_df = notif_filtered_df[notif_filtered_df['District'] == selected_district]
+                notif_base_df = notif_base_df[notif_base_df['District'] == selected_district]
             
             if selected_school_type != "All":
-                notif_filtered_df = notif_filtered_df[notif_filtered_df['School Management'] == selected_school_type]
+                notif_base_df = notif_base_df[notif_base_df['School Management'] == selected_school_type]
+            
+            # For table display: apply all filters including status
+            notif_filtered_df = notif_base_df.copy()
             
             if selected_notif_filter == "Uploaded":
                 notif_filtered_df = notif_filtered_df[notif_filtered_df['Notification Uploaded'] == 'Yes']
             elif selected_notif_filter == "NOT Uploaded":
                 notif_filtered_df = notif_filtered_df[notif_filtered_df['Notification Uploaded'] == 'No']
         
-        # Notification metrics
-        notif_total = len(notif_filtered_df)
-        notif_uploaded_count = len(notif_filtered_df[notif_filtered_df['Notification Uploaded'] == 'Yes'])
-        notif_not_uploaded_count = len(notif_filtered_df[notif_filtered_df['Notification Uploaded'] == 'No'])
+        # Notification metrics - calculated from base filter (district + school type only)
+        notif_total = len(notif_base_df)
+        notif_uploaded_count = len(notif_base_df[notif_base_df['Notification Uploaded'] == 'Yes'])
+        notif_not_uploaded_count = len(notif_base_df[notif_base_df['Notification Uploaded'] == 'No'])
         
         col1, col2, col3 = st.columns([1, 1, 1])
         with col1:
             st.metric("Total Schools", f"{notif_total:,}")
         with col2:
-            st.metric("Notification Uploaded", f"{notif_uploaded_count:,}")
+            st.metric("✅ Notification Uploaded", f"{notif_uploaded_count:,}")
         with col3:
-            st.metric("Notification NOT Uploaded", f"{notif_not_uploaded_count:,}")
+            st.metric("❌ Notification NOT Uploaded", f"{notif_not_uploaded_count:,}")
         
+        st.info(f"📊 **Showing {len(notif_filtered_df):,} schools** in the table below based on selected filters. Metrics above show complete totals for selected District & School Type.")
         st.markdown("---")
         
         # Display notification data
@@ -303,37 +308,42 @@ def main():
                 key="tree_status_filter"
             )
         
-        # Apply filters
+        # Apply filters - separate for metrics and table display
         with st.spinner('Applying filters...'):
-            tree_filtered_df = df.copy()
+            # For metrics: only district and school type filter (not status)
+            tree_base_df = df.copy()
             
             if selected_district_tree != "All":
-                tree_filtered_df = tree_filtered_df[tree_filtered_df['District'] == selected_district_tree]
+                tree_base_df = tree_base_df[tree_base_df['District'] == selected_district_tree]
             
             if selected_school_type_tree != "All":
-                tree_filtered_df = tree_filtered_df[tree_filtered_df['School Management'] == selected_school_type_tree]
+                tree_base_df = tree_base_df[tree_base_df['School Management'] == selected_school_type_tree]
+            
+            # For table display: apply all filters including status
+            tree_filtered_df = tree_base_df.copy()
             
             if selected_tree_filter == "Uploaded":
                 tree_filtered_df = tree_filtered_df[tree_filtered_df['Tree Uploaded'] == 'Yes']
             elif selected_tree_filter == "NOT Uploaded":
                 tree_filtered_df = tree_filtered_df[tree_filtered_df['Tree Uploaded'] == 'No']
         
-        # Tree metrics
-        tree_total = len(tree_filtered_df)
-        tree_uploaded_count = len(tree_filtered_df[tree_filtered_df['Tree Uploaded'] == 'Yes'])
-        tree_not_uploaded_count = len(tree_filtered_df[tree_filtered_df['Tree Uploaded'] == 'No'])
-        tree_total_trees = tree_filtered_df['Trees Planted'].sum()
+        # Tree metrics - calculated from base filter (district + school type only)
+        tree_total = len(tree_base_df)
+        tree_uploaded_count = len(tree_base_df[tree_base_df['Tree Uploaded'] == 'Yes'])
+        tree_not_uploaded_count = len(tree_base_df[tree_base_df['Tree Uploaded'] == 'No'])
+        tree_total_trees = tree_base_df['Trees Planted'].sum()
         
         col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
         with col1:
             st.metric("Total Schools", f"{tree_total:,}")
         with col2:
-            st.metric("Tree Uploaded", f"{tree_uploaded_count:,}")
+            st.metric("✅ Tree Uploaded", f"{tree_uploaded_count:,}")
         with col3:
-            st.metric("Tree NOT Uploaded", f"{tree_not_uploaded_count:,}")
+            st.metric("❌ Tree NOT Uploaded", f"{tree_not_uploaded_count:,}")
         with col4:
-            st.metric("Total Trees Planted", f"{tree_total_trees:,}")
+            st.metric("🌳 Total Trees Planted", f"{tree_total_trees:,}")
         
+        st.info(f"📊 **Showing {len(tree_filtered_df):,} schools** in the table below based on selected filters. Metrics above show complete totals for selected District & School Type.")
         st.markdown("---")
         
         # Display tree data
@@ -387,8 +397,21 @@ def main():
         # Sort by district name
         district_summary = district_summary.sort_values('District')
         
+        # Add TOTAL row at the bottom
+        total_row = pd.DataFrame({
+            'District': ['TOTAL'],
+            'Total Schools': [district_summary['Total Schools'].sum()],
+            'Eco-Club Notification Uploaded': [district_summary['Eco-Club Notification Uploaded'].sum()],
+            'Percentage (%)': [
+                (district_summary['Eco-Club Notification Uploaded'].sum() / 
+                 district_summary['Total Schools'].sum() * 100).round(2)
+            ]
+        })
+        
+        district_summary_with_total = pd.concat([district_summary, total_row], ignore_index=True)
+        
         st.dataframe(
-            district_summary,
+            district_summary_with_total,
             column_config={
                 "District": st.column_config.TextColumn("District", width="medium"),
                 "Total Schools": st.column_config.NumberColumn("Total Schools", width="small", format="%d"),
@@ -407,6 +430,15 @@ def main():
             hide_index=True,
             height=400
         )
+        
+        # Show overall summary metrics
+        col_m1, col_m2, col_m3 = st.columns(3)
+        with col_m1:
+            st.metric("📚 Total S_with_totalchools", f"{total_row['Total Schools'].iloc[0]:,}")
+        with col_m2:
+            st.metric("✅ Total Notifications Uploaded", f"{total_row['Eco-Club Notification Uploaded'].iloc[0]:,}")
+        with col_m3:
+            st.metric("📊 Overall Percentage", f"{total_row['Percentage (%)'].iloc[0]:.2f}%")
         
         # Download button
         st.download_button(
@@ -521,11 +553,22 @@ def main():
             )
         
         with col_d3:
-            # Create comprehensive report
+            # Create comprehensive report with totals
             with pd.ExcelWriter('summary_reports.xlsx', engine='openpyxl') as writer:
-                district_summary.to_excel(writer, sheet_name='All Districts', index=False)
+                district_summary_with_total.to_excel(writer, sheet_name='All Districts', index=False)
                 top_10.to_excel(writer, sheet_name='Top 10', index=False)
                 bottom_10.to_excel(writer, sheet_name='Bottom 10', index=False)
+                
+                # Add summary sheet
+                summary_sheet = pd.DataFrame({
+                    'Metric': ['Total Schools', 'Total Notifications Uploaded', 'Overall Percentage (%)'],
+                    'Value': [
+                        total_row['Total Schools'].iloc[0],
+                        total_row['Eco-Club Notification Uploaded'].iloc[0],
+                        total_row['Percentage (%)'].iloc[0]
+                    ]
+                })
+                summary_sheet.to_excel(writer, sheet_name='Overall Summary', index=False)
             
             with open('summary_reports.xlsx', 'rb') as f:
                 st.download_button(
