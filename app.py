@@ -551,10 +551,9 @@ def main():
         )
     # Tab 3: Summary Report
     with tab3:
-        st.subheader("📊 Summary Reports")
-
-        # Overall Statistics Pie Charts
-        st.markdown("### 📊 Overall Statistics")
+        st.subheader("📊 Upload Status Overview")
+        
+        # Pie Charts Section
         
         col_pie1, col_pie2 = st.columns(2)
         
