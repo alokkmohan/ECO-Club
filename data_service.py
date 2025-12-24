@@ -7,6 +7,7 @@ import pandas as pd
 from pathlib import Path
 from typing import Tuple
 import re
+import logging
 
 
 class DataService:
@@ -69,8 +70,8 @@ class DataService:
             ):
                 df = pd.read_excel(self.tree_xlsx, dtype=str)
                 df.to_csv(self.tree_csv, index=False)
-        except:
-            pass  # Silently fail, will use Excel if CSV conversion fails
+        except Exception as e:
+            logging.warning(f"CSV conversion failed: {e}. Will use Excel files instead.")
     
     def load_data(self) -> Tuple[pd.DataFrame, bool, str]:
         """
@@ -172,11 +173,13 @@ class DataService:
             tree_summary = tree_df.groupby('UDISE ID')['Saplings'].sum().reset_index()
             tree_summary.columns = ['UDISE Code', 'Trees Planted']
             
+            # Drop the existing column before merge to avoid conflicts
+            df = df.drop(columns=['Trees Planted'])
+            
             # Merge efficiently
-            df = df.merge(tree_summary, on='UDISE Code', how='left', suffixes=('', '_tree'))
-            df['Trees Planted'] = df['Trees Planted_tree'].fillna(0).astype(int)
+            df = df.merge(tree_summary, on='UDISE Code', how='left')
+            df['Trees Planted'] = df['Trees Planted'].fillna(0).astype(int)
             df['Tree Uploaded'] = (df['Trees Planted'] > 0).map({True: 'Yes', False: 'No'})
-            df = df.drop(columns=['Trees Planted_tree'], errors='ignore')
         
         # Select and reorder columns for display
         required_columns = ['District', 'School Name', 'UDISE Code', 'School Management', 'School Category', 
