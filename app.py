@@ -331,6 +331,46 @@ def main():
         with col3:
             st.metric("❌ Notification NOT Uploaded", f"{notif_not_uploaded_count:,}")
         
+        # School Type-wise Notification Summary Table
+        st.markdown("---")
+        st.subheader("School Type-wise Notification Summary")
+        
+        school_type_summary = notif_base_df.groupby('School Management').agg({
+            'School Name': 'count',
+            'Notification Uploaded': lambda x: (x == 'Yes').sum()
+        }).reset_index()
+        
+        school_type_summary.columns = ['School Type', 'Total Schools', 'Notification Uploaded']
+        school_type_summary['Notification NOT Uploaded'] = school_type_summary['Total Schools'] - school_type_summary['Notification Uploaded']
+        school_type_summary.insert(0, 'Sr. No.', range(1, len(school_type_summary) + 1))
+        
+        total_row_notif = pd.DataFrame({
+            'Sr. No.': [0],
+            'School Type': ['TOTAL'],
+            'Total Schools': [school_type_summary['Total Schools'].sum()],
+            'Notification Uploaded': [school_type_summary['Notification Uploaded'].sum()],
+            'Notification NOT Uploaded': [school_type_summary['Notification NOT Uploaded'].sum()]
+        })
+        school_type_summary_with_total = pd.concat([school_type_summary, total_row_notif], ignore_index=True)
+        
+        st.dataframe(
+            school_type_summary_with_total,
+            column_config={
+                "Sr. No.": st.column_config.TextColumn("Sr. No.", width="small"),
+                "School Type": st.column_config.TextColumn("School Type", width="large"),
+                "Total Schools": st.column_config.NumberColumn("Total Schools", width="medium", format="%d"),
+                "Notification Uploaded": st.column_config.NumberColumn("Notification Uploaded", width="medium", format="%d"),
+                "Notification NOT Uploaded": st.column_config.NumberColumn("Notification NOT Uploaded", width="medium", format="%d"),
+            },
+            use_container_width=True,
+            hide_index=True,
+        )
+        
+        st.markdown("---")
+        st.markdown("### 📋 Detailed School-wise Data")
+
+        
+        
         st.info(f"📊 **Showing {len(notif_filtered_df):,} schools** in the table below based on selected filters. Metrics above show complete totals for selected District & School Type.")
         st.markdown("---")
         
@@ -361,50 +401,6 @@ def main():
             mime="text/csv",
             key="download_notif"
         )
-        # School Type-wise Notification Summary Table
-        st.markdown("---")
-        st.subheader("School Type-wise Notification Summary")
-        
-        # Group by School Type
-        school_type_summary = notif_base_df.groupby('School Management').agg({
-            'School Name': 'count',
-            'Notification Uploaded': lambda x: (x == 'Yes').sum()
-        }).reset_index()
-        
-        school_type_summary.columns = ['School Type', 'Total Schools', 'Notification Uploaded']
-        
-        # Add Notification NOT Uploaded column
-        school_type_summary['Notification NOT Uploaded'] = school_type_summary['Total Schools'] - school_type_summary['Notification Uploaded']
-        
-        # Add Sr. No.
-        school_type_summary.insert(0, 'Sr. No.', range(1, len(school_type_summary) + 1))
-        
-        # Add TOTAL row
-        total_row_notif = pd.DataFrame({
-            'Sr. No.': [0],
-            'School Type': ['TOTAL'],
-            'Total Schools': [school_type_summary['Total Schools'].sum()],
-            'Notification Uploaded': [school_type_summary['Notification Uploaded'].sum()],
-            'Notification NOT Uploaded': [school_type_summary['Notification NOT Uploaded'].sum()]
-        })
-        school_type_summary_with_total = pd.concat([school_type_summary, total_row_notif], ignore_index=True)
-        
-        # Display the summary table
-        st.dataframe(
-            school_type_summary_with_total,
-            column_config={
-                "Sr. No.": st.column_config.TextColumn("Sr. No.", width="small"),
-                "School Type": st.column_config.TextColumn("School Type", width="large"),
-                "Total Schools": st.column_config.NumberColumn("Total Schools", width="medium", format="%d"),
-                "Notification Uploaded": st.column_config.NumberColumn("Notification Uploaded", width="medium", format="%d"),
-                "Notification NOT Uploaded": st.column_config.NumberColumn("Notification NOT Uploaded", width="medium", format="%d"),
-            },
-            use_container_width=True,
-            hide_index=True,
-        )
-
-    
-    
     # Tab 2: Tree Planted Report
     with tab2:
         st.subheader("Tree Plantation Status")
@@ -479,6 +475,49 @@ def main():
         with col4:
             st.metric("🌳 Total Trees Planted", f"{tree_total_trees:,}")
         
+        # School Type-wise Tree Plantation Summary Table
+        st.markdown("---")
+        st.subheader("School Type-wise Tree Plantation Summary")
+        
+        tree_type_summary = tree_base_df.groupby('School Management').agg({
+            'School Name': 'count',
+            'Tree Uploaded': lambda x: (x == 'Yes').sum(),
+            'Trees Planted': 'sum'
+        }).reset_index()
+        
+        tree_type_summary.columns = ['School Type', 'Total Schools', 'Schools with Tree Upload', 'Total Trees Planted']
+        tree_type_summary['Schools with NO Tree Upload'] = tree_type_summary['Total Schools'] - tree_type_summary['Schools with Tree Upload']
+        tree_type_summary.insert(0, 'Sr. No.', range(1, len(tree_type_summary) + 1))
+        
+        total_row_tree = pd.DataFrame({
+            'Sr. No.': [0],
+            'School Type': ['TOTAL'],
+            'Total Schools': [tree_type_summary['Total Schools'].sum()],
+            'Schools with Tree Upload': [tree_type_summary['Schools with Tree Upload'].sum()],
+            'Schools with NO Tree Upload': [tree_type_summary['Schools with NO Tree Upload'].sum()],
+            'Total Trees Planted': [tree_type_summary['Total Trees Planted'].sum()]
+        })
+        tree_type_summary_with_total = pd.concat([tree_type_summary, total_row_tree], ignore_index=True)
+        
+        st.dataframe(
+            tree_type_summary_with_total,
+            column_config={
+                "Sr. No.": st.column_config.TextColumn("Sr. No.", width="small"),
+                "School Type": st.column_config.TextColumn("School Type", width="large"),
+                "Total Schools": st.column_config.NumberColumn("Total Schools", width="medium", format="%d"),
+                "Schools with Tree Upload": st.column_config.NumberColumn("Schools with Tree Upload", width="medium", format="%d"),
+                "Schools with NO Tree Upload": st.column_config.NumberColumn("Schools with NO Tree Upload", width="medium", format="%d"),
+                "Total Trees Planted": st.column_config.NumberColumn("Total Trees Planted", width="medium", format="%d"),
+            },
+            use_container_width=True,
+            hide_index=True,
+        )
+        
+        st.markdown("---")
+        st.markdown("### 🌳 Detailed School-wise Data")
+
+        
+        
         st.info(f"📊 **Showing {len(tree_filtered_df):,} schools** in the table below based on selected filters. Metrics above show complete totals for selected District & School Type.")
         st.markdown("---")
         
@@ -510,53 +549,6 @@ def main():
             mime="text/csv",
             key="download_tree"
         )
-        # School Type-wise Tree Plantation Summary Table
-        st.markdown("---")
-        st.subheader("School Type-wise Tree Plantation Summary")
-        
-        # Group by School Type
-        tree_type_summary = tree_base_df.groupby('School Management').agg({
-            'School Name': 'count',
-            'Tree Uploaded': lambda x: (x == 'Yes').sum(),
-            'Trees Planted': 'sum'
-        }).reset_index()
-        
-        tree_type_summary.columns = ['School Type', 'Total Schools', 'Schools with Tree Upload', 'Total Trees Planted']
-        
-        # Add Schools with NO Tree Upload column
-        tree_type_summary['Schools with NO Tree Upload'] = tree_type_summary['Total Schools'] - tree_type_summary['Schools with Tree Upload']
-        
-        # Add Sr. No.
-        tree_type_summary.insert(0, 'Sr. No.', range(1, len(tree_type_summary) + 1))
-        
-        # Add TOTAL row
-        total_row_tree = pd.DataFrame({
-            'Sr. No.': [0],
-            'School Type': ['TOTAL'],
-            'Total Schools': [tree_type_summary['Total Schools'].sum()],
-            'Schools with Tree Upload': [tree_type_summary['Schools with Tree Upload'].sum()],
-            'Schools with NO Tree Upload': [tree_type_summary['Schools with NO Tree Upload'].sum()],
-            'Total Trees Planted': [tree_type_summary['Total Trees Planted'].sum()]
-        })
-        tree_type_summary_with_total = pd.concat([tree_type_summary, total_row_tree], ignore_index=True)
-        
-        # Display the summary table
-        st.dataframe(
-            tree_type_summary_with_total,
-            column_config={
-                "Sr. No.": st.column_config.TextColumn("Sr. No.", width="small"),
-                "School Type": st.column_config.TextColumn("School Type", width="large"),
-                "Total Schools": st.column_config.NumberColumn("Total Schools", width="medium", format="%d"),
-                "Schools with Tree Upload": st.column_config.NumberColumn("Schools with Tree Upload", width="medium", format="%d"),
-                "Schools with NO Tree Upload": st.column_config.NumberColumn("Schools with NO Tree Upload", width="medium", format="%d"),
-                "Total Trees Planted": st.column_config.NumberColumn("Total Trees Planted", width="medium", format="%d"),
-            },
-            use_container_width=True,
-            hide_index=True,
-        )
-
-    
-    
     # Tab 3: Summary Report
     with tab3:
         st.subheader("📊 Summary Reports")
