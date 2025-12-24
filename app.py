@@ -552,6 +552,85 @@ def main():
     # Tab 3: Summary Report
     with tab3:
         st.subheader("📊 Summary Reports")
+
+        # Overall Statistics Pie Charts
+        st.markdown("### 📊 Overall Statistics")
+        
+        col_pie1, col_pie2 = st.columns(2)
+        
+        with col_pie1:
+            st.markdown("#### 📋 Notification Upload Status")
+            notif_uploaded = len(df[df['Notification Uploaded'] == 'Yes'])
+            notif_not_uploaded = len(df[df['Notification Uploaded'] == 'No'])
+            
+            import plotly.graph_objects as go
+            
+            fig_notif = go.Figure(data=[go.Pie(
+                labels=['Uploaded', 'Not Uploaded'],
+                values=[notif_uploaded, notif_not_uploaded],
+                hole=.4,
+                marker_colors=['#4CAF50', '#f44336'],
+                textinfo='label+percent',
+                textfont_size=14
+            )])
+            
+            fig_notif.update_layout(
+                showlegend=True,
+                height=400,
+                margin=dict(t=50, b=50, l=50, r=50),
+                annotations=[dict(
+                    text=f'{(notif_uploaded/(notif_uploaded+notif_not_uploaded)*100):.1f}%',
+                    x=0.5, y=0.5, font_size=24, showarrow=False
+                )]
+            )
+            
+            st.plotly_chart(fig_notif, use_container_width=True)
+            
+            # Stats
+            st.metric("Total Schools", f"{notif_uploaded + notif_not_uploaded:,}")
+            col_a, col_b = st.columns(2)
+            with col_a:
+                st.metric("✅ Uploaded", f"{notif_uploaded:,}")
+            with col_b:
+                st.metric("❌ Not Uploaded", f"{notif_not_uploaded:,}")
+        
+        with col_pie2:
+            st.markdown("#### 🌳 Tree Plantation Status")
+            tree_uploaded = len(df[df['Tree Uploaded'] == 'Yes'])
+            tree_not_uploaded = len(df[df['Tree Uploaded'] == 'No'])
+            
+            fig_tree = go.Figure(data=[go.Pie(
+                labels=['Uploaded', 'Not Uploaded'],
+                values=[tree_uploaded, tree_not_uploaded],
+                hole=.4,
+                marker_colors=['#4CAF50', '#f44336'],
+                textinfo='label+percent',
+                textfont_size=14
+            )])
+            
+            fig_tree.update_layout(
+                showlegend=True,
+                height=400,
+                margin=dict(t=50, b=50, l=50, r=50),
+                annotations=[dict(
+                    text=f'{(tree_uploaded/(tree_uploaded+tree_not_uploaded)*100):.1f}%',
+                    x=0.5, y=0.5, font_size=24, showarrow=False
+                )]
+            )
+            
+            st.plotly_chart(fig_tree, use_container_width=True)
+            
+            # Stats
+            st.metric("Total Schools", f"{tree_uploaded + tree_not_uploaded:,}")
+            col_a, col_b = st.columns(2)
+            with col_a:
+                st.metric("✅ Uploaded", f"{tree_uploaded:,}")
+            with col_b:
+                st.metric("❌ Not Uploaded", f"{tree_not_uploaded:,}")
+        
+        st.markdown("---")
+        
+
         
         # 1. District-wise Summary Report
         st.markdown("### 📍 District-wise Summary Report")
