@@ -550,326 +550,286 @@ def main():
             key="download_tree"
         )
     # Tab 3: Summary Report
-
     with tab3:
-
-        st.subheader("📊 Summary Reports")
-
+        st.subheader("📊 Upload Status Overview")
         
-
-        # Section 1: Charts Only (Visual Status)
-
-        col_chart1, col_chart2 = st.columns(2)
-
+        # Pie Charts Section
         
-
-        with col_chart1:
-
+        col_pie1, col_pie2 = st.columns(2)
+        
+        with col_pie1:
             st.markdown("#### 📋 Notification Upload Status")
-
             notif_uploaded = len(df[df['Notification Uploaded'] == 'Yes'])
-
             notif_not_uploaded = len(df[df['Notification Uploaded'] == 'No'])
-
             
-
             import plotly.graph_objects as go
-
             
-
             fig_notif = go.Figure(data=[go.Pie(
-
                 labels=['Uploaded', 'Not Uploaded'],
-
                 values=[notif_uploaded, notif_not_uploaded],
-
                 hole=.4,
-
                 marker_colors=['#4CAF50', '#f44336'],
-
                 textinfo='label+percent',
-
                 textfont_size=14
-
             )])
-
             
-
             fig_notif.update_layout(
-
                 showlegend=True,
-
                 height=400,
-
                 margin=dict(t=50, b=50, l=50, r=50),
-
                 annotations=[dict(
-
                     text=f'{(notif_uploaded/(notif_uploaded+notif_not_uploaded)*100):.1f}%',
-
                     x=0.5, y=0.5, font_size=24, showarrow=False
-
                 )]
-
             )
-
             
-
             st.plotly_chart(fig_notif, use_container_width=True)
-
+            
+            # Stats
+            st.metric("Total Schools", f"{notif_uploaded + notif_not_uploaded:,}")
+            col_a, col_b = st.columns(2)
+            with col_a:
+                st.metric("✅ Uploaded", f"{notif_uploaded:,}")
+            with col_b:
+                st.metric("❌ Not Uploaded", f"{notif_not_uploaded:,}")
         
-
-        with col_chart2:
-
+        with col_pie2:
             st.markdown("#### 🌳 Tree Plantation Status")
-
             tree_uploaded = len(df[df['Tree Uploaded'] == 'Yes'])
-
             tree_not_uploaded = len(df[df['Tree Uploaded'] == 'No'])
-
             
-
             fig_tree = go.Figure(data=[go.Pie(
-
                 labels=['Uploaded', 'Not Uploaded'],
-
                 values=[tree_uploaded, tree_not_uploaded],
-
                 hole=.4,
-
                 marker_colors=['#4CAF50', '#f44336'],
-
                 textinfo='label+percent',
-
                 textfont_size=14
-
             )])
-
             
-
             fig_tree.update_layout(
-
                 showlegend=True,
-
                 height=400,
-
                 margin=dict(t=50, b=50, l=50, r=50),
-
                 annotations=[dict(
-
                     text=f'{(tree_uploaded/(tree_uploaded+tree_not_uploaded)*100):.1f}%',
-
                     x=0.5, y=0.5, font_size=24, showarrow=False
-
                 )]
-
             )
-
             
-
             st.plotly_chart(fig_tree, use_container_width=True)
-
+            
+            # Stats
+            st.metric("Total Schools", f"{tree_uploaded + tree_not_uploaded:,}")
+            col_a, col_b = st.columns(2)
+            with col_a:
+                st.metric("✅ Uploaded", f"{tree_uploaded:,}")
+            with col_b:
+                st.metric("❌ Not Uploaded", f"{tree_not_uploaded:,}")
+        
+        st.markdown("---")
         
 
-        # Divider between charts and statistics
-
-        st.divider()
-
         
-
-        # Section 2: Overall Statistics (Numbers Only)
-
-        st.markdown("### 📊 Overall Statistics")
-
+        # 1. District-wise Summary Report
+        st.markdown("### 📍 District-wise Summary Report")
         
-
-        # Calculate metrics
-
-        total_schools = len(df)
-
-        total_trees = df['Trees Planted'].sum()
-
-        notif_percentage = (notif_uploaded / total_schools * 100)
-
-        tree_percentage = (tree_uploaded / total_schools * 100)
-
+        # Calculate district-wise statistics
+        district_summary = df.groupby('District').agg({
+            'UDISE Code': 'count',
+            'Notification Uploaded': lambda x: (x == 'Yes').sum()
+        }).reset_index()
         
-
-        # Display KPI cards
-
-        col_k1, col_k2, col_k3, col_k4, col_k5 = st.columns(5)
-
+        district_summary.columns = ['District', 'Total Schools', 'Eco-Club Notification Uploaded']
+        district_summary['Percentage (%)'] = (
+            (district_summary['Eco-Club Notification Uploaded'] / district_summary['Total Schools'] * 100)
+            .round(2)
+        )
         
-
-        with col_k1:
-
-            st.metric(
-
-                "📚 Total Schools",
-
-                f"{total_schools:,}",
-
-                help="Total number of schools in the system"
-
+        # Sort by district name
+        district_summary = district_summary.sort_values('District')
+        
+        # Add TOTAL row at the bottom
+        total_row = pd.DataFrame({
+            'District': ['TOTAL'],
+            'Total Schools': [district_summary['Total Schools'].sum()],
+            'Eco-Club Notification Uploaded': [district_summary['Eco-Club Notification Uploaded'].sum()],
+            'Percentage (%)': [
+                (district_summary['Eco-Club Notification Uploaded'].sum() / 
+                 district_summary['Total Schools'].sum() * 100).round(2)
+            ]
+        })
+        
+        district_summary_with_total = pd.concat([district_summary, total_row], ignore_index=True)
+        
+        st.dataframe(
+            district_summary_with_total,
+            column_config={
+                "District": st.column_config.TextColumn("District", width="medium"),
+                "Total Schools": st.column_config.NumberColumn("Total Schools", width="small", format="%d"),
+                "Eco-Club Notification Uploaded": st.column_config.NumberColumn(
+                    "Notification Uploaded", 
+                    width="small", 
+                    format="%d"
+                ),
+                "Percentage (%)": st.column_config.NumberColumn(
+                    "Percentage (%)", 
+                    width="small", 
+                    format="%.2f%%"
+                ),
+            },
+            use_container_width=True,
+            hide_index=True,
+            height=400
+        )
+        
+        # Show overall summary metrics
+        col_m1, col_m2, col_m3 = st.columns(3)
+        with col_m1:
+            st.metric("📚 Total S_with_totalchools", f"{total_row['Total Schools'].iloc[0]:,}")
+        with col_m2:
+            st.metric("✅ Total Notifications Uploaded", f"{total_row['Eco-Club Notification Uploaded'].iloc[0]:,}")
+        with col_m3:
+            st.metric("📊 Overall Percentage", f"{total_row['Percentage (%)'].iloc[0]:.2f}%")
+        
+        # Download button
+        st.download_button(
+            label="📥 Download District Summary",
+            data=district_summary.to_csv(index=False).encode('utf-8'),
+            file_name=f"district_summary_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
+            mime="text/csv",
+            key="download_district_summary"
+        )
+        
+        st.markdown("---")
+        
+        # 2. Top 10 Best Performing Districts
+        st.markdown("### 🏆 Top 10 Best Performing Districts")
+        
+        top_10 = district_summary.nlargest(10, 'Percentage (%)')
+        
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.dataframe(
+                top_10,
+                column_config={
+                    "District": st.column_config.TextColumn("District", width="medium"),
+                    "Total Schools": st.column_config.NumberColumn("Total Schools", width="small", format="%d"),
+                    "Eco-Club Notification Uploaded": st.column_config.NumberColumn(
+                        "Uploaded", 
+                        width="small", 
+                        format="%d"
+                    ),
+                    "Percentage (%)": st.column_config.NumberColumn(
+                        "Percentage (%)", 
+                        width="small", 
+                        format="%.2f%%"
+                    ),
+                },
+                use_container_width=True,
+                hide_index=True
             )
-
         
-
-        with col_k2:
-
-            st.metric(
-
-                "✅ Notification Uploaded",
-
-                f"{notif_uploaded:,}",
-
-                delta=f"{notif_percentage:.1f}%",
-
-                help="Schools that uploaded notifications"
-
+        with col2:
+            # Show top 3 as metrics
+            if len(top_10) >= 3:
+                st.metric("🥇 1st Place", top_10.iloc[0]['District'], 
+                         f"{top_10.iloc[0]['Percentage (%)']}%")
+                st.metric("🥈 2nd Place", top_10.iloc[1]['District'], 
+                         f"{top_10.iloc[1]['Percentage (%)']}%")
+                st.metric("🥉 3rd Place", top_10.iloc[2]['District'], 
+                         f"{top_10.iloc[2]['Percentage (%)']}%")
+        
+        st.markdown("---")
+        
+        # 3. Bottom 10 Worst Performing Districts
+        st.markdown("### ⚠️ Bottom 10 Districts (Need Attention)")
+        
+        bottom_10 = district_summary.nsmallest(10, 'Percentage (%)')
+        
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.dataframe(
+                bottom_10,
+                column_config={
+                    "District": st.column_config.TextColumn("District", width="medium"),
+                    "Total Schools": st.column_config.NumberColumn("Total Schools", width="small", format="%d"),
+                    "Eco-Club Notification Uploaded": st.column_config.NumberColumn(
+                        "Uploaded", 
+                        width="small", 
+                        format="%d"
+                    ),
+                    "Percentage (%)": st.column_config.NumberColumn(
+                        "Percentage (%)", 
+                        width="small", 
+                        format="%.2f%%"
+                    ),
+                },
+                use_container_width=True,
+                hide_index=True
             )
-
         
-
-        with col_k3:
-
-            st.metric(
-
-                "❌ Notification NOT Uploaded",
-
-                f"{notif_not_uploaded:,}",
-
-                delta=f"{(100-notif_percentage):.1f}%",
-
-                delta_color="inverse",
-
-                help="Schools that did not upload notifications"
-
+        with col2:
+            # Show bottom 3 as warning metrics
+            if len(bottom_10) >= 3:
+                st.metric("⚠️ Needs Most Attention", bottom_10.iloc[0]['District'], 
+                         f"{bottom_10.iloc[0]['Percentage (%)']}%", delta_color="inverse")
+                st.metric("⚠️ Second Priority", bottom_10.iloc[1]['District'], 
+                         f"{bottom_10.iloc[1]['Percentage (%)']}%", delta_color="inverse")
+                st.metric("⚠️ Third Priority", bottom_10.iloc[2]['District'], 
+                         f"{bottom_10.iloc[2]['Percentage (%)']}%", delta_color="inverse")
+        
+        # Combined download for all summary reports
+        st.markdown("---")
+        
+        col_d1, col_d2, col_d3 = st.columns(3)
+        
+        with col_d1:
+            st.download_button(
+                label="📥 Download Top 10",
+                data=top_10.to_csv(index=False).encode('utf-8'),
+                file_name=f"top_10_districts_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv",
+                key="download_top_10"
             )
-
         
-
-        with col_k4:
-
-            st.metric(
-
-                "✅ Tree Data Uploaded",
-
-                f"{tree_uploaded:,}",
-
-                delta=f"{tree_percentage:.1f}%",
-
-                help="Schools that uploaded tree data"
-
+        with col_d2:
+            st.download_button(
+                label="📥 Download Bottom 10",
+                data=bottom_10.to_csv(index=False).encode('utf-8'),
+                file_name=f"bottom_10_districts_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv",
+                key="download_bottom_10"
             )
-
         
-
-        with col_k5:
-
-            st.metric(
-
-                "❌ Tree NOT Uploaded",
-
-                f"{tree_not_uploaded:,}",
-
-                delta=f"{(100-tree_percentage):.1f}%",
-
-                delta_color="inverse",
-
-                help="Schools that did not upload tree data"
-
-            )
-
-        
-
-        # Second row of metrics
-
-        col_k6, col_k7, col_k8, col_k9, col_k10 = st.columns(5)
-
-        
-
-        with col_k6:
-
-            st.metric(
-
-                "🌱 Total Trees Planted",
-
-                f"{total_trees:,}",
-
-                help="Total number of trees planted across all schools"
-
-            )
-
-        
-
-        with col_k7:
-
-            st.metric(
-
-                "📊 Overall Notification Rate",
-
-                f"{notif_percentage:.1f}%",
-
-                help="Percentage of schools with notifications"
-
-            )
-
-        
-
-        with col_k8:
-
-            st.metric(
-
-                "📊 Overall Tree Upload Rate",
-
-                f"{tree_percentage:.1f}%",
-
-                help="Percentage of schools with tree data"
-
-            )
-
-        
-
-        with col_k9:
-
-            avg_trees = int(total_trees / tree_uploaded) if tree_uploaded > 0 else 0
-
-            st.metric(
-
-                "🌳 Avg Trees per School",
-
-                f"{avg_trees:,}",
-
-                help="Average trees planted per school (among uploaders)"
-
-            )
-
-        
-
-        with col_k10:
-
-            both_uploaded = len(df[(df['Notification Uploaded'] == 'Yes') & (df['Tree Uploaded'] == 'Yes')])
-
-            compliance_rate = (both_uploaded / total_schools * 100)
-
-            st.metric(
-
-                "✅ Full Compliance",
-
-                f"{compliance_rate:.1f}%",
-
-                delta=f"{both_uploaded:,} schools",
-
-                help="Schools that completed both notification and tree upload"
-
-            )
-
-        
-
-        # Divider before district reports
-
-        st.divider()
+        with col_d3:
+            # Create comprehensive report with totals
+            with pd.ExcelWriter('summary_reports.xlsx', engine='openpyxl') as writer:
+                district_summary_with_total.to_excel(writer, sheet_name='All Districts', index=False)
+                top_10.to_excel(writer, sheet_name='Top 10', index=False)
+                bottom_10.to_excel(writer, sheet_name='Bottom 10', index=False)
+                
+                # Add summary sheet
+                summary_sheet = pd.DataFrame({
+                    'Metric': ['Total Schools', 'Total Notifications Uploaded', 'Overall Percentage (%)'],
+                    'Value': [
+                        total_row['Total Schools'].iloc[0],
+                        total_row['Eco-Club Notification Uploaded'].iloc[0],
+                        total_row['Percentage (%)'].iloc[0]
+                    ]
+                })
+                summary_sheet.to_excel(writer, sheet_name='Overall Summary', index=False)
+            
+            with open('summary_reports.xlsx', 'rb') as f:
+                st.download_button(
+                    label="📥 Download Complete Report (Excel)",
+                    data=f,
+                    file_name=f"complete_summary_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    key="download_complete_summary"
+                )
     
     # Footer with visitor counter
     st.markdown("---")
