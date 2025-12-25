@@ -159,6 +159,47 @@ def main():
     # Custom CSS for better styling and mobile responsiveness
     st.markdown("""
         <style>
+        /* Main Container Width Control - CENTERED LAYOUT */
+        .main .block-container {
+            max-width: 1400px !important;
+            padding-left: 6rem !important;
+            padding-right: 6rem !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+        
+        /* Header and content centering */
+        .stApp > header {
+            background-color: transparent;
+        }
+        
+        section[data-testid="stAppViewContainer"] > .main {
+            background-color: #f8f9fa;
+            padding-left: 3% !important;
+            padding-right: 3% !important;
+        }
+        
+        @media (min-width: 1600px) {
+            .main .block-container {
+                max-width: 1600px !important;
+                padding-left: 8rem !important;
+                padding-right: 8rem !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main .block-container {
+                max-width: 100% !important;
+                padding-left: 1.5rem !important;
+                padding-right: 1.5rem !important;
+            }
+            
+            section[data-testid="stAppViewContainer"] > .main {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+        }
+        
         /* Tab styling */
         .stTabs [data-baseweb="tab-list"] {
             gap: 24px;
@@ -231,26 +272,6 @@ def main():
             margin-bottom: 30px;
             position: relative;
             overflow: hidden;
-        }
-        
-        .header-banner::before {
-            content: '🌳';
-            position: absolute;
-            left: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 3.5em;
-            opacity: 0.9;
-        }
-        
-        .header-banner::after {
-            content: '🇮🇳';
-            position: absolute;
-            right: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 3.5em;
-            opacity: 0.9;
         }
         
         .header-title {
