@@ -402,6 +402,46 @@ def main():
             display: block;
         }
         
+        /* Tab Navigation Styling */
+        .stTabs [data-baseweb="tab-list"] {
+            gap: 8px;
+            background-color: #f0f4f8;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stTabs [data-baseweb="tab"] {
+            height: 60px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 0 30px;
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #2c3e50;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        
+        .stTabs [data-baseweb="tab"]:hover {
+            background: linear-gradient(135deg, #e8f4f8 0%, #d6e9f5 100%);
+            border: 2px solid #4a90e2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+        }
+        
+        .stTabs [aria-selected="true"] {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            border: 2px solid #5568d3 !important;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+        }
+        
+        .stTabs [data-baseweb="tab-panel"] {
+            padding-top: 30px;
+        }
+        
         /* Table Styling */
         .dataframe {
             font-size: 1.1em;
@@ -653,13 +693,15 @@ def main():
                 {
                     'selector': 'thead th',
                     'props': [
-                        ('background-color', '#4a90e2'),
+                        ('background-color', '#2c5aa0'),
                         ('color', 'white'),
-                        ('font-weight', 'bold'),
+                        ('font-weight', '900'),
                         ('text-align', 'center'),
-                        ('padding', '12px'),
-                        ('border', '1px solid #ddd'),
-                        ('font-size', '1.05em')
+                        ('padding', '14px'),
+                        ('border', '1px solid #1e4a7a'),
+                        ('font-size', '1.15em'),
+                        ('text-transform', 'uppercase'),
+                        ('letter-spacing', '0.5px')
                     ]
                 },
                 # All cells
@@ -695,10 +737,12 @@ def main():
                 {
                     'selector': 'tbody tr:last-child',
                     'props': [
-                        ('background-color', '#ffd966 !important'),
-                        ('font-weight', 'bold'),
-                        ('font-size', '1.1em'),
-                        ('border-top', '3px solid #ff9800')
+                        ('background-color', '#ff9800 !important'),
+                        ('color', 'white'),
+                        ('font-weight', '900'),
+                        ('font-size', '1.15em'),
+                        ('border-top', '3px solid #e68900'),
+                        ('border-bottom', '3px solid #e68900')
                     ]
                 },
                 # Hover effect
@@ -737,15 +781,18 @@ def main():
             {
                 'selector': 'thead th',
                 'props': [
-                    ('background-color', '#2c3e50'),
+                    ('background-color', '#1a252f'),
                     ('color', 'white'),
-                    ('font-weight', 'bold'),
+                    ('font-weight', '900'),
                     ('text-align', 'center'),
-                    ('padding', '12px'),
+                    ('padding', '14px'),
                     ('position', 'sticky'),
                     ('top', '0'),
                     ('z-index', '1'),
-                    ('border', '1px solid #ddd')
+                    ('border', '1px solid #0d1419'),
+                    ('font-size', '1.05em'),
+                    ('text-transform', 'uppercase'),
+                    ('letter-spacing', '0.5px')
                 ]
             },
             {
