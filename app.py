@@ -380,17 +380,28 @@ def main():
         
         /* Filter Section */
         .filter-container {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 25px;
-            border-radius: 12px;
-            margin: 20px 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            background: linear-gradient(135deg, #e8f4f8 0%, #d6e9f5 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 4px 12px rgba(70, 130, 180, 0.15);
+            border: 2px solid #b3d9f2;
+        }
+        .filter-header {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .filter-label {
             font-weight: 700;
-            font-size: 1.05em;
+            font-size: 1.1em;
             color: #2c3e50;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            display: block;
         }
         
         /* Table Styling */
@@ -512,7 +523,7 @@ def main():
         
         # Filters for Notification Report in styled container
         st.markdown('<div class="filter-container">', unsafe_allow_html=True)
-        st.markdown("#### 🔍 Filter Options")
+        st.markdown('<div class="filter-header">🔍 Filter Options</div>', unsafe_allow_html=True)
         col_f1, col_f2, col_f3 = st.columns(3)
         
         with col_f1:

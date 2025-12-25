@@ -378,17 +378,28 @@ def main():
         
         /* Filter Section */
         .filter-container {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 25px;
-            border-radius: 12px;
-            margin: 20px 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            background: linear-gradient(135deg, #e8f4f8 0%, #d6e9f5 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 4px 12px rgba(70, 130, 180, 0.15);
+            border: 2px solid #b3d9f2;
+        }
+        .filter-header {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .filter-label {
             font-weight: 700;
-            font-size: 1.05em;
+            font-size: 1.1em;
             color: #2c3e50;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            display: block;
         }
         
         /* Table Styling */
@@ -508,10 +519,14 @@ def main():
     with tab1:
         st.subheader("Notification Upload Status")
         
-        # Filters for Notification Report
+        # Filters for Notification Report wrapped in styled container
+        st.markdown('<div class="filter-container">', unsafe_allow_html=True)
+        st.markdown('<div class="filter-header"><span>🔍</span> Filter Options</div>', unsafe_allow_html=True)
+        
         col_f1, col_f2, col_f3 = st.columns([1, 1, 1])
         
         with col_f1:
+            st.markdown('<label class="filter-label">District:</label>', unsafe_allow_html=True)
             # District filter
             districts = sorted(df['District'].unique().tolist())
             district_options = ["All"] + districts
@@ -519,10 +534,12 @@ def main():
                 "Select District",
                 options=district_options,
                 index=0,
-                key="notif_district"
+                key="notif_district",
+                label_visibility="collapsed"
             )
         
         with col_f2:
+            st.markdown('<label class="filter-label">School Type:</label>', unsafe_allow_html=True)
             # School Management filter
             school_type_options = ["All", "Private Unaided Recognized", "Government Aided", 
                                   "Department of Education (Government School)"]
@@ -530,18 +547,23 @@ def main():
                 "Select School Type",
                 options=school_type_options,
                 index=0,
-                key="notif_school_type"
+                key="notif_school_type",
+                label_visibility="collapsed"
             )
         
         with col_f3:
+            st.markdown('<label class="filter-label">Status:</label>', unsafe_allow_html=True)
             # Notification Status filter
             notif_filter_options = ["All", "Uploaded", "NOT Uploaded"]
             selected_notif_filter = st.selectbox(
                 "Notification Status",
                 options=notif_filter_options,
                 index=0,
-                key="notif_status_filter"
+                key="notif_status_filter",
+                label_visibility="collapsed"
             )
+        
+        st.markdown('</div>', unsafe_allow_html=True)
         
         # Apply filters - separate for metrics and table display
         with st.spinner('Applying filters...'):
@@ -770,10 +792,14 @@ def main():
     with tab2:
         st.subheader("Tree Plantation Status")
         
-        # Filters for Tree Report
+        # Filters for Tree Report wrapped in styled container
+        st.markdown('<div class="filter-container">', unsafe_allow_html=True)
+        st.markdown('<div class="filter-header"><span>🔍</span> Filter Options</div>', unsafe_allow_html=True)
+        
         col_f1, col_f2, col_f3 = st.columns([1, 1, 1])
         
         with col_f1:
+            st.markdown('<label class="filter-label">District:</label>', unsafe_allow_html=True)
             # District filter
             districts_tree = sorted(df['District'].unique().tolist())
             district_options_tree = ["All"] + districts_tree
@@ -781,10 +807,12 @@ def main():
                 "Select District",
                 options=district_options_tree,
                 index=0,
-                key="tree_district"
+                key="tree_district",
+                label_visibility="collapsed"
             )
         
         with col_f2:
+            st.markdown('<label class="filter-label">School Type:</label>', unsafe_allow_html=True)
             # School Management filter
             school_type_options_tree = ["All", "Private Unaided Recognized", "Government Aided", 
                                        "Department of Education (Government School)"]
@@ -792,18 +820,23 @@ def main():
                 "Select School Type",
                 options=school_type_options_tree,
                 index=0,
-                key="tree_school_type"
+                key="tree_school_type",
+                label_visibility="collapsed"
             )
         
         with col_f3:
+            st.markdown('<label class="filter-label">Status:</label>', unsafe_allow_html=True)
             # Tree Status filter
             tree_filter_options = ["All", "Uploaded", "NOT Uploaded"]
             selected_tree_filter = st.selectbox(
                 "Tree Status",
                 options=tree_filter_options,
                 index=0,
-                key="tree_status_filter"
+                key="tree_status_filter",
+                label_visibility="collapsed"
             )
+        
+        st.markdown('</div>', unsafe_allow_html=True)
         
         # Apply filters - separate for metrics and table display
         with st.spinner('Applying filters...'):
