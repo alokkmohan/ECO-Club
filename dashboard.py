@@ -442,6 +442,60 @@ def main():
             padding-top: 30px;
         }
         
+        /* Mobile Responsive Design */
+        @media (max-width: 768px) {
+            /* Make tabs stack vertically on mobile */
+            .stTabs [data-baseweb="tab-list"] {
+                flex-direction: column;
+                gap: 8px;
+                padding: 8px;
+            }
+            
+            .stTabs [data-baseweb="tab"] {
+                width: 100%;
+                height: 50px;
+                padding: 0 20px;
+                font-size: 1.1em;
+                text-align: center;
+            }
+            
+            /* Make metric cards stack on mobile */
+            .metric-card {
+                margin-bottom: 15px;
+            }
+            
+            /* Adjust filter container on mobile */
+            .filter-container {
+                padding: 20px;
+            }
+            
+            /* Reduce header font size on mobile */
+            .header-banner h1 {
+                font-size: 1.8em !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            /* Extra small devices */
+            .stTabs [data-baseweb="tab"] {
+                font-size: 1em;
+                height: 45px;
+                padding: 0 15px;
+            }
+            
+            .header-banner h1 {
+                font-size: 1.5em !important;
+            }
+            
+            .filter-container {
+                padding: 15px;
+            }
+            
+            .filter-header {
+                font-size: 1.2em;
+            }
+        }
+        
         /* Table Styling */
         .dataframe {
             font-size: 1.1em;
