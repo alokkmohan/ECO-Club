@@ -624,17 +624,95 @@ def main():
         })
         school_type_summary_with_total = pd.concat([school_type_summary, total_row_notif], ignore_index=True)
         
+        # Custom styling for the summary table
+        def style_summary_table(df):
+            # Create styles
+            styles = []
+            
+            # Style for all cells
+            for i in range(len(df)):
+                for j in range(len(df.columns)):
+                    if i == len(df) - 1:  # TOTAL row
+                        styles.append({
+                            'selector': f'tbody tr:last-child',
+                            'props': [
+                                ('background-color', '#ffd966 !important'),
+                                ('font-weight', 'bold'),
+                                ('font-size', '1.1em'),
+                                ('border-top', '3px solid #ff9800')
+                            ]
+                        })
+                        break
+            
+            return df.style.set_table_styles([
+                # Header styling
+                {
+                    'selector': 'thead th',
+                    'props': [
+                        ('background-color', '#4a90e2'),
+                        ('color', 'white'),
+                        ('font-weight', 'bold'),
+                        ('text-align', 'center'),
+                        ('padding', '12px'),
+                        ('border', '1px solid #ddd'),
+                        ('font-size', '1.05em')
+                    ]
+                },
+                # All cells
+                {
+                    'selector': 'td',
+                    'props': [
+                        ('border', '1px solid #ddd'),
+                        ('padding', '10px'),
+                        ('text-align', 'left')
+                    ]
+                },
+                # Number columns (right align)
+                {
+                    'selector': 'td:nth-child(n+3)',
+                    'props': [
+                        ('text-align', 'right')
+                    ]
+                },
+                # Zebra striping
+                {
+                    'selector': 'tbody tr:nth-child(even)',
+                    'props': [
+                        ('background-color', '#f8f9fa')
+                    ]
+                },
+                {
+                    'selector': 'tbody tr:nth-child(odd)',
+                    'props': [
+                        ('background-color', 'white')
+                    ]
+                },
+                # TOTAL row
+                {
+                    'selector': 'tbody tr:last-child',
+                    'props': [
+                        ('background-color', '#ffd966 !important'),
+                        ('font-weight', 'bold'),
+                        ('font-size', '1.1em'),
+                        ('border-top', '3px solid #ff9800')
+                    ]
+                },
+                # Hover effect
+                {
+                    'selector': 'tbody tr:hover',
+                    'props': [
+                        ('background-color', '#e3f2fd !important')
+                    ]
+                }
+            ]).set_properties(**{
+                'text-align': 'center'
+            }, subset=['Sr. No.']).set_properties(**{
+                'text-align': 'right'
+            }, subset=['Total Schools', 'Notification Uploaded', 'Notification NOT Uploaded']).hide(axis='index')
+        
         st.dataframe(
-            school_type_summary_with_total,
-            column_config={
-                "Sr. No.": st.column_config.TextColumn("Sr. No.", width="small"),
-                "School Type": st.column_config.TextColumn("School Type", width="large"),
-                "Total Schools": st.column_config.NumberColumn("Total Schools", width="medium", format="%d"),
-                "Notification Uploaded": st.column_config.NumberColumn("Notification Uploaded", width="medium", format="%d"),
-                "Notification NOT Uploaded": st.column_config.NumberColumn("Notification NOT Uploaded", width="medium", format="%d"),
-            },
+            style_summary_table(school_type_summary_with_total),
             use_container_width=True,
-            hide_index=True,
         )
         
         st.markdown("---")
