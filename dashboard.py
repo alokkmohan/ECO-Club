@@ -220,12 +220,80 @@ def main():
         .stDownloadButton button:hover {
             background-color: #45a049;
         }
+        
+        /* Full-width header banner */
+        .header-banner {
+            background: linear-gradient(135deg, #ff9933 0%, #ff6600 50%, #ff9933 100%);
+            padding: 30px 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(255, 102, 0, 0.3);
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-banner::before {
+            content: '🌳';
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3.5em;
+            opacity: 0.9;
+        }
+        
+        .header-banner::after {
+            content: '🇮🇳';
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3.5em;
+            opacity: 0.9;
+        }
+        
+        .header-title {
+            color: white;
+            font-size: 2.5em;
+            font-weight: 800;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            letter-spacing: 2px;
+        }
+        
+        .header-subtitle {
+            color: white;
+            font-size: 1.2em;
+            font-weight: 500;
+            margin-top: 10px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .header-banner::before,
+            .header-banner::after {
+                font-size: 2em;
+                left: 10px;
+                right: 10px;
+            }
+            .header-title {
+                font-size: 1.5em;
+            }
+            .header-subtitle {
+                font-size: 0.9em;
+            }
+        }
         </style>
     """, unsafe_allow_html=True)
     
-    # Title
-    st.title("🌱 UP Secondary Schools Eco Club Monitoring Dashboard")
-    st.markdown("---")
+    # Full-width header banner
+    st.markdown("""
+        <div class="header-banner">
+            <h1 class="header-title">EK PED MAA KE NAAM 2.0</h1>
+            <p class="header-subtitle">UP Secondary Schools Eco Club Monitoring Dashboard</p>
+        </div>
+    """, unsafe_allow_html=True)
     
     # Load cached data
     with st.spinner("Loading data..."):
