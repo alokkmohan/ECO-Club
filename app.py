@@ -321,46 +321,62 @@ def main():
     # Custom CSS for colorful metric cards and table styling
     st.markdown("""
         <style>
-        /* Top Metrics Cards */
-        .top-metric-card {
-            padding: 30px 20px;
-            border-radius: 15px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        .metric-card {
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
-            margin: 15px 0;
-            transition: all 0.3s;
+            margin: 10px 0;
+            transition: transform 0.2s;
         }
-        .top-metric-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
-        .top-metric-icon {
-            font-size: 3.5em;
-            margin-bottom: 15px;
+        .metric-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
         }
-        .top-metric-value {
-            font-size: 3em;
-            font-weight: 800;
-            margin: 15px 0;
-            line-height: 1;
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
         }
-        .top-metric-label {
-            font-size: 1.1em;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+        .metric-label {
+            font-size: 0.95em;
+            color: #666;
+            font-weight: 500;
         }
         .blue-card {
-            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
+        .blue-card .metric-label { color: #f0f0f0; }
         .green-card {
-            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             color: white;
         }
+        .green-card .metric-label { color: #f0f0f0; }
         .red-card {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
             color: white;
         }
+        .red-card .metric-label { color: #f0f0f0; }
+        .light-green-card {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            color: white;
+        }
+        .light-green-card .metric-label { color: #f0f0f0; }
+        .orange-card {
+            background: linear-gradient(135deg, #f46b45 0%, #eea849 100%);
+            color: white;
+        }
+        .orange-card .metric-label { color: #f0f0f0; }
+        .dark-green-card {
+            background: linear-gradient(135deg, #134e5e 0%, #71b280 100%);
+            color: white;
+        }
+        .dark-green-card .metric-label { color: #f0f0f0; }
         
         /* Filter Section */
         .filter-container {
@@ -415,37 +431,64 @@ def main():
         </style>
     """, unsafe_allow_html=True)
     
-    # Create 3 column layout for top metrics
-    col1, col2, col3 = st.columns(3)
+    # Create 6 column layout
+    col1, col2, col3, col4, col5, col6 = st.columns(6)
     
     with col1:
         st.markdown(f"""
-            <div class="top-metric-card blue-card">
-                <div class="top-metric-icon">🏫</div>
-                <div class="top-metric-value">{total_schools:,}</div>
-                <div class="top-metric-label">Total Schools</div>
+            <div class="metric-card blue-card">
+                <div class="metric-icon">🏫</div>
+                <div class="metric-value">{total_schools:,}</div>
+                <div class="metric-label">Total Schools</div>
             </div>
         """, unsafe_allow_html=True)
     
     with col2:
         st.markdown(f"""
-            <div class="top-metric-card green-card">
-                <div class="top-metric-icon">✅</div>
-                <div class="top-metric-value">{notif_uploaded:,}</div>
-                <div class="top-metric-label">Notification Uploaded</div>
+            <div class="metric-card green-card">
+                <div class="metric-icon">✅</div>
+                <div class="metric-value">{notif_uploaded:,}</div>
+                <div class="metric-label">Notification Uploaded</div>
             </div>
         """, unsafe_allow_html=True)
     
     with col3:
         st.markdown(f"""
-            <div class="top-metric-card red-card">
-                <div class="top-metric-icon">❌</div>
-                <div class="top-metric-value">{notif_not_uploaded:,}</div>
-                <div class="top-metric-label">Notification NOT Uploaded</div>
+            <div class="metric-card red-card">
+                <div class="metric-icon">❌</div>
+                <div class="metric-value">{notif_not_uploaded:,}</div>
+                <div class="metric-label">NOT Uploaded</div>
             </div>
         """, unsafe_allow_html=True)
     
-    st.markdown("<br>", unsafe_allow_html=True)
+    with col4:
+        st.markdown(f"""
+            <div class="metric-card light-green-card">
+                <div class="metric-icon">🌳</div>
+                <div class="metric-value">{tree_uploaded:,}</div>
+                <div class="metric-label">Tree Uploaded Schools</div>
+            </div>
+        """, unsafe_allow_html=True)
+    
+    with col5:
+        st.markdown(f"""
+            <div class="metric-card orange-card">
+                <div class="metric-icon">⚠️</div>
+                <div class="metric-value">{tree_not_uploaded:,}</div>
+                <div class="metric-label">Tree NOT Uploaded</div>
+            </div>
+        """, unsafe_allow_html=True)
+    
+    with col6:
+        st.markdown(f"""
+            <div class="metric-card dark-green-card">
+                <div class="metric-icon">🌲</div>
+                <div class="metric-value">{total_trees:,}</div>
+                <div class="metric-label">Total Trees</div>
+            </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("---")
     
     # Create tabs
     tab1, tab2, tab3 = st.tabs(["📋 Notification Report", "🌳 Tree Planted Report", "📊 Summary Report"])
