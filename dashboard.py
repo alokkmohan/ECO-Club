@@ -229,8 +229,6 @@ def main():
     # Load cached data
     with st.spinner("Loading data..."):
         df, success, error_message, data_service = load_eco_data()
-    with st.spinner("Loading data..."):
-        df, success, error_message = data_service.load_data()
     
     # Handle data loading errors
     if not success:
@@ -349,19 +347,27 @@ def main():
         with col3:
             st.metric("❌ Notification NOT Uploaded", f"{notif_not_uploaded_count:,}")
         
-        # School Type-wise Notification Summary Table
+        st.info(f"📊 **Showing {len(notif_filtered_df):,} schools** in the table below based on selected filters. Metrics above show complete totals for selected District & School Type.")
         st.markdown("---")
-        st.subheader("School Type-wise Notification Summary")
         
+        # School Type wise Notification Summary Table
+        st.markdown("#### 📊 School Type-wise Notification Summary")
+        
+        # Calculate summary by school type (using base df which has district + school type filters)
         school_type_summary = notif_base_df.groupby('School Management').agg({
-            'School Name': 'count',
+            'UDISE Code': 'count',
             'Notification Uploaded': lambda x: (x == 'Yes').sum()
         }).reset_index()
         
         school_type_summary.columns = ['School Type', 'Total Schools', 'Notification Uploaded']
+        
+        # Add Notification NOT Uploaded column
         school_type_summary['Notification NOT Uploaded'] = school_type_summary['Total Schools'] - school_type_summary['Notification Uploaded']
+        
+        # Add Sr. No.
         school_type_summary.insert(0, 'Sr. No.', range(1, len(school_type_summary) + 1))
         
+        # Add TOTAL row
         total_row_notif = pd.DataFrame({
             'Sr. No.': [0],
             'School Type': ['TOTAL'],
@@ -371,6 +377,7 @@ def main():
         })
         school_type_summary_with_total = pd.concat([school_type_summary, total_row_notif], ignore_index=True)
         
+        # Display the summary table
         st.dataframe(
             school_type_summary_with_total,
             column_config={
@@ -384,12 +391,6 @@ def main():
             hide_index=True,
         )
         
-        st.markdown("---")
-        st.markdown("### 📋 Detailed School-wise Data")
-
-        
-        
-        st.info(f"📊 **Showing {len(notif_filtered_df):,} schools** in the table below based on selected filters. Metrics above show complete totals for selected District & School Type.")
         st.markdown("---")
         
         # Display notification data
@@ -419,6 +420,7 @@ def main():
             mime="text/csv",
             key="download_notif"
         )
+    
     # Tab 2: Tree Planted Report
     with tab2:
         st.subheader("Tree Plantation Status")
@@ -493,20 +495,28 @@ def main():
         with col4:
             st.metric("🌳 Total Trees Planted", f"{tree_total_trees:,}")
         
-        # School Type-wise Tree Plantation Summary Table
+        st.info(f"📊 **Showing {len(tree_filtered_df):,} schools** in the table below based on selected filters. Metrics above show complete totals for selected District & School Type.")
         st.markdown("---")
-        st.subheader("School Type-wise Tree Plantation Summary")
         
+        # School Type wise Tree Plantation Summary Table
+        st.markdown("#### 🌳 School Type-wise Tree Plantation Summary")
+        
+        # Calculate summary by school type (using base df which has district + school type filters)
         tree_type_summary = tree_base_df.groupby('School Management').agg({
-            'School Name': 'count',
+            'UDISE Code': 'count',
             'Tree Uploaded': lambda x: (x == 'Yes').sum(),
             'Trees Planted': 'sum'
         }).reset_index()
         
         tree_type_summary.columns = ['School Type', 'Total Schools', 'Schools with Tree Upload', 'Total Trees Planted']
+        
+        # Add Schools with NO Tree Upload column
         tree_type_summary['Schools with NO Tree Upload'] = tree_type_summary['Total Schools'] - tree_type_summary['Schools with Tree Upload']
+        
+        # Add Sr. No.
         tree_type_summary.insert(0, 'Sr. No.', range(1, len(tree_type_summary) + 1))
         
+        # Add TOTAL row
         total_row_tree = pd.DataFrame({
             'Sr. No.': [0],
             'School Type': ['TOTAL'],
@@ -517,6 +527,7 @@ def main():
         })
         tree_type_summary_with_total = pd.concat([tree_type_summary, total_row_tree], ignore_index=True)
         
+        # Display the summary table
         st.dataframe(
             tree_type_summary_with_total,
             column_config={
@@ -531,12 +542,6 @@ def main():
             hide_index=True,
         )
         
-        st.markdown("---")
-        st.markdown("### 🌳 Detailed School-wise Data")
-
-        
-        
-        st.info(f"📊 **Showing {len(tree_filtered_df):,} schools** in the table below based on selected filters. Metrics above show complete totals for selected District & School Type.")
         st.markdown("---")
         
         # Display tree data
@@ -567,87 +572,10 @@ def main():
             mime="text/csv",
             key="download_tree"
         )
+    
     # Tab 3: Summary Report
     with tab3:
-        st.subheader("📊 Upload Status Overview")
-        
-        # Pie Charts Section
-        
-        col_pie1, col_pie2 = st.columns(2)
-        
-        with col_pie1:
-            st.markdown("#### 📋 Notification Upload Status")
-            notif_uploaded = len(df[df['Notification Uploaded'] == 'Yes'])
-            notif_not_uploaded = len(df[df['Notification Uploaded'] == 'No'])
-            
-            import plotly.graph_objects as go
-            
-            fig_notif = go.Figure(data=[go.Pie(
-                labels=['Uploaded', 'Not Uploaded'],
-                values=[notif_uploaded, notif_not_uploaded],
-                hole=.4,
-                marker_colors=['#4CAF50', '#f44336'],
-                textinfo='label+percent',
-                textfont_size=14
-            )])
-            
-            fig_notif.update_layout(
-                showlegend=True,
-                height=400,
-                margin=dict(t=50, b=50, l=50, r=50),
-                annotations=[dict(
-                    text=f'{(notif_uploaded/(notif_uploaded+notif_not_uploaded)*100):.1f}%',
-                    x=0.5, y=0.5, font_size=24, showarrow=False
-                )]
-            )
-            
-            st.plotly_chart(fig_notif, use_container_width=True)
-            
-            # Stats
-            st.metric("Total Schools", f"{notif_uploaded + notif_not_uploaded:,}")
-            col_a, col_b = st.columns(2)
-            with col_a:
-                st.metric("✅ Uploaded", f"{notif_uploaded:,}")
-            with col_b:
-                st.metric("❌ Not Uploaded", f"{notif_not_uploaded:,}")
-        
-        with col_pie2:
-            st.markdown("#### 🌳 Tree Plantation Status")
-            tree_uploaded = len(df[df['Tree Uploaded'] == 'Yes'])
-            tree_not_uploaded = len(df[df['Tree Uploaded'] == 'No'])
-            
-            fig_tree = go.Figure(data=[go.Pie(
-                labels=['Uploaded', 'Not Uploaded'],
-                values=[tree_uploaded, tree_not_uploaded],
-                hole=.4,
-                marker_colors=['#4CAF50', '#f44336'],
-                textinfo='label+percent',
-                textfont_size=14
-            )])
-            
-            fig_tree.update_layout(
-                showlegend=True,
-                height=400,
-                margin=dict(t=50, b=50, l=50, r=50),
-                annotations=[dict(
-                    text=f'{(tree_uploaded/(tree_uploaded+tree_not_uploaded)*100):.1f}%',
-                    x=0.5, y=0.5, font_size=24, showarrow=False
-                )]
-            )
-            
-            st.plotly_chart(fig_tree, use_container_width=True)
-            
-            # Stats
-            st.metric("Total Schools", f"{tree_uploaded + tree_not_uploaded:,}")
-            col_a, col_b = st.columns(2)
-            with col_a:
-                st.metric("✅ Uploaded", f"{tree_uploaded:,}")
-            with col_b:
-                st.metric("❌ Not Uploaded", f"{tree_not_uploaded:,}")
-        
-        st.markdown("---")
-        
-
+        st.subheader("📊 Summary Reports")
         
         # 1. District-wise Summary Report
         st.markdown("### 📍 District-wise Summary Report")
@@ -704,7 +632,7 @@ def main():
         # Show overall summary metrics
         col_m1, col_m2, col_m3 = st.columns(3)
         with col_m1:
-            st.metric("📚 Total S_with_totalchools", f"{total_row['Total Schools'].iloc[0]:,}")
+            st.metric("📚 Total Schools", f"{total_row['Total Schools'].iloc[0]:,}")
         with col_m2:
             st.metric("✅ Total Notifications Uploaded", f"{total_row['Eco-Club Notification Uploaded'].iloc[0]:,}")
         with col_m3:
