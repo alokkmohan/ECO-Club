@@ -318,172 +318,182 @@ def main():
     tree_not_uploaded = len(df[df['Tree Uploaded'] == 'No'])
     total_trees = df['Trees Planted'].sum()
     
-    # Custom CSS for colorful metric cards
+    # Custom CSS for colorful metric cards and table styling
     st.markdown("""
         <style>
-        .metric-card {
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        /* Top Metrics Cards */
+        .top-metric-card {
+            padding: 30px 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
             text-align: center;
-            margin: 10px 0;
-            transition: transform 0.2s;
+            margin: 15px 0;
+            transition: all 0.3s;
         }
-        .metric-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        .top-metric-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
-        .metric-icon {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+        .top-metric-icon {
+            font-size: 3.5em;
+            margin-bottom: 15px;
         }
-        .metric-value {
-            font-size: 2em;
-            font-weight: bold;
-            margin: 10px 0;
+        .top-metric-value {
+            font-size: 3em;
+            font-weight: 800;
+            margin: 15px 0;
+            line-height: 1;
         }
-        .metric-label {
-            font-size: 0.95em;
-            color: #666;
-            font-weight: 500;
+        .top-metric-label {
+            font-size: 1.1em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
         .blue-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
             color: white;
         }
-        .blue-card .metric-label { color: #f0f0f0; }
         .green-card {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
             color: white;
         }
-        .green-card .metric-label { color: #f0f0f0; }
         .red-card {
-            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
             color: white;
         }
-        .red-card .metric-label { color: #f0f0f0; }
-        .light-green-card {
-            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
-            color: white;
+        
+        /* Filter Section */
+        .filter-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
-        .light-green-card .metric-label { color: #f0f0f0; }
-        .orange-card {
-            background: linear-gradient(135deg, #f46b45 0%, #eea849 100%);
-            color: white;
+        .filter-label {
+            font-weight: 700;
+            font-size: 1.05em;
+            color: #2c3e50;
+            margin-bottom: 8px;
         }
-        .orange-card .metric-label { color: #f0f0f0; }
-        .dark-green-card {
-            background: linear-gradient(135deg, #134e5e 0%, #71b280 100%);
-            color: white;
+        
+        /* Table Styling */
+        .dataframe {
+            font-size: 1.05em;
         }
-        .dark-green-card .metric-label { color: #f0f0f0; }
+        .dataframe thead tr th {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%) !important;
+            color: white !important;
+            font-weight: 700 !important;
+            padding: 15px !important;
+            text-align: center !important;
+            border: none !important;
+        }
+        .dataframe tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .dataframe tbody tr:nth-child(odd) {
+            background-color: white;
+        }
+        .dataframe tbody tr:last-child {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%) !important;
+            font-weight: 700 !important;
+            border-top: 3px solid #e17055 !important;
+        }
+        .dataframe td {
+            padding: 12px !important;
+            border-bottom: 1px solid #dee2e6 !important;
+        }
+        
+        /* Section Headers */
+        h3 {
+            font-size: 1.8em !important;
+            font-weight: 700 !important;
+            color: #2c3e50 !important;
+            margin-top: 25px !important;
+        }
         </style>
     """, unsafe_allow_html=True)
     
-    # Create 6 column layout
-    col1, col2, col3, col4, col5, col6 = st.columns(6)
+    # Create 3 column layout for top metrics
+    col1, col2, col3 = st.columns(3)
     
     with col1:
         st.markdown(f"""
-            <div class="metric-card blue-card">
-                <div class="metric-icon">🏫</div>
-                <div class="metric-value">{total_schools:,}</div>
-                <div class="metric-label">Total Schools</div>
+            <div class="top-metric-card blue-card">
+                <div class="top-metric-icon">🏫</div>
+                <div class="top-metric-value">{total_schools:,}</div>
+                <div class="top-metric-label">Total Schools</div>
             </div>
         """, unsafe_allow_html=True)
     
     with col2:
         st.markdown(f"""
-            <div class="metric-card green-card">
-                <div class="metric-icon">✅</div>
-                <div class="metric-value">{notif_uploaded:,}</div>
-                <div class="metric-label">Notification Uploaded</div>
+            <div class="top-metric-card green-card">
+                <div class="top-metric-icon">✅</div>
+                <div class="top-metric-value">{notif_uploaded:,}</div>
+                <div class="top-metric-label">Notification Uploaded</div>
             </div>
         """, unsafe_allow_html=True)
     
     with col3:
         st.markdown(f"""
-            <div class="metric-card red-card">
-                <div class="metric-icon">❌</div>
-                <div class="metric-value">{notif_not_uploaded:,}</div>
-                <div class="metric-label">NOT Uploaded</div>
+            <div class="top-metric-card red-card">
+                <div class="top-metric-icon">❌</div>
+                <div class="top-metric-value">{notif_not_uploaded:,}</div>
+                <div class="top-metric-label">Notification NOT Uploaded</div>
             </div>
         """, unsafe_allow_html=True)
     
-    with col4:
-        st.markdown(f"""
-            <div class="metric-card light-green-card">
-                <div class="metric-icon">🌳</div>
-                <div class="metric-value">{tree_uploaded:,}</div>
-                <div class="metric-label">Tree Uploaded Schools</div>
-            </div>
-        """, unsafe_allow_html=True)
-    
-    with col5:
-        st.markdown(f"""
-            <div class="metric-card orange-card">
-                <div class="metric-icon">⚠️</div>
-                <div class="metric-value">{tree_not_uploaded:,}</div>
-                <div class="metric-label">Tree NOT Uploaded</div>
-            </div>
-        """, unsafe_allow_html=True)
-    
-    with col6:
-        st.markdown(f"""
-            <div class="metric-card dark-green-card">
-                <div class="metric-icon">🌲</div>
-                <div class="metric-value">{total_trees:,}</div>
-                <div class="metric-label">Total Trees</div>
-            </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown("---")
-    
-    # Home button
-    if st.button("🏠 Home"):
-        st.rerun()
+    st.markdown("<br>", unsafe_allow_html=True)
     
     # Create tabs
     tab1, tab2, tab3 = st.tabs(["📋 Notification Report", "🌳 Tree Planted Report", "📊 Summary Report"])
     
     # Tab 1: Notification Report
     with tab1:
-        st.subheader("Notification Upload Status")
+        st.markdown("### 📋 Notification Upload Status")
         
-        # Filters for Notification Report
-        col_f1, col_f2, col_f3 = st.columns([1, 1, 1])
+        # Filters for Notification Report in styled container
+        st.markdown('<div class="filter-container">', unsafe_allow_html=True)
+        st.markdown("#### 🔍 Filter Options")
+        col_f1, col_f2, col_f3 = st.columns(3)
         
         with col_f1:
-            # District filter
+            st.markdown('<p class="filter-label">📍 District</p>', unsafe_allow_html=True)
             districts = sorted(df['District'].unique().tolist())
             district_options = ["All"] + districts
             selected_district = st.selectbox(
                 "Select District",
                 options=district_options,
                 index=0,
-                key="notif_district"
+                key="notif_district",
+                label_visibility="collapsed"
             )
         
         with col_f2:
-            # School Management filter
+            st.markdown('<p class="filter-label">🏫 School Type</p>', unsafe_allow_html=True)
             school_type_options = ["All", "Private Unaided Recognized", "Government Aided", 
                                   "Department of Education (Government School)"]
             selected_school_type = st.selectbox(
                 "Select School Type",
                 options=school_type_options,
                 index=0,
-                key="notif_school_type"
+                key="notif_school_type",
+                label_visibility="collapsed"
             )
         
         with col_f3:
-            # Notification Status filter
+            st.markdown('<p class="filter-label">📊 Status</p>', unsafe_allow_html=True)
             notif_filter_options = ["All", "Uploaded", "NOT Uploaded"]
             selected_notif_filter = st.selectbox(
                 "Notification Status",
                 options=notif_filter_options,
                 index=0,
-                key="notif_status_filter"
+                key="notif_status_filter",
+                label_visibility="collapsed"
             )
+        st.markdown('</div>', unsafe_allow_html=True)
         
         # Apply filters - separate for metrics and table display
         with st.spinner('Applying filters...'):
