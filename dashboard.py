@@ -240,9 +240,7 @@ def main():
         st.markdown("- UTTAR PRADESH.xlsx")
         return
     
-    # Display summary metrics
-    col1, col2, col3, col4, col5, col6 = st.columns([1, 1, 1, 1, 1, 1])
-    
+    # Display summary metrics with colorful cards
     total_schools = len(df)
     notif_uploaded = len(df[df['Notification Uploaded'] == 'Yes'])
     notif_not_uploaded = len(df[df['Notification Uploaded'] == 'No'])
@@ -250,23 +248,124 @@ def main():
     tree_not_uploaded = len(df[df['Tree Uploaded'] == 'No'])
     total_trees = df['Trees Planted'].sum()
     
+    # Custom CSS for colorful metric cards
+    st.markdown("""
+        <style>
+        .metric-card {
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin: 10px 0;
+            transition: transform 0.2s;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .metric-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .metric-label {
+            font-size: 0.95em;
+            color: #666;
+            font-weight: 500;
+        }
+        .blue-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .blue-card .metric-label { color: #f0f0f0; }
+        .green-card {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+        .green-card .metric-label { color: #f0f0f0; }
+        .red-card {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+        }
+        .red-card .metric-label { color: #f0f0f0; }
+        .light-green-card {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            color: white;
+        }
+        .light-green-card .metric-label { color: #f0f0f0; }
+        .orange-card {
+            background: linear-gradient(135deg, #f46b45 0%, #eea849 100%);
+            color: white;
+        }
+        .orange-card .metric-label { color: #f0f0f0; }
+        .dark-green-card {
+            background: linear-gradient(135deg, #134e5e 0%, #71b280 100%);
+            color: white;
+        }
+        .dark-green-card .metric-label { color: #f0f0f0; }
+        </style>
+    """, unsafe_allow_html=True)
+    
+    # Create 6 column layout
+    col1, col2, col3, col4, col5, col6 = st.columns(6)
+    
     with col1:
-        st.metric("Total Schools", f"{total_schools:,}")
+        st.markdown(f"""
+            <div class="metric-card blue-card">
+                <div class="metric-icon">🏫</div>
+                <div class="metric-value">{total_schools:,}</div>
+                <div class="metric-label">Total Schools</div>
+            </div>
+        """, unsafe_allow_html=True)
     
     with col2:
-        st.metric("Notif Uploaded", f"{notif_uploaded:,}")
+        st.markdown(f"""
+            <div class="metric-card green-card">
+                <div class="metric-icon">✅</div>
+                <div class="metric-value">{notif_uploaded:,}</div>
+                <div class="metric-label">Notification Uploaded</div>
+            </div>
+        """, unsafe_allow_html=True)
     
     with col3:
-        st.metric("Notif NOT Uploaded", f"{notif_not_uploaded:,}")
+        st.markdown(f"""
+            <div class="metric-card red-card">
+                <div class="metric-icon">❌</div>
+                <div class="metric-value">{notif_not_uploaded:,}</div>
+                <div class="metric-label">NOT Uploaded</div>
+            </div>
+        """, unsafe_allow_html=True)
     
     with col4:
-        st.metric("Tree Uploaded Schools", f"{tree_uploaded:,}")
+        st.markdown(f"""
+            <div class="metric-card light-green-card">
+                <div class="metric-icon">🌳</div>
+                <div class="metric-value">{tree_uploaded:,}</div>
+                <div class="metric-label">Tree Uploaded Schools</div>
+            </div>
+        """, unsafe_allow_html=True)
     
     with col5:
-        st.metric("Tree NOT Uploaded Schools", f"{tree_not_uploaded:,}")
+        st.markdown(f"""
+            <div class="metric-card orange-card">
+                <div class="metric-icon">⚠️</div>
+                <div class="metric-value">{tree_not_uploaded:,}</div>
+                <div class="metric-label">Tree NOT Uploaded</div>
+            </div>
+        """, unsafe_allow_html=True)
     
     with col6:
-        st.metric("Total Trees", f"{total_trees:,}")
+        st.markdown(f"""
+            <div class="metric-card dark-green-card">
+                <div class="metric-icon">🌲</div>
+                <div class="metric-value">{total_trees:,}</div>
+                <div class="metric-label">Total Trees</div>
+            </div>
+        """, unsafe_allow_html=True)
     
     st.markdown("---")
     
