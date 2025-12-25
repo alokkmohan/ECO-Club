@@ -700,12 +700,50 @@ def main():
         
         st.markdown("---")
         
-        # Display notification data
+        # Display notification data with enhanced styling
         notif_df = notif_filtered_df[['District', 'School Name', 'UDISE Code', 'School Management', 
                                       'School Category', 'Notification Uploaded']].copy()
         
+        # Apply color coding to Status column
+        def highlight_status(row):
+            if row['Notification Uploaded'] == 'Yes':
+                return [''] * 5 + ['background-color: #d4edda; color: #155724; font-weight: bold']
+            else:
+                return [''] * 5 + ['background-color: #f8d7da; color: #721c24; font-weight: bold']
+        
+        styled_notif_df = notif_df.style.apply(highlight_status, axis=1).set_table_styles([
+            {
+                'selector': 'thead th',
+                'props': [
+                    ('background-color', '#2c3e50'),
+                    ('color', 'white'),
+                    ('font-weight', 'bold'),
+                    ('text-align', 'center'),
+                    ('padding', '12px'),
+                    ('position', 'sticky'),
+                    ('top', '0'),
+                    ('z-index', '1'),
+                    ('border', '1px solid #ddd')
+                ]
+            },
+            {
+                'selector': 'tbody tr:hover',
+                'props': [
+                    ('background-color', '#e3f2fd'),
+                    ('cursor', 'pointer')
+                ]
+            },
+            {
+                'selector': 'td',
+                'props': [
+                    ('padding', '10px'),
+                    ('border', '1px solid #ddd')
+                ]
+            }
+        ])
+        
         st.dataframe(
-            notif_df,
+            styled_notif_df,
             column_config={
                 "District": st.column_config.TextColumn("District", width="medium"),
                 "School Name": st.column_config.TextColumn("School Name", width="large"),
