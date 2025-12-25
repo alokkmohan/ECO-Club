@@ -395,15 +395,20 @@ def main():
         
         /* Table Styling */
         .dataframe {
-            font-size: 1.05em;
+            font-size: 1.1em;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         .dataframe thead tr th {
-            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%) !important;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
             color: white !important;
-            font-weight: 700 !important;
-            padding: 15px !important;
+            font-weight: 800 !important;
+            font-size: 1.15em !important;
+            padding: 18px !important;
             text-align: center !important;
             border: none !important;
+            letter-spacing: 0.5px;
         }
         .dataframe tbody tr:nth-child(even) {
             background-color: #f8f9fa;
@@ -411,13 +416,21 @@ def main():
         .dataframe tbody tr:nth-child(odd) {
             background-color: white;
         }
+        .dataframe tbody tr:hover {
+            background-color: #e3f2fd !important;
+            transition: background-color 0.2s;
+        }
         .dataframe tbody tr:last-child {
-            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%) !important;
-            font-weight: 700 !important;
-            border-top: 3px solid #e17055 !important;
+            background: linear-gradient(135deg, #fdcb6e 0%, #ffeaa7 100%) !important;
+            font-weight: 800 !important;
+            font-size: 1.15em !important;
+            border-top: 4px solid #e17055 !important;
+        }
+        .dataframe tbody tr:last-child:hover {
+            background: linear-gradient(135deg, #fdcb6e 0%, #ffeaa7 100%) !important;
         }
         .dataframe td {
-            padding: 12px !important;
+            padding: 14px !important;
             border-bottom: 1px solid #dee2e6 !important;
         }
         
@@ -562,17 +575,36 @@ def main():
         notif_uploaded_count = len(notif_base_df[notif_base_df['Notification Uploaded'] == 'Yes'])
         notif_not_uploaded_count = len(notif_base_df[notif_base_df['Notification Uploaded'] == 'No'])
         
-        col1, col2, col3 = st.columns([1, 1, 1])
+        st.markdown("<br>", unsafe_allow_html=True)
+        col1, col2, col3 = st.columns(3)
         with col1:
-            st.metric("Total Schools", f"{notif_total:,}")
+            st.markdown(f"""
+                <div class="metric-card blue-card">
+                    <div class="metric-icon">🏫</div>
+                    <div class="metric-value">{notif_total:,}</div>
+                    <div class="metric-label">Total Schools</div>
+                </div>
+            """, unsafe_allow_html=True)
         with col2:
-            st.metric("✅ Notification Uploaded", f"{notif_uploaded_count:,}")
+            st.markdown(f"""
+                <div class="metric-card green-card">
+                    <div class="metric-icon">✅</div>
+                    <div class="metric-value">{notif_uploaded_count:,}</div>
+                    <div class="metric-label">Notification Uploaded</div>
+                </div>
+            """, unsafe_allow_html=True)
         with col3:
-            st.metric("❌ Notification NOT Uploaded", f"{notif_not_uploaded_count:,}")
+            st.markdown(f"""
+                <div class="metric-card red-card">
+                    <div class="metric-icon">❌</div>
+                    <div class="metric-value">{notif_not_uploaded_count:,}</div>
+                    <div class="metric-label">Notification NOT Uploaded</div>
+                </div>
+            """, unsafe_allow_html=True)
         
         # School Type-wise Notification Summary Table
-        st.markdown("---")
-        st.subheader("School Type-wise Notification Summary")
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        st.markdown('<h2 style="font-size: 2em; font-weight: 700; color: #000000; margin-bottom: 20px;">📊 School Type-wise Notification Summary</h2>', unsafe_allow_html=True)
         
         school_type_summary = notif_base_df.groupby('School Management').agg({
             'School Name': 'count',
