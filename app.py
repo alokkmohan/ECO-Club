@@ -1207,15 +1207,6 @@ def main():
             height=400
         )
         
-        # Show overall summary metrics
-        col_m1, col_m2, col_m3 = st.columns(3)
-        with col_m1:
-            st.metric("📚 Total S_with_totalchools", f"{total_row['Total Schools'].iloc[0]:,}")
-        with col_m2:
-            st.metric("✅ Total Notifications Uploaded", f"{total_row['Eco-Club Notification Uploaded'].iloc[0]:,}")
-        with col_m3:
-            st.metric("📊 Overall Percentage", f"{total_row['Percentage (%)'].iloc[0]:.2f}%")
-        
         # Download button
         st.download_button(
             label="📥 Download District Summary",
