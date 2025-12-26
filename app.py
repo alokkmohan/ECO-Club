@@ -1124,14 +1124,6 @@ def main():
             )
             
             st.plotly_chart(fig_notif, use_container_width=True)
-            
-            # Stats
-            st.metric("Total Schools", f"{notif_uploaded + notif_not_uploaded:,}")
-            col_a, col_b = st.columns(2)
-            with col_a:
-                st.metric("✅ Uploaded", f"{notif_uploaded:,}")
-            with col_b:
-                st.metric("❌ Not Uploaded", f"{notif_not_uploaded:,}")
         
         with col_pie2:
             st.markdown("#### 🌳 Tree Plantation Status")
@@ -1158,14 +1150,6 @@ def main():
             )
             
             st.plotly_chart(fig_tree, use_container_width=True)
-            
-            # Stats
-            st.metric("Total Schools", f"{tree_uploaded + tree_not_uploaded:,}")
-            col_a, col_b = st.columns(2)
-            with col_a:
-                st.metric("✅ Uploaded", f"{tree_uploaded:,}")
-            with col_b:
-                st.metric("❌ Not Uploaded", f"{tree_not_uploaded:,}")
         
         st.markdown("---")
         
