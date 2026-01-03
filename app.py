@@ -1,4 +1,4 @@
-"""
+isk"""
 Eco Club Monitoring Dashboard
 A read-only Streamlit dashboard for monitoring school notification uploads.
 """
@@ -15,7 +15,6 @@ from PIL import Image
 
 
 # Function to get GitHub repository last update time
-@st.cache_data(ttl=300)  # Cache for 5 minutes
 def get_github_last_update():
     try:
         url = "https://api.github.com/repos/alokkmohan/ECO-Club/commits/main"
