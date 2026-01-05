@@ -1,3 +1,4 @@
-git rm filename.xlsx
+git rm filename.csv
 git commit -m "All_Schools_with_Notifications_UTTAR PRADESH.csv"
 git push
+
