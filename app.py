@@ -1152,35 +1152,6 @@ def main():
             
             st.plotly_chart(fig_tree, use_container_width=True)
         
-        # School Type Upload Chart (Below pie charts)
-        st.markdown("#### 🏫 School Type-wise Notification Upload Percentage")
-        # Calculate school type wise percentages
-        school_type_data = df.groupby('School Management').agg({
-            'UDISE Code': 'count',
-            'Notification Uploaded': lambda x: (x == 'Yes').sum()
-        }).reset_index()
-        school_type_data.columns = ['School Type', 'Total', 'Uploaded']
-        school_type_data['Percentage'] = (school_type_data['Uploaded'] / school_type_data['Total'] * 100).round(1)
-        
-        fig_school_type = go.Figure(data=[go.Bar(
-            x=school_type_data['School Type'],
-            y=school_type_data['Percentage'],
-            text=school_type_data['Percentage'].apply(lambda x: f'{x:.1f}%'),
-            textposition='outside',
-            marker_color='#2196F3'
-        )])
-        
-        fig_school_type.update_layout(
-            showlegend=False,
-            height=400,
-            margin=dict(t=20, b=40, l=40, r=40),
-            yaxis_title='Upload Percentage (%)',
-            xaxis_title='School Type',
-            xaxis={'tickangle': -45}
-        )
-        
-        st.plotly_chart(fig_school_type, use_container_width=True)
-        
         st.markdown("---")
         
 
@@ -1288,10 +1259,10 @@ def main():
         
         st.markdown("---")
         
-        # 3. Bottom 10 Worst Performing Districts
-        st.markdown("### ⚠️ Bottom 10 Districts (Need Attention)")
+        # 3. Bottom 25 Worst Performing Districts
+        st.markdown("### ⚠️ Bottom 25 Districts (Need Attention)")
         
-        bottom_10 = district_summary.nsmallest(10, 'Percentage (%)')
+        bottom_10 = district_summary.nsmallest(25, 'Percentage (%)')
         
         col1, col2 = st.columns([2, 1])
         
@@ -1342,11 +1313,11 @@ def main():
         
         with col_d2:
             st.download_button(
-                label="📥 Download Bottom 10",
+                label="📥 Download Bottom 25",
                 data=bottom_10.to_csv(index=False).encode('utf-8'),
-                file_name=f"bottom_10_districts_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                file_name=f"bottom_25_districts_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
                 mime="text/csv",
-                key="download_bottom_10"
+                key="download_bottom_25"
             )
         
         with col_d3:

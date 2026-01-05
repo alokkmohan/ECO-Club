@@ -1168,10 +1168,10 @@ def main():
         
         st.markdown("---")
         
-        # 3. Bottom 25 Worst Performing Districts
-        st.markdown("### ⚠️ Bottom 25 Districts (Need Attention)")
+        # 3. Bottom 10 Worst Performing Districts
+        st.markdown("### ⚠️ Bottom 10 Districts (Need Attention)")
         
-        bottom_10 = district_summary.nsmallest(25, 'Percentage (%)')
+        bottom_10 = district_summary.nsmallest(10, 'Percentage (%)')
         
         col1, col2 = st.columns([2, 1])
         
@@ -1222,11 +1222,11 @@ def main():
         
         with col_d2:
             st.download_button(
-                label="📥 Download Bottom 25",
+                label="📥 Download Bottom 10",
                 data=bottom_10.to_csv(index=False).encode('utf-8'),
-                file_name=f"bottom_25_districts_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                file_name=f"bottom_10_districts_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
                 mime="text/csv",
-                key="download_bottom_25"
+                key="download_bottom_10"
             )
         
         with col_d3:
@@ -1234,7 +1234,7 @@ def main():
             with pd.ExcelWriter('summary_reports.xlsx', engine='openpyxl') as writer:
                 district_summary_with_total.to_excel(writer, sheet_name='All Districts', index=False)
                 top_10.to_excel(writer, sheet_name='Top 10', index=False)
-                bottom_10.to_excel(writer, sheet_name='Bottom 25', index=False)
+                bottom_10.to_excel(writer, sheet_name='Bottom 10', index=False)
                 
                 # Add summary sheet
                 summary_sheet = pd.DataFrame({
