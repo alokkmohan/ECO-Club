@@ -739,6 +739,7 @@ def main():
         
         school_type_summary.columns = ['School Type', 'Total Schools', 'Notification Uploaded']
         school_type_summary['Notification NOT Uploaded'] = school_type_summary['Total Schools'] - school_type_summary['Notification Uploaded']
+        school_type_summary['Percentage (%)'] = ((school_type_summary['Notification Uploaded'] / school_type_summary['Total Schools']) * 100).apply(lambda x: f"{x:.2f}")
         school_type_summary.insert(0, 'Sr. No.', range(1, len(school_type_summary) + 1))
         
         total_row_notif = pd.DataFrame({
@@ -746,7 +747,8 @@ def main():
             'School Type': ['TOTAL'],
             'Total Schools': [school_type_summary['Total Schools'].sum()],
             'Notification Uploaded': [school_type_summary['Notification Uploaded'].sum()],
-            'Notification NOT Uploaded': [school_type_summary['Notification NOT Uploaded'].sum()]
+            'Notification NOT Uploaded': [school_type_summary['Notification NOT Uploaded'].sum()],
+            'Percentage (%)': [f"{((school_type_summary['Notification Uploaded'].sum() / school_type_summary['Total Schools'].sum()) * 100):.2f}"]
         })
         school_type_summary_with_total = pd.concat([school_type_summary, total_row_notif], ignore_index=True)
         
@@ -820,7 +822,7 @@ def main():
                 'text-align': 'center'
             }, subset=['Sr. No.']).set_properties(**{
                 'text-align': 'right'
-            }, subset=['Total Schools', 'Notification Uploaded', 'Notification NOT Uploaded']).hide(axis='index')
+            }, subset=['Total Schools', 'Notification Uploaded', 'Notification NOT Uploaded', 'Percentage (%)']).hide(axis='index')
         
         st.dataframe(
             style_summary_table(school_type_summary_with_total),
@@ -1094,6 +1096,7 @@ def main():
         st.subheader("📊 Upload Status Overview")
         
         # Pie Charts Section
+        import plotly.graph_objects as go
         
         col_pie1, col_pie2 = st.columns(2)
         
@@ -1102,24 +1105,22 @@ def main():
             notif_uploaded = len(df[df['Notification Uploaded'] == 'Yes'])
             notif_not_uploaded = len(df[df['Notification Uploaded'] == 'No'])
             
-            import plotly.graph_objects as go
-            
             fig_notif = go.Figure(data=[go.Pie(
                 labels=['Uploaded', 'Not Uploaded'],
                 values=[notif_uploaded, notif_not_uploaded],
                 hole=.4,
                 marker_colors=['#4CAF50', '#f44336'],
                 textinfo='label+percent',
-                textfont_size=14
+                textfont_size=12
             )])
             
             fig_notif.update_layout(
                 showlegend=True,
-                height=400,
-                margin=dict(t=50, b=50, l=50, r=50),
+                height=300,
+                margin=dict(t=20, b=20, l=20, r=20),
                 annotations=[dict(
                     text=f'{(notif_uploaded/(notif_uploaded+notif_not_uploaded)*100):.1f}%',
-                    x=0.5, y=0.5, font_size=24, showarrow=False
+                    x=0.5, y=0.5, font_size=16, showarrow=False
                 )]
             )
             
@@ -1136,20 +1137,49 @@ def main():
                 hole=.4,
                 marker_colors=['#4CAF50', '#f44336'],
                 textinfo='label+percent',
-                textfont_size=14
+                textfont_size=12
             )])
             
             fig_tree.update_layout(
                 showlegend=True,
-                height=400,
-                margin=dict(t=50, b=50, l=50, r=50),
+                height=300,
+                margin=dict(t=20, b=20, l=20, r=20),
                 annotations=[dict(
                     text=f'{(tree_uploaded/(tree_uploaded+tree_not_uploaded)*100):.1f}%',
-                    x=0.5, y=0.5, font_size=24, showarrow=False
+                    x=0.5, y=0.5, font_size=16, showarrow=False
                 )]
             )
             
             st.plotly_chart(fig_tree, use_container_width=True)
+        
+        # School Type Upload Chart (Below pie charts)
+        st.markdown("#### 🏫 School Type-wise Notification Upload Percentage")
+        # Calculate school type wise percentages
+        school_type_data = df.groupby('School Management').agg({
+            'UDISE Code': 'count',
+            'Notification Uploaded': lambda x: (x == 'Yes').sum()
+        }).reset_index()
+        school_type_data.columns = ['School Type', 'Total', 'Uploaded']
+        school_type_data['Percentage'] = (school_type_data['Uploaded'] / school_type_data['Total'] * 100).round(1)
+        
+        fig_school_type = go.Figure(data=[go.Bar(
+            x=school_type_data['School Type'],
+            y=school_type_data['Percentage'],
+            text=school_type_data['Percentage'].apply(lambda x: f'{x:.1f}%'),
+            textposition='outside',
+            marker_color='#2196F3'
+        )])
+        
+        fig_school_type.update_layout(
+            showlegend=False,
+            height=400,
+            margin=dict(t=20, b=40, l=40, r=40),
+            yaxis_title='Upload Percentage (%)',
+            xaxis_title='School Type',
+            xaxis={'tickangle': -45}
+        )
+        
+        st.plotly_chart(fig_school_type, use_container_width=True)
         
         st.markdown("---")
         
