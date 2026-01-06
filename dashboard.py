@@ -233,25 +233,7 @@ def main():
             overflow: hidden;
         }
         
-        .header-banner::before {
-            content: '🌳';
-            position: absolute;
-            left: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 3.5em;
-            opacity: 0.9;
-        }
-        
-        .header-banner::after {
-            content: '🇮🇳';
-            position: absolute;
-            right: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 3.5em;
-            opacity: 0.9;
-        }
+
         
         .header-title {
             color: white;
@@ -721,29 +703,29 @@ def main():
             'UDISE Code': 'count',
             'Notification Uploaded': lambda x: (x == 'Yes').sum()
         }).reset_index()
-        
+
         school_type_summary.columns = ['School Type', 'Total Schools', 'Notification Uploaded']
-        
+
         # Add Notification NOT Uploaded column
         school_type_summary['Notification NOT Uploaded'] = school_type_summary['Total Schools'] - school_type_summary['Notification Uploaded']
-        
-        # Add Sr. No.
-        school_type_summary.insert(0, 'Sr. No.', range(1, len(school_type_summary) + 1))
-        
-        # Add TOTAL row
+
+        # Add Percentage (%) column
+        school_type_summary['Percentage (%)'] = (school_type_summary['Notification Uploaded'] / school_type_summary['Total Schools'] * 100).map(lambda x: f"{x:.2f}")
+
+        # Add TOTAL row (no Sr. No. column needed)
         total_row_notif = pd.DataFrame({
-            'Sr. No.': [0],
             'School Type': ['TOTAL'],
             'Total Schools': [school_type_summary['Total Schools'].sum()],
             'Notification Uploaded': [school_type_summary['Notification Uploaded'].sum()],
-            'Notification NOT Uploaded': [school_type_summary['Notification NOT Uploaded'].sum()]
+            'Notification NOT Uploaded': [school_type_summary['Notification NOT Uploaded'].sum()],
+            'Percentage (%)': [f"{(school_type_summary['Notification Uploaded'].sum() / school_type_summary['Total Schools'].sum() * 100):.2f}"]
         })
         school_type_summary_with_total = pd.concat([school_type_summary, total_row_notif], ignore_index=True)
         
         # Custom styling for the summary table
         def style_summary_table(df):
             return df.style.set_table_styles([
-                # Header styling
+                # Header styling (plain text, no icons)
                 {
                     'selector': 'thead th',
                     'props': [
@@ -807,8 +789,6 @@ def main():
                     ]
                 }
             ]).set_properties(**{
-                'text-align': 'center'
-            }, subset=['Sr. No.']).set_properties(**{
                 'text-align': 'right'
             }, subset=['Total Schools', 'Notification Uploaded', 'Notification NOT Uploaded']).hide(axis='index')
         
@@ -979,7 +959,6 @@ def main():
         
         # School Type wise Tree Plantation Summary Table
         st.markdown("#### 🌳 School Type-wise Tree Plantation Summary")
-        
         # Calculate summary by school type (using base df which has district + school type filters)
         tree_type_summary = tree_base_df.groupby('School Management').agg({
             'UDISE Code': 'count',
@@ -991,35 +970,22 @@ def main():
         
         # Add Schools with NO Tree Upload column
         tree_type_summary['Schools with NO Tree Upload'] = tree_type_summary['Total Schools'] - tree_type_summary['Schools with Tree Upload']
-        
-        # Add Sr. No.
-        tree_type_summary.insert(0, 'Sr. No.', range(1, len(tree_type_summary) + 1))
-        
-        # Add TOTAL row
+        # Add Percentage (%) column
+        tree_type_summary['Percentage (%)'] = (tree_type_summary['Schools with Tree Upload'] / tree_type_summary['Total Schools'] * 100).map(lambda x: f"{x:.2f}")
+
+        # Add TOTAL row (no Sr. No. column)
         total_row_tree = pd.DataFrame({
-            'Sr. No.': [0],
             'School Type': ['TOTAL'],
             'Total Schools': [tree_type_summary['Total Schools'].sum()],
             'Schools with Tree Upload': [tree_type_summary['Schools with Tree Upload'].sum()],
+            'Total Trees Planted': [tree_type_summary['Total Trees Planted'].sum()],
             'Schools with NO Tree Upload': [tree_type_summary['Schools with NO Tree Upload'].sum()],
-            'Total Trees Planted': [tree_type_summary['Total Trees Planted'].sum()]
+            'Percentage (%)': [f"{(tree_type_summary['Schools with Tree Upload'].sum() / tree_type_summary['Total Schools'].sum() * 100):.2f}"]
         })
         tree_type_summary_with_total = pd.concat([tree_type_summary, total_row_tree], ignore_index=True)
-        
+
         # Display the summary table
-        st.dataframe(
-            tree_type_summary_with_total,
-            column_config={
-                "Sr. No.": st.column_config.TextColumn("Sr. No.", width="small"),
-                "School Type": st.column_config.TextColumn("School Type", width="large"),
-                "Total Schools": st.column_config.NumberColumn("Total Schools", width="medium", format="%d"),
-                "Schools with Tree Upload": st.column_config.NumberColumn("Schools with Tree Upload", width="medium", format="%d"),
-                "Schools with NO Tree Upload": st.column_config.NumberColumn("Schools with NO Tree Upload", width="medium", format="%d"),
-                "Total Trees Planted": st.column_config.NumberColumn("Total Trees Planted", width="medium", format="%d"),
-            },
-            use_container_width=True,
-            hide_index=True,
-        )
+        st.dataframe(tree_type_summary_with_total, use_container_width=True)
         
         st.markdown("---")
         
@@ -1168,10 +1134,10 @@ def main():
         
         st.markdown("---")
         
-        # 3. Bottom 10 Worst Performing Districts
-        st.markdown("### ⚠️ Bottom 10 Districts (Need Attention)")
+        # 3. Bottom 25 Worst Performing Districts
+        st.markdown("### ⚠️ Bottom 25 Districts (Need Attention)")
         
-        bottom_10 = district_summary.nsmallest(10, 'Percentage (%)')
+        bottom_10 = district_summary.nsmallest(25, 'Percentage (%)')
         
         col1, col2 = st.columns([2, 1])
         
@@ -1222,38 +1188,61 @@ def main():
         
         with col_d2:
             st.download_button(
-                label="📥 Download Bottom 10",
+                label="📥 Download Bottom 25",
                 data=bottom_10.to_csv(index=False).encode('utf-8'),
-                file_name=f"bottom_10_districts_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                file_name=f"bottom_25_districts_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
                 mime="text/csv",
-                key="download_bottom_10"
+                key="download_bottom_25"
             )
         
         with col_d3:
-            # Create comprehensive report with totals
-            with pd.ExcelWriter('summary_reports.xlsx', engine='openpyxl') as writer:
+            # Auto-generate Eco-Club-Complete_Summary.xlsx with latest data
+            summary_xlsx = 'Eco-Club-Complete_Summary.xlsx'
+            with pd.ExcelWriter(summary_xlsx, engine='openpyxl') as writer:
+                # All Districts
                 district_summary_with_total.to_excel(writer, sheet_name='All Districts', index=False)
+                # Top 10
                 top_10.to_excel(writer, sheet_name='Top 10', index=False)
-                bottom_10.to_excel(writer, sheet_name='Bottom 10', index=False)
+                # Bottom 25
+                bottom_10.to_excel(writer, sheet_name='Bottom 25', index=False)
+                # Overall Summary (with tree data)
+                total_schools = total_row['Total Schools'].iloc[0]
+                total_notif_uploaded = total_row['Eco-Club Notification Uploaded'].iloc[0]
+                notif_percentage = total_row['Percentage (%)'].iloc[0]
                 
-                # Add summary sheet
+                # Calculate tree totals from main dataframe
+                total_tree_uploaded = len(df[df['Tree Uploaded'] == 'Yes'])
+                total_trees_planted = df['Trees Planted'].sum()
+                tree_percentage = (total_tree_uploaded / total_schools * 100).round(2) if total_schools > 0 else 0
+                
                 summary_sheet = pd.DataFrame({
-                    'Metric': ['Total Schools', 'Total Notifications Uploaded', 'Overall Percentage (%)'],
+                    'Metric': [
+                        'Total Schools', 
+                        'Total Notifications Uploaded', 
+                        'Notification Percentage (%)',
+                        'Total Tree Uploaded',
+                        'Total Trees Planted',
+                        'Tree Upload Percentage (%)'
+                    ],
                     'Value': [
-                        total_row['Total Schools'].iloc[0],
-                        total_row['Eco-Club Notification Uploaded'].iloc[0],
-                        total_row['Percentage (%)'].iloc[0]
+                        total_schools,
+                        total_notif_uploaded,
+                        notif_percentage,
+                        total_tree_uploaded,
+                        total_trees_planted,
+                        tree_percentage
                     ]
                 })
                 summary_sheet.to_excel(writer, sheet_name='Overall Summary', index=False)
-            
-            with open('summary_reports.xlsx', 'rb') as f:
+
+            # Download button for the latest summary report
+            with open(summary_xlsx, 'rb') as f:
                 st.download_button(
-                    label="📥 Download Complete Report (Excel)",
-                    data=f,
-                    file_name=f"complete_summary_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
+                    label="📥 Download Eco-Club-Complete_Summary (Excel)",
+                    data=f.read(),
+                    file_name=f"Eco-Club-Complete_Summary_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    key="download_complete_summary"
+                    key="download_eco_club_complete_summary"
                 )
     
     # Footer with visitor counter
