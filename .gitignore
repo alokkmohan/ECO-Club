@@ -8,8 +8,8 @@ venv/
 env/
 ENV/
 
-# Streamlit
-.streamlit/
+# Streamlit secrets (keep config.toml but ignore secrets)
+.streamlit/secrets.toml
 
 # CSV files (generated from Excel)
 *.csv

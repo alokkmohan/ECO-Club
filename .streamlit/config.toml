@@ -1,0 +1,21 @@
+[theme]
+primaryColor = "#4CAF50"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F0F2F6"
+textColor = "#262730"
+font = "sans serif"
+
+[server]
+headless = true
+enableCORS = false
+port = 8501
+maxUploadSize = 200
+
+[runner]
+# Force fresh data load on each run
+fastReruns = true
+
+[client]
+# Disable toolbar and unnecessary UI elements
+showErrorDetails = false
+toolbarMode = "minimal"
