@@ -29,7 +29,17 @@ desktop.ini
 
 # Logs
 *.log
+logs/
 
 # Data cache
 *.pickle
 *.pkl
+
+# Chrome profile (browser automation data - should not be in git)
+chrome_profile/
+
+# Environment variables
+.env
+
+# Visitor count (auto-updated)
+visitor_count.json
