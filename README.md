@@ -2,6 +2,8 @@
 
 A professional Streamlit-based monitoring dashboard for tracking Eco Club activities across Uttar Pradesh secondary schools.
 
+**Last Updated:** January 6, 2026
+
 ## 📊 Features
 
 - **Dual Report System**
