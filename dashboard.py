@@ -248,6 +248,19 @@ def main():
             color: white;
             font-size: 1.2em;
             font-weight: 500;
+        }
+        
+        /* Version indicator - Updated Jan 6, 2026 */
+        .version-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
             margin-top: 10px;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
@@ -272,6 +285,7 @@ def main():
     # Full-width header banner
     st.markdown("""
         <div class="header-banner">
+            <span class="version-tag">v2.0 - Updated Jan 6, 2026</span>
             <h1 class="header-title">EK PED MAA KE NAAM 2.0</h1>
             <p class="header-subtitle">UP Secondary Schools Eco Club Monitoring Dashboard</p>
         </div>
