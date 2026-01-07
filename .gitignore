@@ -16,6 +16,7 @@ ENV/
 
 # Excel files (keep originals, ignore if large)
 # *.xlsx
+All_Schools_with_Notifications_UTTAR PRADESH.xlsx
 
 # VS Code
 .vscode/
