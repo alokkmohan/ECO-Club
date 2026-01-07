@@ -12,6 +12,12 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import requests
 from PIL import Image
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4, landscape
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from io import BytesIO
 
 
 # Function to get GitHub repository last update time
@@ -58,6 +64,202 @@ st.markdown("""
     <meta name="description" content="Real-time monitoring dashboard for UP Secondary Schools Eco Club activities" />
     <meta name="keywords" content="Eco Club, UP Schools, Tree Plantation, Environmental Monitoring" />
 """, unsafe_allow_html=True)
+
+
+def create_pdf_from_dataframe(df, title, filename_prefix):
+    """Convert DataFrame to PDF with professional formatting."""
+    buffer = BytesIO()
+    
+    # Create PDF document
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=landscape(A4),
+        rightMargin=30,
+        leftMargin=30,
+        topMargin=40,
+        bottomMargin=30
+    )
+    
+    elements = []
+    
+    # Styles
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=20,
+        textColor=colors.HexColor('#1f4788'),
+        spaceAfter=20,
+        alignment=1
+    )
+    
+    # Add title
+    title_para = Paragraph(title, title_style)
+    elements.append(title_para)
+    
+    # Add date
+    date_text = Paragraph(
+        f"Generated on: {datetime.now().strftime('%B %d, %Y at %I:%M %p')}", 
+        styles['Normal']
+    )
+    elements.append(date_text)
+    elements.append(Spacer(1, 0.2*inch))
+    
+    # Limit rows for PDF (max 500 rows)
+    display_df = df.head(500) if len(df) > 500 else df
+    
+    # Convert DataFrame to list
+    data = [display_df.columns.tolist()] + display_df.values.tolist()
+    
+    # Create table
+    table = Table(data, repeatRows=1)
+    
+    # Table style
+    table_style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2c5aa0')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 8),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 6),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey]),
+    ])
+    
+    table.setStyle(table_style)
+    elements.append(table)
+    
+    # Add note if data was truncated
+    if len(df) > 500:
+        elements.append(Spacer(1, 0.1*inch))
+        note = Paragraph(
+            f"<i>Note: Showing first 500 rows out of {len(df)} total rows. Download CSV for complete data.</i>", 
+            styles['Italic']
+        )
+        elements.append(note)
+    
+    # Build PDF
+    doc.build(elements)
+    buffer.seek(0)
+    return buffer
+
+
+def create_complete_summary_pdf(district_summary, top_10, bottom_25, df):
+    """Create complete summary PDF with multiple sheets."""
+    buffer = BytesIO()
+    
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=landscape(A4),
+        rightMargin=30,
+        leftMargin=30,
+        topMargin=40,
+        bottomMargin=30
+    )
+    
+    elements = []
+    styles = getSampleStyleSheet()
+    
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=24,
+        textColor=colors.HexColor('#1f4788'),
+        spaceAfter=30,
+        alignment=1
+    )
+    
+    heading_style = ParagraphStyle(
+        'CustomHeading',
+        parent=styles['Heading2'],
+        fontSize=16,
+        textColor=colors.HexColor('#2c5aa0'),
+        spaceAfter=12,
+        spaceBefore=12
+    )
+    
+    # Main title
+    title = Paragraph("UP Secondary Schools Eco Club - Complete Summary", title_style)
+    elements.append(title)
+    
+    date_text = Paragraph(
+        f"Generated on: {datetime.now().strftime('%B %d, %Y at %I:%M %p')}", 
+        styles['Normal']
+    )
+    elements.append(date_text)
+    elements.append(Spacer(1, 0.3*inch))
+    
+    # Overall Summary
+    total_schools = district_summary[district_summary['District'] != 'TOTAL']['Total Schools'].sum()
+    total_notif = district_summary[district_summary['District'] != 'TOTAL']['Eco-Club Notification Uploaded'].sum()
+    notif_percentage = (total_notif / total_schools * 100) if total_schools > 0 else 0
+    total_tree_uploaded = len(df[df['Tree Uploaded'] == 'Yes'])
+    total_trees_planted = df['Trees Planted'].sum()
+    tree_percentage = (total_tree_uploaded / total_schools * 100) if total_schools > 0 else 0
+    
+    summary_data = [
+        ['Metric', 'Value'],
+        ['Total Schools', f"{total_schools:,}"],
+        ['Total Notifications Uploaded', f"{total_notif:,}"],
+        ['Notification Percentage (%)', f"{notif_percentage:.2f}%"],
+        ['Total Tree Data Uploaded', f"{total_tree_uploaded:,}"],
+        ['Total Trees Planted', f"{total_trees_planted:,}"],
+        ['Tree Upload Percentage (%)', f"{tree_percentage:.2f}%"]
+    ]
+    
+    summary_table = Table(summary_data)
+    summary_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2c5aa0')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('FONTSIZE', (0, 1), (-1, -1), 9),
+    ]))
+    elements.append(summary_table)
+    elements.append(PageBreak())
+    
+    # Helper function to add a section
+    def add_section(title_text, data_df):
+        elements.append(Paragraph(title_text, heading_style))
+        elements.append(Spacer(1, 0.1*inch))
+        
+        table_data = [data_df.columns.tolist()] + data_df.values.tolist()
+        table = Table(table_data, repeatRows=1)
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2c5aa0')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 9),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('FONTSIZE', (0, 1), (-1, -1), 7),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey]),
+        ]))
+        elements.append(table)
+    
+    # Add sections
+    add_section("All Districts Summary", district_summary)
+    elements.append(PageBreak())
+    
+    add_section("Top 10 Best Performing Districts", top_10)
+    elements.append(PageBreak())
+    
+    add_section("Bottom 25 Districts", bottom_25)
+    
+    # Build PDF
+    doc.build(elements)
+    buffer.seek(0)
+    return buffer
 
 
 @st.cache_data(ttl=3600, show_spinner=False, max_entries=1)  # Cache for 1 hour
@@ -874,14 +1076,29 @@ def main():
             height=600
         )
         
-        # Download button
-        st.download_button(
-            label="📥 Download Filtered Report",
-            data=notif_df.to_csv(index=False).encode('utf-8'),
-            file_name=f"notification_report_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
-            mime="text/csv",
-            key="download_notif"
-        )
+        # Download buttons - CSV and PDF
+        col1, col2 = st.columns(2)
+        with col1:
+            st.download_button(
+                label="📥 Download as CSV",
+                data=notif_df.to_csv(index=False).encode('utf-8'),
+                file_name=f"notification_report_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv",
+                key="download_notif_csv"
+            )
+        with col2:
+            pdf_buffer = create_pdf_from_dataframe(
+                notif_df, 
+                "Eco Club Notification Report",
+                "notification_report"
+            )
+            st.download_button(
+                label="📄 Download as PDF",
+                data=pdf_buffer,
+                file_name=f"notification_report_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+                mime="application/pdf",
+                key="download_notif_pdf"
+            )
     
     # Tab 2: Tree Planted Report
     with tab2:
@@ -1023,14 +1240,29 @@ def main():
             height=600
         )
         
-        # Download button
-        st.download_button(
-            label="📥 Download Filtered Report",
-            data=tree_df.to_csv(index=False).encode('utf-8'),
-            file_name=f"tree_report_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
-            mime="text/csv",
-            key="download_tree"
-        )
+        # Download buttons - CSV and PDF
+        col1, col2 = st.columns(2)
+        with col1:
+            st.download_button(
+                label="📥 Download as CSV",
+                data=tree_df.to_csv(index=False).encode('utf-8'),
+                file_name=f"tree_report_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv",
+                key="download_tree_csv"
+            )
+        with col2:
+            pdf_buffer = create_pdf_from_dataframe(
+                tree_df, 
+                "Eco Club Tree Plantation Report",
+                "tree_report"
+            )
+            st.download_button(
+                label="📄 Download as PDF",
+                data=pdf_buffer,
+                file_name=f"tree_report_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+                mime="application/pdf",
+                key="download_tree_pdf"
+            )
     
     # Tab 3: Summary Report
     with tab3:
@@ -1097,14 +1329,29 @@ def main():
         with col_m3:
             st.metric("📊 Overall Percentage", f"{total_row['Percentage (%)'].iloc[0]:.2f}%")
         
-        # Download button
-        st.download_button(
-            label="📥 Download District Summary",
-            data=district_summary.to_csv(index=False).encode('utf-8'),
-            file_name=f"district_summary_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
-            mime="text/csv",
-            key="download_district_summary"
-        )
+        # Download buttons - CSV and PDF
+        col1, col2 = st.columns(2)
+        with col1:
+            st.download_button(
+                label="📥 Download as CSV",
+                data=district_summary.to_csv(index=False).encode('utf-8'),
+                file_name=f"district_summary_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv",
+                key="download_district_summary_csv"
+            )
+        with col2:
+            pdf_buffer = create_pdf_from_dataframe(
+                district_summary, 
+                "District-wise Eco Club Summary",
+                "district_summary"
+            )
+            st.download_button(
+                label="📄 Download as PDF",
+                data=pdf_buffer,
+                file_name=f"district_summary_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+                mime="application/pdf",
+                key="download_district_summary_pdf"
+            )
         
         st.markdown("---")
         
@@ -1151,13 +1398,13 @@ def main():
         # 3. Bottom 25 Worst Performing Districts
         st.markdown("### ⚠️ Bottom 25 Districts (Need Attention)")
         
-        bottom_10 = district_summary.nsmallest(25, 'Percentage (%)')
+        bottom_25 = district_summary.nsmallest(25, 'Percentage (%)')
         
         col1, col2 = st.columns([2, 1])
         
         with col1:
             st.dataframe(
-                bottom_10,
+                bottom_25,
                 column_config={
                     "District": st.column_config.TextColumn("District", width="medium"),
                     "Total Schools": st.column_config.NumberColumn("Total Schools", width="small", format="%d"),
@@ -1178,38 +1425,77 @@ def main():
         
         with col2:
             # Show bottom 3 as warning metrics
-            if len(bottom_10) >= 3:
-                st.metric("⚠️ Needs Most Attention", bottom_10.iloc[0]['District'], 
-                         f"{bottom_10.iloc[0]['Percentage (%)']}%", delta_color="inverse")
-                st.metric("⚠️ Second Priority", bottom_10.iloc[1]['District'], 
-                         f"{bottom_10.iloc[1]['Percentage (%)']}%", delta_color="inverse")
-                st.metric("⚠️ Third Priority", bottom_10.iloc[2]['District'], 
-                         f"{bottom_10.iloc[2]['Percentage (%)']}%", delta_color="inverse")
+            if len(bottom_25) >= 3:
+                st.metric("⚠️ Needs Most Attention", bottom_25.iloc[0]['District'], 
+                         f"{bottom_25.iloc[0]['Percentage (%)']}%", delta_color="inverse")
+                st.metric("⚠️ Second Priority", bottom_25.iloc[1]['District'], 
+                         f"{bottom_25.iloc[1]['Percentage (%)']}%", delta_color="inverse")
+                st.metric("⚠️ Third Priority", bottom_25.iloc[2]['District'], 
+                         f"{bottom_25.iloc[2]['Percentage (%)']}%", delta_color="inverse")
         
         # Combined download for all summary reports
         st.markdown("---")
+        st.markdown("### 📥 Download Summary Reports")
         
-        col_d1, col_d2, col_d3 = st.columns(3)
+        # Row 1: Individual reports
+        col_d1, col_d2 = st.columns(2)
         
         with col_d1:
-            st.download_button(
-                label="📥 Download Top 10",
-                data=top_10.to_csv(index=False).encode('utf-8'),
-                file_name=f"top_10_districts_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
-                mime="text/csv",
-                key="download_top_10"
-            )
+            st.markdown("**Top 10 Districts**")
+            sub_col1, sub_col2 = st.columns(2)
+            with sub_col1:
+                st.download_button(
+                    label="📊 CSV",
+                    data=top_10.to_csv(index=False).encode('utf-8'),
+                    file_name=f"top_10_districts_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                    mime="text/csv",
+                    key="download_top_10_csv"
+                )
+            with sub_col2:
+                pdf_top10 = create_pdf_from_dataframe(
+                    top_10, 
+                    "Top 10 Best Performing Districts",
+                    "top_10_districts"
+                )
+                st.download_button(
+                    label="📄 PDF",
+                    data=pdf_top10,
+                    file_name=f"top_10_districts_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+                    mime="application/pdf",
+                    key="download_top_10_pdf"
+                )
         
         with col_d2:
-            st.download_button(
-                label="📥 Download Bottom 25",
-                data=bottom_10.to_csv(index=False).encode('utf-8'),
-                file_name=f"bottom_25_districts_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
-                mime="text/csv",
-                key="download_bottom_25"
-            )
+            st.markdown("**Bottom 25 Districts**")
+            sub_col1, sub_col2 = st.columns(2)
+            with sub_col1:
+                st.download_button(
+                    label="📊 CSV",
+                    data=bottom_25.to_csv(index=False).encode('utf-8'),
+                    file_name=f"bottom_25_districts_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                    mime="text/csv",
+                    key="download_bottom_25_csv"
+                )
+            with sub_col2:
+                pdf_bottom25 = create_pdf_from_dataframe(
+                    bottom_25, 
+                    "Bottom 25 Districts",
+                    "bottom_25_districts"
+                )
+                st.download_button(
+                    label="📄 PDF",
+                    data=pdf_bottom25,
+                    file_name=f"bottom_25_districts_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+                    mime="application/pdf",
+                    key="download_bottom_25_pdf"
+                )
         
-        with col_d3:
+        # Row 2: Complete summary
+        st.markdown("---")
+        st.markdown("**Complete Summary (All Reports Combined)**")
+        col_summary1, col_summary2 = st.columns(2)
+        
+        with col_summary1:
             # Auto-generate Eco-Club-Complete_Summary.xlsx with latest data
             summary_xlsx = 'Eco-Club-Complete_Summary.xlsx'
             with pd.ExcelWriter(summary_xlsx, engine='openpyxl') as writer:
@@ -1218,7 +1504,7 @@ def main():
                 # Top 10
                 top_10.to_excel(writer, sheet_name='Top 10', index=False)
                 # Bottom 25
-                bottom_10.to_excel(writer, sheet_name='Bottom 25', index=False)
+                bottom_25.to_excel(writer, sheet_name='Bottom 25', index=False)
                 # Overall Summary (with tree data)
                 total_schools = total_row['Total Schools'].iloc[0]
                 total_notif_uploaded = total_row['Eco-Club Notification Uploaded'].iloc[0]
@@ -1252,12 +1538,30 @@ def main():
             # Download button for the latest summary report
             with open(summary_xlsx, 'rb') as f:
                 st.download_button(
-                    label="📥 Download Eco-Club-Complete_Summary (Excel)",
+                    label="� Download Complete Summary (Excel)",
                     data=f.read(),
                     file_name=f"Eco-Club-Complete_Summary_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    key="download_eco_club_complete_summary"
+                    key="download_eco_club_complete_summary_excel",
+                    use_container_width=True
                 )
+        
+        with col_summary2:
+            # Create and download complete PDF
+            pdf_complete = create_complete_summary_pdf(
+                district_summary_with_total, 
+                top_10, 
+                bottom_25, 
+                df
+            )
+            st.download_button(
+                label="📄 Download Complete Summary (PDF)",
+                data=pdf_complete,
+                file_name=f"Eco-Club-Complete_Summary_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+                mime="application/pdf",
+                key="download_eco_club_complete_summary_pdf",
+                use_container_width=True
+            )
     
     # Footer with visitor counter
     st.markdown("---")

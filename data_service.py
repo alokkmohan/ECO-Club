@@ -84,8 +84,21 @@ class DataService:
                 - Error message (empty string if successful)
         """
         try:
-            # Use CSV if available (10-20x faster)
+            # Try CSV first, but validate they're not empty
+            use_csv = False
             if self.school_master_csv.exists() and self.notifications_csv.exists() and self.tree_csv.exists():
+                # Check if CSV files are valid (not empty)
+                try:
+                    # Quick validation - just check if we can read headers
+                    pd.read_csv(self.school_master_csv, nrows=0)
+                    pd.read_csv(self.notifications_csv, nrows=0)
+                    pd.read_csv(self.tree_csv, nrows=0)
+                    use_csv = True
+                except:
+                    logging.warning("CSV files are invalid or empty. Falling back to Excel.")
+                    use_csv = False
+            
+            if use_csv:
                 # Load from CSV - super fast!
                 school_master_df = pd.read_csv(
                     self.school_master_csv,
