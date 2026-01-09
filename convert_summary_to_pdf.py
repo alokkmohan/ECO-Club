@@ -331,102 +331,131 @@ def create_pdf_summary(excel_file='Eco-Club-Complete_Summary.xlsx', output_pdf='
     elements.append(PageBreak())
     
     # ==================== DETAILED DATA SHEETS ====================
-    elements.append(Paragraph("DETAILED DATA SHEETS FROM EXCEL", heading_style))
+    elements.append(Paragraph("DETAILED DATA SHEETS", heading_style))
     elements.append(Spacer(1, 0.2*inch))
     
-    excel = pd.ExcelFile(excel_file)
+    # Process All Districts
+    sheet_heading = Paragraph("All Districts", heading_style)
+    elements.append(sheet_heading)
+    elements.append(Spacer(1, 0.1*inch))
     
-    # Skip 'Top 10' sheet
-    sheets_to_process = [s for s in excel.sheet_names if s != 'Top 10']
-    sheet_count = len(sheets_to_process)
-    for sheet_idx, sheet_name in enumerate(sheets_to_process):
-        print(f"Processing sheet: {sheet_name}")
-        
-        # Add sheet heading
-        sheet_heading = Paragraph(f"{sheet_name}", heading_style)
-        elements.append(sheet_heading)
-        elements.append(Spacer(1, 0.1*inch))
-        
-        # Read sheet
-        df = pd.read_excel(excel_file, sheet_name=sheet_name)
-        
-        # Add Sr. No. column at the beginning
-        df_display = df.copy()
-        df_display.insert(0, 'Sr. No.', range(1, len(df_display) + 1))
-        
-        # Add Performance Category column for "All Districts" sheet
-        if sheet_name == 'All Districts' and 'Percentage (%)' in df.columns:
-            def categorize(pct):
-                if pct >= 75:
-                    return 'EXCELLENT'
-                elif pct >= 50:
-                    return 'GOOD'
-                elif pct >= 25:
-                    return 'AVERAGE'
-                else:
-                    return 'CRITICAL'
-            df_display['Category'] = df['Percentage (%)'].apply(categorize)
-        
-        # Convert DataFrame to list for table
-        data = [df_display.columns.tolist()] + df_display.values.tolist()
-        
-        # Limit rows for better display
-        note = None
-        if len(data) > 100:
-            data = data[:100]
-            note = Paragraph(f"<i>Note: Showing first 100 rows out of {len(df)} total rows</i>", styles['Italic'])
-        
-        # Create table
-        table = Table(data, repeatRows=1)
-        
-        # Base table style
-        table_style = TableStyle([
-            # Header
-            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2c5aa0')),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, 0), 9),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            
-            # Body
-            ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
-            ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-            ('FONTSIZE', (0, 1), (-1, -1), 7),
-            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
-        ])
-        
-        # Apply color-coding for "All Districts" sheet based on performance
-        if sheet_name == 'All Districts' and 'Percentage (%)' in df.columns:
-            pct_col_idx = list(df.columns).index('Percentage (%)')
-            for row_idx in range(1, len(data)):  # Start from 1 to skip header
-                pct_value = data[row_idx][pct_col_idx]
-                try:
-                    pct_num = float(pct_value)
-                    if pct_num >= 75:
-                        table_style.add('BACKGROUND', (0, row_idx), (-1, row_idx), colors.HexColor('#90EE90'))  # Light green
-                    elif pct_num >= 50:
-                        table_style.add('BACKGROUND', (0, row_idx), (-1, row_idx), colors.HexColor('#FFFFE0'))  # Light yellow
-                    elif pct_num >= 25:
-                        table_style.add('BACKGROUND', (0, row_idx), (-1, row_idx), colors.HexColor('#FFE4B5'))  # Moccasin
-                    else:
-                        table_style.add('BACKGROUND', (0, row_idx), (-1, row_idx), colors.HexColor('#FFB6C1'))  # Light pink
-                except:
-                    table_style.add('BACKGROUND', (0, row_idx), (-1, row_idx), colors.white)
+    # Add Sr. No. column at the beginning
+    df_display = district_summary_sorted.copy()
+    df_display.insert(0, 'Sr. No.', range(1, len(df_display) + 1))
+    
+    # Add Performance Category column
+    def categorize(pct):
+        if pct >= 75:
+            return 'EXCELLENT'
+        elif pct >= 50:
+            return 'GOOD'
+        elif pct >= 25:
+            return 'AVERAGE'
         else:
-            # Default alternating rows for other sheets
-            table_style.add('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey])
+            return 'CRITICAL'
+    df_display['Category'] = df_display['Percentage (%)'].apply(categorize)
+    
+    # Convert DataFrame to list for table
+    data = [df_display.columns.tolist()] + df_display.values.tolist()
+    
+    # Create table
+    table = Table(data, repeatRows=1)
+    
+    # Base table style
+    table_style = TableStyle([
+        # Header
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2c5aa0')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 9),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         
-        table.setStyle(table_style)
-        elements.append(table)
-        
-        if note:
-            elements.append(Spacer(1, 0.1*inch))
-            elements.append(note)
-        
-        # Page break after each sheet except last
-        if sheet_idx < sheet_count - 1:
-            elements.append(PageBreak())
+        # Body
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 7),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+    ])
+    
+    # Apply color-coding based on performance
+    pct_col_idx = list(df_display.columns).index('Percentage (%)')
+    for row_idx in range(1, len(data)):  # Start from 1 to skip header
+        pct_value = data[row_idx][pct_col_idx]
+        try:
+            pct_num = float(pct_value)
+            if pct_num >= 75:
+                table_style.add('BACKGROUND', (0, row_idx), (-1, row_idx), colors.HexColor('#90EE90'))  # Light green
+            elif pct_num >= 50:
+                table_style.add('BACKGROUND', (0, row_idx), (-1, row_idx), colors.HexColor('#FFFFE0'))  # Light yellow
+            elif pct_num >= 25:
+                table_style.add('BACKGROUND', (0, row_idx), (-1, row_idx), colors.HexColor('#FFE4B5'))  # Moccasin
+            else:
+                table_style.add('BACKGROUND', (0, row_idx), (-1, row_idx), colors.HexColor('#FFB6C1'))  # Light pink
+        except:
+            table_style.add('BACKGROUND', (0, row_idx), (-1, row_idx), colors.white)
+    
+    table.setStyle(table_style)
+    elements.append(table)
+    elements.append(PageBreak())
+    
+    # Process Bottom 25
+    sheet_heading = Paragraph("Bottom 25 Districts", heading_style)
+    elements.append(sheet_heading)
+    elements.append(Spacer(1, 0.1*inch))
+    
+    # Add Sr. No. column
+    df_bottom = bottom_25.copy()
+    df_bottom.insert(0, 'Sr. No.', range(1, len(df_bottom) + 1))
+    
+    data_bottom = [df_bottom.columns.tolist()] + df_bottom.values.tolist()
+    table_bottom = Table(data_bottom, repeatRows=1)
+    table_bottom.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2c5aa0')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 9),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 7),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey]),
+    ]))
+    elements.append(table_bottom)
+    
+    # Process Overall Summary
+    elements.append(PageBreak())
+    sheet_heading = Paragraph("Overall Summary", heading_style)
+    elements.append(sheet_heading)
+    elements.append(Spacer(1, 0.1*inch))
+    
+    overall_data = [
+        ['Metric', 'Value'],
+        ['Total Districts', str(total_districts)],
+        ['Total Schools', f'{int(total_schools):,}'],
+        ['Total Notifications Uploaded', f'{int(total_notified):,}'],
+        ['Average Completion %', f'{avg_pct:.2f}%'],
+        ['Districts with ≥75%', str(excellent)],
+        ['Districts with 50-75%', str(good)],
+        ['Districts with 25-50%', str(average)],
+        ['Districts with <25%', str(critical)],
+    ]
+    
+    overall_table = Table(overall_data)
+    overall_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2c5aa0')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('FONTSIZE', (0, 1), (-1, -1), 9),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey]),
+    ]))
+    elements.append(overall_table)
     
     # ==================== FOOTER ====================
     elements.append(Spacer(1, 0.8*inch))
@@ -455,4 +484,4 @@ def create_pdf_summary(excel_file='Eco-Club-Complete_Summary.xlsx', output_pdf='
 
 
 if __name__ == "__main__":
-    create_pdf_summary()
+    create_pdf_summary('All_Schools_with_Notifications_UTTAR PRADESH.xlsx', 'Eco-Club-Summary.pdf')
