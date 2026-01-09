@@ -258,6 +258,23 @@ def create_complete_summary_pdf(district_summary, top_10, bottom_25, df):
     
     add_section("Bottom 25 Districts", bottom_25)
     
+    # Add footer with website link
+    elements.append(Spacer(1, 0.5*inch))
+    footer_style = ParagraphStyle(
+        'Footer',
+        parent=styles['Normal'],
+        fontSize=11,
+        textColor=colors.HexColor('#1f4788'),
+        alignment=1,  # Center
+        spaceAfter=12
+    )
+    footer_text = Paragraph(
+        "<b>लाइव अपडेट्स और विस्तृत जानकारी के लिए यहां visit करें:</b><br/>"
+        "<a href='https://ecoclubup.streamlit.app/' color='blue'>https://ecoclubup.streamlit.app/</a>",
+        footer_style
+    )
+    elements.append(footer_text)
+    
     # Build PDF
     doc.build(elements)
     buffer.seek(0)
