@@ -13,6 +13,7 @@ from reportlab.lib.units import inch
 from datetime import datetime
 from io import BytesIO
 import os
+import pytz
 
 
 def generate_qr_code():
@@ -77,9 +78,10 @@ def create_pdf_summary(excel_file='Eco-Club-Complete_Summary.xlsx', output_pdf='
     elements.append(subtitle)
     elements.append(Spacer(1, 0.3*inch))
     
-    # Date - Always use current system time
-    current_time = datetime.now()
-    date_text = Paragraph(f"<b>Generated on:</b> {current_time.strftime('%B %d, %Y at %I:%M %p')}", styles['Normal'])
+    # Date - Always use current system time in Indian timezone (IST)
+    ist_timezone = pytz.timezone('Asia/Kolkata')
+    current_time = datetime.now(ist_timezone)
+    date_text = Paragraph(f"<b>Generated on:</b> {current_time.strftime('%B %d, %Y at %I:%M %p IST')}", styles['Normal'])
     elements.append(date_text)
     
     elements.append(Spacer(1, 0.3*inch))
@@ -338,6 +340,11 @@ def create_pdf_summary(excel_file='Eco-Club-Complete_Summary.xlsx', output_pdf='
     sheet_heading = Paragraph("All Districts", heading_style)
     elements.append(sheet_heading)
     elements.append(Spacer(1, 0.1*inch))
+    
+    # Use df as district_summary_sorted (sort by percentage descending)
+    district_summary_sorted = df.copy()
+    if 'Percentage (%)' in district_summary_sorted.columns:
+        district_summary_sorted = district_summary_sorted.sort_values('Percentage (%)', ascending=False).reset_index(drop=True)
     
     # Add Sr. No. column at the beginning
     df_display = district_summary_sorted.copy()
