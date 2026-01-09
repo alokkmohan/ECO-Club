@@ -40,7 +40,7 @@ def get_github_last_update():
 # Page configuration
 st.set_page_config(
     page_title="UP Secondary Schools Eco Club Monitoring Dashboard",
-    page_icon=Image.open("favicon.png"),
+    page_icon=Image.open("favicon.png"),  # Custom Eco Club icon
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
