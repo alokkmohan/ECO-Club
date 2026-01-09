@@ -114,6 +114,23 @@ def create_pdf_summary(excel_file='Eco-Club-Complete_Summary.xlsx', output_pdf='
         if sheet_name != excel.sheet_names[-1]:
             elements.append(PageBreak())
     
+    # Add footer with website link
+    elements.append(Spacer(1, 0.5*inch))
+    footer_style = ParagraphStyle(
+        'Footer',
+        parent=styles['Normal'],
+        fontSize=11,
+        textColor=colors.HexColor('#1f4788'),
+        alignment=1,  # Center
+        spaceAfter=12
+    )
+    footer_text = Paragraph(
+        "<b>लाइव अपडेट्स और विस्तृत जानकारी के लिए यहां visit करें:</b><br/>"
+        "<a href='https://ecoclubup.streamlit.app/' color='blue'>https://ecoclubup.streamlit.app/</a>",
+        footer_style
+    )
+    elements.append(footer_text)
+    
     # Build PDF
     print(f"Creating PDF: {output_pdf}")
     doc.build(elements)
