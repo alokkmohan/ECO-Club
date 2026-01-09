@@ -54,8 +54,10 @@ def create_pdf_summary(excel_file='Eco-Club-Complete_Summary.xlsx', output_pdf='
     title = Paragraph("UP Secondary Schools Eco Club - Complete Summary", title_style)
     elements.append(title)
     
-    # Date
-    date_text = Paragraph(f"Generated on: {datetime.now().strftime('%B %d, %Y at %I:%M %p')}", styles['Normal'])
+    # Date - Always use current system time
+    from datetime import datetime as dt
+    current_time = dt.now()
+    date_text = Paragraph(f"Generated on: {current_time.strftime('%B %d, %Y at %I:%M %p')}", styles['Normal'])
     elements.append(date_text)
     elements.append(Spacer(1, 0.3*inch))
     

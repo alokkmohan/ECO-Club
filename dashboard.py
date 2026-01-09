@@ -97,9 +97,11 @@ def create_pdf_from_dataframe(df, title, filename_prefix):
     title_para = Paragraph(title, title_style)
     elements.append(title_para)
     
-    # Add date
+    # Add date - Always use current system time for PDF generation
+    from datetime import datetime as dt
+    current_time = dt.now()
     date_text = Paragraph(
-        f"Generated on: {datetime.now().strftime('%B %d, %Y at %I:%M %p')}", 
+        f"Generated on: {current_time.strftime('%B %d, %Y at %I:%M %p')}", 
         styles['Normal']
     )
     elements.append(date_text)
