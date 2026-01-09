@@ -172,7 +172,7 @@ def create_complete_summary_pdf(district_summary, top_10, bottom_25, df):
         fontSize=24,
         textColor=colors.HexColor('#1f4788'),
         spaceAfter=30,
-        alignment=1
+        alignment=1  # Center
     )
     
     heading_style = ParagraphStyle(
@@ -181,7 +181,8 @@ def create_complete_summary_pdf(district_summary, top_10, bottom_25, df):
         fontSize=16,
         textColor=colors.HexColor('#2c5aa0'),
         spaceAfter=12,
-        spaceBefore=12
+        spaceBefore=12,
+        alignment=1  # Center
     )
     
     # Main title
@@ -195,7 +196,8 @@ def create_complete_summary_pdf(district_summary, top_10, bottom_25, df):
     elements.append(date_text)
     elements.append(Spacer(1, 0.3*inch))
     
-    # Overall Summary
+    # Overall Summary with Performance Categories
+    total_districts = len(district_summary[district_summary['District'] != 'TOTAL'])
     total_schools = district_summary[district_summary['District'] != 'TOTAL']['Total Schools'].sum()
     total_notif = district_summary[district_summary['District'] != 'TOTAL']['Eco-Club Notification Uploaded'].sum()
     notif_percentage = (total_notif / total_schools * 100) if total_schools > 0 else 0
@@ -203,60 +205,170 @@ def create_complete_summary_pdf(district_summary, top_10, bottom_25, df):
     total_trees_planted = df['Trees Planted'].sum()
     tree_percentage = (total_tree_uploaded / total_schools * 100) if total_schools > 0 else 0
     
+    # Calculate district categories
+    dist_data = district_summary[district_summary['District'] != 'TOTAL'].copy()
+    excellent = len(dist_data[dist_data['Percentage (%)'] >= 75])
+    good = len(dist_data[(dist_data['Percentage (%)'] >= 50) & (dist_data['Percentage (%)'] < 75)])
+    average = len(dist_data[(dist_data['Percentage (%)'] >= 25) & (dist_data['Percentage (%)'] < 50)])
+    critical = len(dist_data[dist_data['Percentage (%)'] < 25])
+    
     summary_data = [
-        ['Metric', 'Value'],
-        ['Total Schools', f"{total_schools:,}"],
-        ['Total Notifications Uploaded', f"{total_notif:,}"],
-        ['Notification Percentage (%)', f"{notif_percentage:.2f}%"],
-        ['Total Tree Data Uploaded', f"{total_tree_uploaded:,}"],
-        ['Total Trees Planted', f"{total_trees_planted:,}"],
-        ['Tree Upload Percentage (%)', f"{tree_percentage:.2f}%"]
+        ['Metric', 'Value', 'Performance'],
+        ['Total Districts', str(total_districts), '75 Districts'],
+        ['Total Schools', f"{total_schools:,}", f'{total_schools:,} Schools'],
+        ['Notifications Uploaded', f"{total_notif:,}", f'{notif_percentage:.1f}% Complete'],
+        ['Trees Planted', f"{total_trees_planted:,}", f'{tree_percentage:.1f}% Uploaded'],
+        ['', '', ''],
+        ['EXCELLENT (≥75%)', str(excellent), f'{excellent} Districts'],
+        ['GOOD (50-75%)', str(good), f'{good} Districts'],
+        ['AVERAGE (25-50%)', str(average), f'{average} Districts'],
+        ['CRITICAL (<25%)', str(critical), f'{critical} Districts'],
     ]
     
-    summary_table = Table(summary_data)
+    summary_table = Table(summary_data, colWidths=[2.8*inch, 1.8*inch, 2*inch])
     summary_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2c5aa0')),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#1f4788')),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 10),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('FONTSIZE', (0, 0), (-1, 0), 11),
+        ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-        ('FONTSIZE', (0, 1), (-1, -1), 9),
+        ('ROWBACKGROUNDS', (0, 1), (-1, 5), [colors.white, colors.lightgrey]),
+        # Color-code category rows
+        ('BACKGROUND', (0, 6), (-1, 6), colors.HexColor('#90EE90')),  # Light green for Excellent
+        ('BACKGROUND', (0, 7), (-1, 7), colors.HexColor('#FFFFE0')),  # Light yellow for Good
+        ('BACKGROUND', (0, 8), (-1, 8), colors.HexColor('#FFE4B5')),  # Moccasin for Average
+        ('BACKGROUND', (0, 9), (-1, 9), colors.HexColor('#FFB6C1')),  # Light pink for Critical
+        ('FONTNAME', (0, 6), (-1, 9), 'Helvetica-Bold'),
     ]))
     elements.append(summary_table)
     elements.append(PageBreak())
     
-    # Helper function to add a section
-    def add_section(title_text, data_df):
-        elements.append(Paragraph(title_text, heading_style))
+    # Detailed Category Breakdown Section with Tables (Start from Page 2)
+    category_heading = Paragraph("PERFORMANCE CATEGORY DETAILS", heading_style)
+    elements.append(category_heading)
+    elements.append(Spacer(1, 0.2*inch))
+    
+    # Helper function to create category table
+    def create_category_table(category_df, category_name, bg_color):
+        if len(category_df) == 0:
+            return
+        
+        cat_heading = Paragraph(category_name, heading_style)
+        elements.append(cat_heading)
         elements.append(Spacer(1, 0.1*inch))
         
-        table_data = [data_df.columns.tolist()] + data_df.values.tolist()
-        table = Table(table_data, repeatRows=1)
-        table.setStyle(TableStyle([
+        # Add Sr. No. and prepare data
+        cat_df = category_df.copy()
+        cat_df.insert(0, 'Sr. No.', range(1, len(cat_df) + 1))
+        cat_data = [cat_df.columns.tolist()] + cat_df.values.tolist()
+        
+        cat_table = Table(cat_data, repeatRows=1)
+        cat_table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2c5aa0')),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
             ('FONTSIZE', (0, 0), (-1, 0), 9),
             ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
             ('FONTSIZE', (0, 1), (-1, -1), 7),
             ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
-            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey]),
+            ('BACKGROUND', (0, 1), (-1, -1), bg_color),
         ]))
+        elements.append(cat_table)
+        elements.append(Spacer(1, 0.2*inch))
+    
+    # EXCELLENT Districts Table (sorted by % descending - best first)
+    excellent_df = dist_data[dist_data['Percentage (%)'] >= 75][['District', 'Total Schools', 'Eco-Club Notification Uploaded', 'Percentage (%)']].copy()
+    excellent_df = excellent_df.sort_values('Percentage (%)', ascending=False)
+    create_category_table(excellent_df, f"EXCELLENT PERFORMERS (≥75%) - {excellent} Districts", colors.HexColor('#90EE90'))
+    
+    # GOOD Districts Table (sorted by % descending - best first)
+    good_df = dist_data[(dist_data['Percentage (%)'] >= 50) & (dist_data['Percentage (%)'] < 75)][['District', 'Total Schools', 'Eco-Club Notification Uploaded', 'Percentage (%)']].copy()
+    good_df = good_df.sort_values('Percentage (%)', ascending=False)
+    create_category_table(good_df, f"GOOD PERFORMERS (50-75%) - {good} Districts", colors.HexColor('#FFFFE0'))
+    
+    # AVERAGE Districts Table (sorted by % ascending - worst first)
+    average_df = dist_data[(dist_data['Percentage (%)'] >= 25) & (dist_data['Percentage (%)'] < 50)][['District', 'Total Schools', 'Eco-Club Notification Uploaded', 'Percentage (%)']].copy()
+    average_df = average_df.sort_values('Percentage (%)', ascending=True)
+    create_category_table(average_df, f"AVERAGE PERFORMERS (25-50%) - {average} Districts", colors.HexColor('#FFE4B5'))
+    
+    # CRITICAL Districts Table (sorted by % ascending - worst first)
+    critical_df = dist_data[dist_data['Percentage (%)'] < 25][['District', 'Total Schools', 'Eco-Club Notification Uploaded', 'Percentage (%)']].copy()
+    critical_df = critical_df.sort_values('Percentage (%)', ascending=True)
+    create_category_table(critical_df, f"CRITICAL - NEEDS IMMEDIATE ATTENTION (<25%) - {critical} Districts", colors.HexColor('#FFB6C1'))
+    
+    elements.append(PageBreak())
+    
+    # Helper function to add a section with color-coding and Sr. No.
+    def add_section(title_text, data_df, color_code=False):
+        elements.append(Paragraph(title_text, heading_style))
+        elements.append(Spacer(1, 0.1*inch))
+        
+        # Add Sr. No. column
+        df_copy = data_df.copy()
+        df_copy.insert(0, 'Sr. No.', range(1, len(df_copy) + 1))
+        
+        # Add Category column for All Districts
+        if color_code and 'Percentage (%)' in data_df.columns:
+            def categorize(pct):
+                if pct >= 75:
+                    return 'EXCELLENT'
+                elif pct >= 50:
+                    return 'GOOD'
+                elif pct >= 25:
+                    return 'AVERAGE'
+                else:
+                    return 'CRITICAL'
+            df_copy['Category'] = df_copy['Percentage (%)'].apply(categorize)
+        
+        table_data = [df_copy.columns.tolist()] + df_copy.values.tolist()
+        
+        table = Table(table_data, repeatRows=1)
+        
+        # Base style
+        table_style = TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2c5aa0')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 9),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+            ('FONTSIZE', (0, 1), (-1, -1), 7),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+        ])
+        
+        # Apply color-coding if requested
+        if color_code and 'Percentage (%)' in data_df.columns:
+            pct_col_idx = list(df_copy.columns).index('Percentage (%)')
+            for row_idx in range(1, len(table_data)):
+                pct_value = table_data[row_idx][pct_col_idx]
+                try:
+                    pct_num = float(pct_value)
+                    if pct_num >= 75:
+                        table_style.add('BACKGROUND', (0, row_idx), (-1, row_idx), colors.HexColor('#90EE90'))
+                    elif pct_num >= 50:
+                        table_style.add('BACKGROUND', (0, row_idx), (-1, row_idx), colors.HexColor('#FFFFE0'))
+                    elif pct_num >= 25:
+                        table_style.add('BACKGROUND', (0, row_idx), (-1, row_idx), colors.HexColor('#FFE4B5'))
+                    else:
+                        table_style.add('BACKGROUND', (0, row_idx), (-1, row_idx), colors.HexColor('#FFB6C1'))
+                except:
+                    table_style.add('BACKGROUND', (0, row_idx), (-1, row_idx), colors.white)
+        else:
+            table_style.add('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey])
+        
+        table.setStyle(table_style)
         elements.append(table)
     
-    # Add sections
-    add_section("All Districts Summary", district_summary)
+    # Add sections with color-coding for All Districts
+    add_section("All Districts Summary", district_summary, color_code=True)
     elements.append(PageBreak())
     
-    add_section("Top 10 Best Performing Districts", top_10)
-    elements.append(PageBreak())
+    # Removed Top 10 section - directly go to category details
     
-    add_section("Bottom 25 Districts", bottom_25)
+    add_section("Bottom 25 Districts", bottom_25, color_code=False)
     
     # Add footer with website link
     elements.append(Spacer(1, 0.5*inch))
@@ -274,6 +386,7 @@ def create_complete_summary_pdf(district_summary, top_10, bottom_25, df):
         footer_style
     )
     elements.append(footer_text)
+    elements.append(PageBreak())
     
     # Build PDF
     doc.build(elements)
