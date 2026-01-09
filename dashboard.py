@@ -269,7 +269,7 @@ def create_complete_summary_pdf(district_summary, top_10, bottom_25, df):
         spaceAfter=12
     )
     footer_text = Paragraph(
-        "<b>लाइव अपडेट्स और विस्तृत जानकारी के लिए यहां visit करें:</b><br/>"
+        "<b>For live updates and detailed information, visit:</b><br/>"
         "<a href='https://ecoclubup.streamlit.app/' color='blue'>https://ecoclubup.streamlit.app/</a>",
         footer_style
     )

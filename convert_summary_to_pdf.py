@@ -127,7 +127,7 @@ def create_pdf_summary(excel_file='Eco-Club-Complete_Summary.xlsx', output_pdf='
         spaceAfter=12
     )
     footer_text = Paragraph(
-        "<b>लाइव अपडेट्स और विस्तृत जानकारी के लिए यहां visit करें:</b><br/>"
+        "<b>For live updates and detailed information, visit:</b><br/>"
         "<a href='https://ecoclubup.streamlit.app/' color='blue'>https://ecoclubup.streamlit.app/</a>",
         footer_style
     )
