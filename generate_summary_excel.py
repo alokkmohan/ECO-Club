@@ -6,7 +6,7 @@ This ensures summary Excel is always up-to-date with latest source data
 import pandas as pd
 from datetime import datetime
 
-def generate_summary_excel(source_file='All_Schools_with_Notifications_UTTAR PRADESH.xlsx', 
+def generate_summary_excel(source_file='Updated_School_Data.csv', 
                            output_file='Eco-Club-Complete_Summary.xlsx'):
     """Generate complete summary Excel from source data."""
     
@@ -14,7 +14,7 @@ def generate_summary_excel(source_file='All_Schools_with_Notifications_UTTAR PRA
     
     try:
         # Read source data
-        df_all = pd.read_excel(source_file)
+        df_all = pd.read_csv(source_file)
         print(f"Loaded {len(df_all)} school records")
         
         # Generate district-wise summary

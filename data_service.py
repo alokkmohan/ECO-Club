@@ -84,6 +84,24 @@ class DataService:
                 - Error message (empty string if successful)
         """
         try:
+            # Check for pre-merged updated data file first
+            updated_data_file = self.data_folder / "Updated_School_Data.csv"
+            if updated_data_file.exists():
+                try:
+                    df = pd.read_csv(updated_data_file, dtype={
+                        'District': str,
+                        'School Name': str,
+                        'UDISE Code': str,
+                        'School Management': str,
+                        'School Category': str,
+                        'Notification Uploaded': str,
+                        'Tree Uploaded': str,
+                        'Trees Planted': int
+                    })
+                    return df, True, ""
+                except Exception as e:
+                    logging.warning(f"Error loading Updated_School_Data.csv: {e}. Falling back to merge process.")
+            
             # Try CSV first, but validate they're not empty
             use_csv = False
             if self.school_master_csv.exists() and self.notifications_csv.exists() and self.tree_csv.exists():
