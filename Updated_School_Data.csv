@@ -314,7 +314,7 @@ AGRA,SRI RAM CHANDRA PUBLIC INTER COLLEGE,09150502803,Private Unaided Recognized
 AGRA,ST. THOMAS SCHOOL SUNARI BICHPURI AGRA,09150501503,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,0,No
 AGRA,Shri Ram Centennial School,09150503403,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 AGRA,V.D. INTER COLLEGE,09150501214,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
-AGRA,Vijaya International School,09150501305,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
+AGRA,Vijaya International School,09150501305,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 AGRA,A V M D INSTITUTE 277 SAWAI BHAWAI ROAD SAWANI ETMADPUR AGRA,09150600212,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
 AGRA,"BAUHARE LAKSHMAN PRASAD H.S.S., JATAUA",09150605810,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,0,No
 AGRA,BRIJ PUBLIC SCHOOL GUDHA BAHRAMPUR ETMADPUR AGRA,09150602004,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
@@ -666,7 +666,7 @@ AGRA,FATEH CHAND INTER COLLEGE,09151714157,Government Aided,Upper Primary to Hig
 AGRA,G B INTER COLLEGE BANKE BASERA FARM SIKANDARPUR DAYALBAGH AGRA,09151720344,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 AGRA,G.D.GOENKA PUB.SCHOOL AGRA,09151712256,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,2,Yes
 AGRA,GANESH RAM NAGAR SARASWATI BALIKA VIDYA MANDIR BALKESHWAR AGRA,09151714239,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
-AGRA,GAYTRI PUBLIC SCHOOL SHASTRIPURAM AGRA,09151721201,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
+AGRA,GAYTRI PUBLIC SCHOOL SHASTRIPURAM AGRA,09151721201,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 AGRA,GEETA GYAN GIRLS HIGHER SECONDARY SCHOOL,09151700171,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
 AGRA,GEETAM SINGH INTER COLLEGE,09150605203,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
 AGRA,GLORIOUS PUB SCH. GURU RAMDAS NAGAR KAKRETHA AGRA,09151720706,Private Unaided Recognized,Upper Primary to Secondary (6–10),Yes,0,No
@@ -1868,7 +1868,7 @@ ALIGARH,SHRI SONPAL SINGH HIGHER SECONDARY SCHOOL,09121307891,Private Unaided Re
 ALIGARH,SUBHASH UCHTAR MADHYMIC VID ALIGARH,09121307829,Government Aided,Upper Primary to Secondary (6–10),No,1,Yes
 ALIGARH,SUSHILA DEVI ADARSH K.U.M.V.,09121307864,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
 ALIGARH,TEEKARAM KANYA IC ALIGARH,09121306049,Government Aided,Upper Primary to Higher Secondary (6–12),No,0,No
-ALIGARH,THE BLOSSOMS SCHOOL,09121305402,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,51,Yes
+ALIGARH,THE BLOSSOMS SCHOOL,09121305402,Private Unaided Recognized,Upper Primary to Secondary (6–10),Yes,51,Yes
 ALIGARH,THREE DOTS SEWA MARG NIRANJANPURUI,09121307006,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,2,Yes
 ALIGARH,UDAY SINGH JAIN IC ALIGARH,09121306053,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,23,Yes
 ALIGARH,VASUDEV  HIGHER SECONDARY SCHOOL ALIGARH,09121307803,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,0,No
@@ -3105,7 +3105,7 @@ AZAMGARH,S.B.J. HIGHER SECONDARY SCHOOL,09611520401,Private Unaided Recognized,U
 AZAMGARH,S.I.D.G.H.S.S. MIRIYA RANAHA,09611506606,Government Aided,Secondary + Higher Secondary (9–12),No,0,No
 AZAMGARH,S.K. UMV GADDOPUR,09611510103,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,0,No
 AZAMGARH,S.K.BALIKA I.C.GADDOPUR,09611510102,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
-AZAMGARH,S.K.N.S.I.C. BAROHI FATEHPUR,09611500108,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
+AZAMGARH,S.K.N.S.I.C. BAROHI FATEHPUR,09611500108,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,0,No
 AZAMGARH,S.N.B. INTER COLLEGE SUNDARPUR,09611518402,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,30,Yes
 AZAMGARH,S.N.H.S.S. KAKRAHI DULAR,09611510702,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,0,No
 AZAMGARH,S.P.H.S.S JALALPUR HOLPUR,09611510602,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,0,No
@@ -3145,7 +3145,7 @@ AZAMGARH,S.S.J. INTER COLLEGE,09610800103,Government Aided,Upper Primary to High
 AZAMGARH,S.S.Y.I.C. SAJAI KHANJAHANPUR,09610804605,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,14,Yes
 AZAMGARH,S.V.G.H.S.S. SEKHVALIYA,09610811705,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,0,No
 AZAMGARH,SHRI KRISHNA INTER COLLEGE BHARMAU,09610804016,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
-AZAMGARH,SRI GOPAL BALIKA INTER COLLEGE,09610800309,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,1,Yes
+AZAMGARH,SRI GOPAL BALIKA INTER COLLEGE,09610800309,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,1,Yes
 AZAMGARH,SRI KAIFY AZMI KANYA INTER COLLEGE,09610803205,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,0,No
 AZAMGARH,A.I.C.BARDIHA,09611407804,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,0,No
 AZAMGARH,AMINA GIRLS HIGHSCHOOL KARMAINI,09611401213,Private Unaided Recognized,Secondary only (9–10),No,0,No
@@ -3814,13 +3814,13 @@ BAGHPAT,NEHRU SMA. I.C BUIDHERA,09080103602,Government Aided,Upper Primary to Hi
 BAGHPAT,PARA MOUNT PUBLIC SCHOOL TATEERI,09080105210,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,0,No
 BAGHPAT,SANT ANGEL PUBLIC SCHOOL BAGHPAT,09080104912,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 BAGHPAT,SARVHITKARI I.C MEETLI GORIPUR,09080103906,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,4,Yes
-BAGHPAT,SARVODAY H. S. SCHOOL PAWALA,09080104304,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,3,Yes
+BAGHPAT,SARVODAY H. S. SCHOOL PAWALA,09080104304,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,3,Yes
 BAGHPAT,SARVODAY PUBLIC SCHOOL TATEERI,09080105209,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 BAGHPAT,SASTRI I SMARAK INTER COLLEGE AHAMAD SHAHPUR  PADRA,09080102803,Government Aided,Primary to Higher Secondary (1–12),Yes,5,Yes
 BAGHPAT,SHAHEED MANVEER NATIONAL JUNIOR HIGH SCHOOL BALI BAGHPAT,09080104707,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 BAGHPAT,SHREE GOPICHAND BHARTRI INTER COLLEGE AHERA,09080104205,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,46,Yes
 BAGHPAT,SHRI DADU BALRAM SANSTRIT MAHAVIDHALA,09080103806,Government Aided,Upper Primary to Higher Secondary (6–12),No,0,No
-BAGHPAT,SHRI DURGAVES SANSKRI SCHOOL GWALIKHERA,09080103807,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
+BAGHPAT,SHRI DURGAVES SANSKRI SCHOOL GWALIKHERA,09080103807,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 BAGHPAT,SHRI SARDAR PATEL I.C. BALI MEWALA,09080104802,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,4,Yes
 BAGHPAT,SHRI YAMUNA INTER COLLEGE,09080104906,Government Aided,Primary to Higher Secondary (1–12),Yes,53,Yes
 BAGHPAT,SRI JAIN INTER COLLEGE BAGHPAT,09080104908,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,2,Yes
@@ -3912,7 +3912,7 @@ BAGHPAT,ADARSH S.S.I.C. KIRTHAL,09080500405,Government Aided,Upper Primary to Hi
 BAGHPAT,ALPINE PUBLIC SCHOOL LOOMB,09080500506,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 BAGHPAT,AMBITION HIGHER SECONDARY SCHOOL,09080502826,Private Unaided Recognized,Secondary only (9–10),No,0,No
 BAGHPAT,ARYA MAHA VIDHYALAYA,09080500407,Government Aided,Upper Primary to Higher Secondary (6–12),No,0,No
-BAGHPAT,B.S.S. HIGHER SECONDARY SCHOOL,09080503005,Government Aided,Upper Primary to Higher Secondary (6–12),No,4,Yes
+BAGHPAT,B.S.S. HIGHER SECONDARY SCHOOL,09080503005,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,4,Yes
 BAGHPAT,CH KUNDAN SINGH INTER COLLEGE,09080501206,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
 BAGHPAT,CH. HUKAM SINGH HIGH SCHOOL NANGLA,09080502705,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,0,No
 BAGHPAT,G.G.I.C TUGANA,09080501906,Department of Education (Government School),Upper Primary to Higher Secondary (6–12),Yes,83,Yes
@@ -3982,7 +3982,7 @@ BAGHPAT,VIDYA BHAWAN PUBLIC SCHOOL,09080604133,Private Unaided Recognized,Primar
 BAGHPAT,VIDYA NIKETAN I.C KHEKRA,09080604114,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,5,Yes
 BAGHPAT,VIVEKANAND H.S. GOTHARA,09080602004,Government Aided,Secondary only (9–10),Yes,7,Yes
 BAGHPAT,ABC I.C DATTNAGAR,09080702306,Government Aided,Upper Primary to Higher Secondary (6–12),No,2,Yes
-BAGHPAT,ACHRIYA JAY. S. D. J. G. INTER COLLEGE,09080700119,Government Aided,Upper Primary to Higher Secondary (6–12),No,36,Yes
+BAGHPAT,ACHRIYA JAY. S. D. J. G. INTER COLLEGE,09080700119,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,36,Yes
 BAGHPAT,ADARSH INTER COLLEGE. DOLLA,09080703903,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,0,No
 BAGHPAT,ADRSH  JANTA SECONDARY SCHOOL POOTHAD,09080700204,Government Aided,Secondary only (9–10),Yes,75,Yes
 BAGHPAT,CH. CHARAN SINGH HIGH SCHOOL KHINDORA,09080700705,Private Unaided Recognized,Secondary only (9–10),No,0,No
@@ -6801,16 +6801,16 @@ BHADOI,NIRMALA DEVI INTER COLLEGE KAULAPUR GOPIGANJ,09710506503,Private Unaided 
 BHADOI,OM PUBLIC SCHOOL VITTHALPUR,09710506002,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,7,Yes
 BHADOI,PARVATI DEVI NATIONAL INTER COLLEGE NAVDHAN,09710500109,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,3,Yes
 BHADOI,PASHCHIM VAHINI SHREE KRISHNA INTER COLLEGE BASGOTIMAVAIYA,09710518903,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
-BHADOI,PHOOLPATTI VIJAY SHANKAR SAMDARIYA I.C. ARTA,09710511506,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,55,Yes
+BHADOI,PHOOLPATTI VIJAY SHANKAR SAMDARIYA I.C. ARTA,09710511506,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,55,Yes
 BHADOI,PREMA DEVI INTER COLLEGE  VAHIDANAGAR,09710519204,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,10,Yes
 BHADOI,Pt Deendayal Upadhyay Govt Model Inter College Sagarraipur bhadohi,09710502905,Department of Education (Government School),Upper Primary to Higher Secondary (6–12),Yes,91,Yes
 BHADOI,RADHASWAMI SANSKRIT UMV RADHASWAMI DHAM BHADOHI ,09710507203,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,0,No
-BHADOI,SANKAT MOCHAN ADARSH BALIKA INTER COLLEGE DANIPATTI,09710512203,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,13,Yes
+BHADOI,SANKAT MOCHAN ADARSH BALIKA INTER COLLEGE DANIPATTI,09710512203,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,13,Yes
 BHADOI,SHRI JAI NANDAN SINGH U.M.V. DARVASI,09710509307,Private Unaided Recognized,Secondary only (9–10),No,4,Yes
 BHADOI,SHRI NARAYAN INTER COLLEGE KONIYA,09710516804,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,2,Yes
 BHADOI,SHRI RAM GIRLS INTER COLLEGE CHHATAMI,09710505903,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,23,Yes
 BHADOI,SHRI RAM JANKI SOBH NATH INTER COLLEGE BHIKHIPUR,09710512905,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,66,Yes
-BHADOI,SHRI SHIVKARAN INTER COLLEGE ITAHARA,09710515608,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
+BHADOI,SHRI SHIVKARAN INTER COLLEGE ITAHARA,09710515608,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,0,No
 BHADOI,SHRI VISHWNATH PANDEY CONVENT GIRLS I.C. KHADAUPUR,09710513402,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,15,Yes
 BHADOI,SMT. CHIRAUJI DEVI INTER COLLEGE KALAPUR,09710501804,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,6,Yes
 BHADOI,SRI BRIJ BHUSHAN SINGH SARVODAY INTER COLLEGE SEMRADH,09710512503,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,4,Yes
@@ -7329,7 +7329,7 @@ BIJNOR,M S JUNIOR HIGH SCHOOL BHADAULA,09031005914,Private Unaided Recognized,Up
 BIJNOR,MAHRISHI DAYANAND VIKLANG U.P.,09031009202,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,96,Yes
 BIJNOR,MARSHI DAYANAND HR.SEC SCHOOL,09031026601,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,2,Yes
 BIJNOR,MOOL CHAND ACADEMY P.S.,09031014125,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
-BIJNOR,MUSLIM PUBLIC GIRLS INTER COLLEGE JALALABAD,09031005804,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
+BIJNOR,MUSLIM PUBLIC GIRLS INTER COLLEGE JALALABAD,09031005804,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 BIJNOR,NOOTAN INTER COLLEGE TISOTRA,09031007309,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 BIJNOR,PARKASH UPS GADMALPUR,09031005207,Private Unaided Recognized,Secondary only (9–10),Yes,1,Yes
 BIJNOR,PNS ARIHANT PUBLIC ACADEMY NAJIBABAD,09031011602,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
@@ -7338,7 +7338,7 @@ BIJNOR,RAJA BHARAT SINGH INTER COLLEG,09031001908,Government Aided,Upper Primary
 BIJNOR,RAJA CHATAR SINGH J.S,09031013302,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,60,Yes
 BIJNOR,RAJKIYA HIGH SCHOOL  JATTIWALA,09031014203,Department of Education (Government School),Secondary + Higher Secondary (9–12),Yes,38,Yes
 BIJNOR,RAJKIYA INTER COLLEGE BHAGUWALA,09031006113,Department of Education (Government School),Upper Primary + Secondary (6–10),Yes,60,Yes
-BIJNOR,RAMKALI DEVI SMARTI MEMO HR.SEC SCHOOL,09031022701,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,5,Yes
+BIJNOR,RAMKALI DEVI SMARTI MEMO HR.SEC SCHOOL,09031022701,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,5,Yes
 BIJNOR,S.S.D INTER COLLEGE,09031005505,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,4,Yes
 BIJNOR,SPRING FIELD ACADEMY MANDAWALI,09031009511,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 BIJNOR,ST. MARY'S INTER COLLEGE MANDAWALI,09031009504,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,12,Yes
@@ -7585,7 +7585,7 @@ BUDAUN,SRI RISHI DEV SINGH H. SEC. SCHOOL,09190606508,Private Unaided Recognized
 BUDAUN,"VEER SAHAY BHU DEVI H. SEC. SCHOOL, JAGAT",09190600109,Private Unaided Recognized,Upper Primary to Secondary (6–10),Yes,0,No
 BUDAUN,VIDHYAWATI VAIDIK KANYA HR.SEC.,09190602008,Government Aided,Upper Primary to Secondary (6–10),Yes,92,Yes
 BUDAUN,VIGYANAND RAM NARAYAN INTER COLLEGE,09190602003,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,20,Yes
-BUDAUN,ZEALOT PUBLIC SCHOOL PADAUA,09190606511,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,7,Yes
+BUDAUN,ZEALOT PUBLIC SCHOOL PADAUA,09190606511,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,7,Yes
 BUDAUN,"FALAH-E-AAM INTER COLLEGE,KAKARALA",09192300135,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
 BUDAUN,"G.B. GIRLS INTER COLLEGE,KAKRALA",09192300116,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 BUDAUN,H.M. SCIENCE INTER COLLEGE KAKRALA,09192300136,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,6,Yes
@@ -7625,7 +7625,7 @@ BUDAUN,"SOHAN LAL MEMORIAL HIGHER SECONDORY SCHOOL,NIZAMABAD",09190104704,Privat
 BUDAUN,SRI DATARAM MEMRORIAL INTER COLLEGE ASRASI,09190105704,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
 BUDAUN,SRI RAM CHANDRA SHASTRI MEMORIAL INTER COLLEGE KAKORA,09190102009,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
 BUDAUN,SUMMER SINNGH MEMO. SECONDARY SCHOOL,09190106004,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,0,No
-BUDAUN,AL HAFIZ EDUCATIONAL ACADEMY,09190513303,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
+BUDAUN,AL HAFIZ EDUCATIONAL ACADEMY,09190513303,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 BUDAUN,ANIL MEMORIAL H.SECONDARY SCHOOL,09190506707,Private Unaided Recognized,Secondary only (9–10),Yes,0,No
 BUDAUN,HANS VAHINI H. SEC. SCHOOL UGHAITI,09190507804,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 BUDAUN,"JANTA INTER COLLEGE,KHITORA",09190506708,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,34,Yes
@@ -12150,7 +12150,7 @@ GAUTAM BUDDHA NAGAR,BIHARI LAL INTER COLLEGE,09100315310,Government Aided,Primar
 GAUTAM BUDDHA NAGAR,BODHI TARU INTERNATIONAL SCHOOL GR. NOIDA,09100317803,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 GAUTAM BUDDHA NAGAR,BRAIN TREE GLOBAL SCHOOL,09100311231,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,14,Yes
 GAUTAM BUDDHA NAGAR,C G V HIGHER SEC SCHOOL,09100307204,Government Aided,Secondary only (9–10),No,0,No
-GAUTAM BUDDHA NAGAR,CAMBRIDGE SCHOOL,09100311804,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,12,Yes
+GAUTAM BUDDHA NAGAR,CAMBRIDGE SCHOOL,09100311804,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,12,Yes
 GAUTAM BUDDHA NAGAR,CH. BRAHAM SINGH INTER COLLEGE NAYA GAON,09100308303,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
 GAUTAM BUDDHA NAGAR,CH. HARISH  CHAND H S SCHOOL,09100309605,Private Unaided Recognized,Secondary only (9–10),No,0,No
 GAUTAM BUDDHA NAGAR,CH. J.P.S.D UMV MURSADPUR,09100310103,Private Unaided Recognized,Secondary only (9–10),No,0,No
@@ -12438,12 +12438,12 @@ GAUTAM BUDDHA NAGAR,STEP BY STEP ROHILLAPUR,09100108503,Private Unaided Recogniz
 GAUTAM BUDDHA NAGAR,SUNRISEVILLE SCHOOL SEC 25 NOIDA,09100109120,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,47,Yes
 GAUTAM BUDDHA NAGAR,THE  MILLENNIUM SCHOOL,09100100125,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,18,Yes
 GAUTAM BUDDHA NAGAR,THE INFINITY SCHOOL,09100100811,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
-GAUTAM BUDDHA NAGAR,THE KHAITAN SCHOOL,09100111902,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,1,Yes
+GAUTAM BUDDHA NAGAR,THE KHAITAN SCHOOL,09100111902,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,1,Yes
 GAUTAM BUDDHA NAGAR,THE MANTHAN SCHOOL,09100111102,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,28,Yes
 GAUTAM BUDDHA NAGAR,THE MILLENNIUM SCHOOL,09100109408,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 GAUTAM BUDDHA NAGAR,THE SD VIDYA SCHOOL PLOT NO C-217 SECTOR 49 BAROLA,09100105504,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,31,Yes
 GAUTAM BUDDHA NAGAR,THE SHRI RAM MILLENNIUM SCHOOL,09100100141,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
-GAUTAM BUDDHA NAGAR,THE WISDOM TREE,09100100134,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
+GAUTAM BUDDHA NAGAR,THE WISDOM TREE,09100100134,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 GAUTAM BUDDHA NAGAR,TRINITY WORLD SCHOOL,09100100714,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 GAUTAM BUDDHA NAGAR,UDAY PUBLI SCHOOL,09104105429,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,0,No
 GAUTAM BUDDHA NAGAR,URSULINE CONVENT SR.SEC SCHOOL,09100111908,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,2,Yes
@@ -12557,19 +12557,19 @@ GHAZIABAD,DIAMOND PUBLIC SCHOOL,09090903705,Private Unaided Recognized,Primary t
 GHAZIABAD,DIVYA PUBLIC HIGH SCH BAYANA,09090202702,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 GHAZIABAD,DIWAKAR MODEL SCHOOL,09090901508,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 GHAZIABAD,DPS SIDDHARTH VIHAR,09090904012,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
-GHAZIABAD,DR. B R AMBEDKAR INTER COLLEGE SIBBAN PURA,09090904821,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,21,Yes
+GHAZIABAD,DR. B R AMBEDKAR INTER COLLEGE SIBBAN PURA,09090904821,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,21,Yes
 GHAZIABAD,DURGAWATI HEMRAJ TAH SARASWATI VIDYA MANDIR,09090907208,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,1,Yes
 GHAZIABAD,Dayawati Chauhan Sr Sec School,09090905509,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 GHAZIABAD,Delhi Public School Ghaziabad Vasundhara,09090901413,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 GHAZIABAD,Delhi Public School HRIT Campus,09090900615,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 GHAZIABAD,Delhi Public School Raj Nagar,09090203302,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,1,Yes
 GHAZIABAD,EAST  DELHI PUBLIC SCHOOL,09090906609,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
-GHAZIABAD,EVEREST PUBLIC SCHOOL,09090907307,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,1,Yes
+GHAZIABAD,EVEREST PUBLIC SCHOOL,09090907307,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,1,Yes
 GHAZIABAD,FATIMA CONVENT SCHOOL  SR SEC SCHOOL NANDGRAM,09090900229,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 GHAZIABAD,G D GOENKA PUBLIC SCHOOL INDIRAPURAM,09090908011,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 GHAZIABAD,G D GOYANKA PUBLIC SCHOOL RAJNAGAR GHAZIABAD,09090900122,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,18,Yes
 GHAZIABAD,G R Convent school Nyay khand 1 Indirapuram Ghaziabad,09090905407,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,26,Yes
-GHAZIABAD,GEETA SANJAI MEMORIAL PUBLIC SCHOOL,09090906102,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
+GHAZIABAD,GEETA SANJAI MEMORIAL PUBLIC SCHOOL,09090906102,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 GHAZIABAD,GHAZIABAD PUBLIC SCHOOL,09090903410,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,7,Yes
 GHAZIABAD,GOLDEN PUBLIC SR SEC SCH,09090904824,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,25,Yes
 GHAZIABAD,GOVT BALIKA INTER COLLEGE VIJAYNAGAR,09090900508,Department of Education (Government School),Upper Primary to Higher Secondary (6–12),Yes,155,Yes
@@ -12583,7 +12583,7 @@ GHAZIABAD,H H K M INTER COLLEGE MADHOPURA,09090900117,Government Aided,Upper Pri
 GHAZIABAD,HARSAN DASS BAHAN PUR,09090104012,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 GHAZIABAD,HI-TECH WORLD SCHOOL,09090202804,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 GHAZIABAD,HOLI CHILD H.S. SCHOOL,09090904819,Private Unaided Recognized,Secondary only (9–10),Yes,0,No
-GHAZIABAD,HOLI TRINITY CHURCH SCHOOL RAILWAY ROAD GHAZIABAD,09090903006,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
+GHAZIABAD,HOLI TRINITY CHURCH SCHOOL RAILWAY ROAD GHAZIABAD,09090903006,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 GHAZIABAD,HOLY ANGEL PUBLIC SCHOOL KAVINAGAR,09090900517,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
 GHAZIABAD,HOLY ANGELS SCHOOL SAHIBABAD,09090900336,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 GHAZIABAD,HOLY ANGELS SHALIMAR GARDEN,09090907309,Private Unaided Recognized,Upper Primary to Secondary (6–10),Yes,0,No
@@ -12619,7 +12619,7 @@ GHAZIABAD,LEELAWATI INTERNATIONAL SCHOOL,09090902323,Private Unaided Recognized,
 GHAZIABAD,M M G PUBLIC H.S SCHOOL POSANDA GZB,09090904828,Private Unaided Recognized,Upper Primary to Secondary (6–10),Yes,50,Yes
 GHAZIABAD,M M H BOY INTER COLLEGE,09090900318,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,0,No
 GHAZIABAD,M P S PUBLIC SCHOOL JAGRITI VIHAR,09090901314,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
-GHAZIABAD,M.L. PUBLIC SCHOOL,09090901307,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
+GHAZIABAD,M.L. PUBLIC SCHOOL,09090901307,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 GHAZIABAD,M.M.H.  BALIKA  INTER  COLLEGE,09090904705,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,6,Yes
 GHAZIABAD,MAHA RISHI DAYA NANAD HR SEC SCH SADIK NAGAR,09090904608,Private Unaided Recognized,Secondary + Higher Secondary (9–12),Yes,0,No
 GHAZIABAD,MAHARSHI DAYANAND SANSKRIT GURUKUL MAHAVIDYALAYA,09090905216,Government Aided,Upper Primary to Higher Secondary (6–12),No,4,Yes
@@ -12728,7 +12728,7 @@ GHAZIABAD,VIDYA BAL BHAWAN PUBLIC SCHOOL VASUNDHRA,09090901418,Private Unaided R
 GHAZIABAD,VISHVA BHARTI PUBLIC SCHOOL ,09090900618,Private Unaided Recognized,Upper Primary to Secondary (6–10),Yes,7,Yes
 GHAZIABAD,VIVEKANAND SHISHU MANDIR MAINROAD,09090900723,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 GHAZIABAD,Vanasthali Public School,09090901412,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
-GHAZIABAD,modern national public school,09090904835,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
+GHAZIABAD,modern national public school,09090904835,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 GHAZIABAD,ADARSH GYAN SAROVER PUBLIC SCHOOL,09090100130,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 GHAZIABAD,ADARSH NAVJEEVAN INTER COLLEGE,09090108101,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,2,Yes
 GHAZIABAD,ADARSH VIDYA MANDIR GIRLS INTER COLLEGE,09090108501,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,2,Yes
@@ -12738,7 +12738,7 @@ GHAZIABAD,"ANAMIKA GIRL,S INTER COLL LONI",09090101407,Private Unaided Recognize
 GHAZIABAD,ANAND MEMORIAL INTER COLLEGE,00909010526,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,1,Yes
 GHAZIABAD,B RS CONVENT GIRLS H SEC SCHOOL,09090104023,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,2,Yes
 GHAZIABAD,B.L. MEMO. HR. SEC. SCHOOL,00909010524,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
-GHAZIABAD,B.S.BHATI MEMO. JR.H. SCHOOL,00909010522,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,0,No
+GHAZIABAD,B.S.BHATI MEMO. JR.H. SCHOOL,00909010522,Private Unaided Recognized,Upper Primary to Secondary (6–10),Yes,0,No
 GHAZIABAD,BAL BHARTI PUBLIC SCHOOL LONI,09090100213,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,66,Yes
 GHAZIABAD,BAL BHARTI VIDYA MANDIR HIGHER SEC SCHOOL,09094104139,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,0,No
 GHAZIABAD,BAL VIDYA MANDIR SANGAM VIHAR LONI,09090103902,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
@@ -12854,7 +12854,7 @@ GHAZIABAD,BABA PUBLIC SCHOOL JALALABAD MURADNAGAR,09090302407,Private Unaided Re
 GHAZIABAD,BIRHAM RISHI BIRHAM DUT INTER COLL,09090302015,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,20,Yes
 GHAZIABAD,CH. CHARAN SINGH SMARAK JANTA INTER COLLEGE,09090305912,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,6,Yes
 GHAZIABAD,CHAMELI DEVI DURGA PRASAD SMARAK KANYA INTER COLLEGE SONDA,09090302006,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,13,Yes
-GHAZIABAD,DGR PUBLIC SCHOOL PATLA,09090305915,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
+GHAZIABAD,DGR PUBLIC SCHOOL PATLA,09090305915,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 GHAZIABAD,EKLAVYA PUBLIC SCHOOL,09090302405,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,17,Yes
 GHAZIABAD,GANDHI VIDYALAY INTER COLLEGE RAWOLI KALAN,09090302009,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,21,Yes
 GHAZIABAD,GAYATRI DEVI  MAHILA VIDYAPEETH INT COLLEGE,09090305914,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
@@ -12987,7 +12987,7 @@ GHAZIPUR,JYOTI GYANODAYA UMV L N P MURTAZIPUR - 1961,09651304403,Private Unaided
 GHAZIPUR,MA VIDYAWATI UMV PALIYA - 1962,09651304805,Private Unaided Recognized,Secondary only (9–10),No,0,No
 GHAZIPUR,MARTINS CHILDREN ACADEMY,09651300905,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 GHAZIPUR,N.K.M.I.C.MAHEND,09651304103,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,2,Yes
-GHAZIPUR,OXFORD INTERNATIONAL SCHOOL,09651300404,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,13,Yes
+GHAZIPUR,OXFORD INTERNATIONAL SCHOOL,09651300404,Private Unaided Recognized,Upper Primary to Secondary (6–10),Yes,13,Yes
 GHAZIPUR,R.K.G.I.C. BHAWARCOL,09651310904,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
 GHAZIPUR,RAMADHAR MEMORIYAL HS REDMAR,09651305204,Private Unaided Recognized,Secondary only (9–10),No,0,No
 GHAZIPUR,S.K. NATIONAL CONVENT SCHOOL MAHEND,09651304104,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
@@ -19710,7 +19710,7 @@ KANPUR NAGAR,GYAN NEKATAN BALIKA INTER COLLEGE,09341200184,Private Unaided Recog
 KANPUR NAGAR,GYANODAY VIDHYA MANDIR H.S. SCHOOL,09341600195,Private Unaided Recognized,Secondary + Higher Secondary (9–12),Yes,20,Yes
 KANPUR NAGAR,GYANODAYA HIGHER SECONDARY SCHOOL,09341100163,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,0,No
 KANPUR NAGAR,HAELEJAR WARDAN EDU. CENTER PANKI,09341105708,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
-KANPUR NAGAR,HAERITAGE INTERNATIONAL SCHOOL NARAMAU,09341112302,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,6,Yes
+KANPUR NAGAR,HAERITAGE INTERNATIONAL SCHOOL NARAMAU,09341112302,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,6,Yes
 KANPUR NAGAR,HUDDARD HIGH SCHOOL,09341401006,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 KANPUR NAGAR,HUDSON MEMORIAL GIRLS HIGH SCHOOL CIVIL LINES,09341200138,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,58,Yes
 KANPUR NAGAR,IC AVINASH GYAN NEED TILAK N.,09341111401,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,20,Yes
@@ -20169,8 +20169,8 @@ KAUSHAMBI,JAY MAA DURGE INTER COLLEGE,09440807622,Private Unaided Recognized,Upp
 KAUSHAMBI,JYOTIBA RAV FULEY I.C. JAHANPUR KADA KAUSHAMBI,09440808304,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 KAUSHAMBI,K . S. H. S. SCHOOL,09440802709,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,0,No
 KAUSHAMBI,K.S.M.SONKAR I.C.BHAIROPUR PARAS KAUSHAMBI,09440804705,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
-KAUSHAMBI,KAMLA DEVI INTER COLLEG BHAUTAR AJHUWA KAUSHAMBI,09440807804,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
-KAUSHAMBI,KRISHNA DEVI SHITLA PRASAD I. COLLEGE,09440805603,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
+KAUSHAMBI,KAMLA DEVI INTER COLLEG BHAUTAR AJHUWA KAUSHAMBI,09440807804,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
+KAUSHAMBI,KRISHNA DEVI SHITLA PRASAD I. COLLEGE,09440805603,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,0,No
 KAUSHAMBI,LATE KRISHNA  CHANDRA  GIRLS INTER COLLEGE SHAJADPUR  KAUSHAMBI,09440802214,Private Unaided Recognized,Secondary only (9–10),Yes,3,Yes
 KAUSHAMBI,LATE SHARDHA PRASAD SINGH H.S.S.,09440805208,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,0,No
 KAUSHAMBI,LITTLE BLOSSOMS CONVENT SCHOOL,09440809102,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
@@ -20313,7 +20313,7 @@ KAUSHAMBI,SMT. KRISHNA DEVI SARASWAT H.S.S.,09440104905,Private Unaided Recogniz
 KAUSHAMBI,SMT. SHASHI TRIPATI INTER COLLEG BABURA OSHA CHAURAHA MANJHANPUR,09440108402,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
 KAUSHAMBI,SRI DEV NARAYAN GIRLS INTER COLLEGE,09440100211,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
 KAUSHAMBI,SRI LAXMI DEVI INTER COLLEGE FAIZIPUR,09440109103,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,0,No
-KAUSHAMBI,SRI. SUNDAR LAL SINGH H.S.S,09440107807,Private Unaided Recognized,Secondary only (9–10),No,0,No
+KAUSHAMBI,SRI. SUNDAR LAL SINGH H.S.S,09440107807,Private Unaided Recognized,Secondary only (9–10),Yes,0,No
 KAUSHAMBI,VASHISTHA BALIKA I. C.,09440109203,Private Unaided Recognized,Secondary only (9–10),No,0,No
 KAUSHAMBI,VIKAS ANAMIKA H.S.S.,09440103106,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,0,No
 KAUSHAMBI,B.P. SINGH GIRLS INTER COLLEG,09440607605,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
@@ -20447,7 +20447,7 @@ KAUSHAMBI,RAJKIY HIGH SCHOOL BAMAHROULI,09440309304,Department of Education (Gov
 KAUSHAMBI,RAJKIYA BALIKA HIGH SCHOOL KASIYA,09440307709,Department of Education (Government School),Secondary + Higher Secondary (9–12),Yes,134,Yes
 KAUSHAMBI,RAJKIYA GIGH SCHOOL RAMPUR DHAMANWA SIRATHU,09440303407,Department of Education (Government School),Secondary + Higher Secondary (9–12),Yes,55,Yes
 KAUSHAMBI,RAJKIYA HIGH SCHOOL RALA SIRATHU KAUSHAMBI,09440307903,Department of Education (Government School),Secondary + Higher Secondary (9–12),Yes,20,Yes
-KAUSHAMBI,RAM SINGH RAM RANI U.M.V. HAKEEM PUR ANETHA,09440319901,Private Unaided Recognized,Secondary only (9–10),No,0,No
+KAUSHAMBI,RAM SINGH RAM RANI U.M.V. HAKEEM PUR ANETHA,09440319901,Private Unaided Recognized,Secondary only (9–10),Yes,0,No
 KAUSHAMBI,S .G. S. I. C.,09440300604,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
 KAUSHAMBI,S D H S SCHOOL CHAKWAN MALAK BHAYAL,09440319502,Private Unaided Recognized,Secondary only (9–10),No,0,No
 KAUSHAMBI,S N INTER COLLEGE,09440309821,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
@@ -20466,7 +20466,7 @@ KAUSHAMBI,SIYARAM BACHAILAL U. M. V.,09440306404,Private Unaided Recognized,Uppe
 KAUSHAMBI,SMT KRISHNA I COLLEGE,09440302905,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,1,Yes
 KAUSHAMBI,SMT SHEELA DEVI H S S,09440300704,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,1,Yes
 KAUSHAMBI,SMT SHYAMA DEVI CAPTAIN HANUMAN PRASAD H. S. SCHOOL,09440303304,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,3,Yes
-KAUSHAMBI,SMT SUSHILA DEVI RAM SAJIWAN SINGH H S SCHOOL,09440309904,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
+KAUSHAMBI,SMT SUSHILA DEVI RAM SAJIWAN SINGH H S SCHOOL,09440309904,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 KAUSHAMBI,SRI MAHADEV PRASAD MAURYA INTER COLLEGE SELRAHA,09440304505,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,4,Yes
 KAUSHAMBI,SRI MATI SHIV PATTI DEVI  PALL HIGH SCHOOL,09440303103,Private Unaided Recognized,Secondary only (9–10),No,5,Yes
 KAUSHAMBI,SRI.HUBLAL IC.BHARWARI,09440307106,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,82,Yes
@@ -20494,7 +20494,7 @@ KHERI,JANTA INTER COLLEGE,09231503208,Private Unaided Recognized,Upper Primary +
 KHERI,KGBV SEC.,09231502613,Department of Education (Government School),Secondary + Higher Secondary (9–12),Yes,73,Yes
 KHERI,LALBAHADUR SHASTRI I.C.MAILANI,09231501508,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,106,Yes
 KHERI,NETA JI SUBHASH CHANDRA BOS SMARAK INTER COLLEGE,09231511904,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,36,Yes
-KHERI,PRAGATI CHITRANSHI INTER COLLEGE ,09231507804,Private Unaided Recognized,Secondary only (9–10),No,66,Yes
+KHERI,PRAGATI CHITRANSHI INTER COLLEGE ,09231507804,Private Unaided Recognized,Secondary only (9–10),Yes,66,Yes
 KHERI,SOBRAN INTER COLLEGE,09231502611,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,29,Yes
 KHERI,VINAYAK CHILDRENS ACADMY BANKEGANJ,09231502205,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,97,Yes
 KHERI,sidharath inter collagebargadiya,09231502303,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,5,Yes
@@ -21312,7 +21312,7 @@ LALITPUR,SANSKAR VALLY ACAKMY MASORAKALAN (PRE TO 12) ENG,09370308105,Private Un
 LALITPUR,SDPS INTERNATIONAL SCHOOL  ,09370307103,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,28,Yes
 LALITPUR,SHRI KRASHNA INTER COLLAGE MANGUWAN LALITPUR,09370300121,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,22,Yes
 LALITPUR,SRI GIRIRAJJI INTER COLLEGE,09370307403,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,3,Yes
-LALITPUR,SRI SHANTINATH BALSANSKAR INTER COLLEGE SEERONJI,09370302902,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,9,Yes
+LALITPUR,SRI SHANTINATH BALSANSKAR INTER COLLEGE SEERONJI,09370302902,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,9,Yes
 LALITPUR,SUR BHARTI NATIONAL INTER COLLAGE MADAWARI,09370304507,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
 LALITPUR,ATAL VIDHYA MANDIR INTER COLLEGE,09370701803,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,18,Yes
 LALITPUR,CENTRAL PUBLIC  SCHOOL LALITPUR,09370700219,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
@@ -21829,7 +21829,7 @@ LUCKNOW,DAULAT DEVI I C KALYANPURI LUCKNOW,09270915446,Private Unaided Recognize
 LUCKNOW,DAV Public School,09270905305,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,0,No
 LUCKNOW,DAYA NANAD KANYA  I.C. MAHANAGAR,09270916523,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,75,Yes
 LUCKNOW,DAYANAND INTER COLL INDIRA NAGAR LUCKNOW,09270916703,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
-LUCKNOW,DELHI PUBLIC SCHOOL,09270905704,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,219,Yes
+LUCKNOW,DELHI PUBLIC SCHOOL,09270905704,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,219,Yes
 LUCKNOW,DELHI PUBLIC SCHOOL SECTOR II ELDECO COLONY RAIBAREILLY ROAD LUCKNOW,09270902106,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,5,Yes
 LUCKNOW,DELHI PUBLIC SCHOOL SHAHEEDPATH,09270703903,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 LUCKNOW,DESH BHARTIYA PUBLIC SC.,09270911998,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,52,Yes
@@ -21893,7 +21893,7 @@ LUCKNOW,GREEN LAWNS HSS LUCKNOW,09270916710,Private Unaided Recognized,Upper Pri
 LUCKNOW,"GREENLAND PUBLIC SCHOOL 3-VIJYANT KHAND, GOMTI NAGAR, LUCKNOW",09270904906,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 LUCKNOW,GURU DIKSHA COLLEGE KESHAV NAGAR LUCKNOW,09270900342,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 LUCKNOW,GURU NANAK GIRLS I.C. CHANDAN NAGAR ALAM BAGH,09270916528,Government Aided,Primary to Higher Secondary (1–12),Yes,74,Yes
-LUCKNOW,GURUKUL ACADEMY,09270903306,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,1,Yes
+LUCKNOW,GURUKUL ACADEMY,09270903306,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,1,Yes
 LUCKNOW,GURUKUL ASHRAM U M SANSKRIT VIDYALAYA JANKIPURAM LKO,09270913939,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,0,No
 LUCKNOW,GURUNAKAK GIRLS I.C. BANSHMANDI CHARBAGH,09270916579,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,71,Yes
 LUCKNOW,GYAN MANDIR KANYA HIGH SCHOOL LUCKNOW,09270108002,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,12,Yes
@@ -22256,7 +22256,7 @@ LUCKNOW,SHRI DURGA SHIKSHA NIKETAN HSS LUCKNOW,09270916618,Private Unaided Recog
 LUCKNOW,SHRI KAMAKHYA B K HSS KALYANPUR LUCKNOW,09270916115,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 LUCKNOW,SHRI RAM GLOBAL SCHOOL VIKALP KHAND -2 GOMTI NAGAR LUCKNOW,09270904908,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 LUCKNOW,SHRI VINAYAK CONVENT SCHOOL AMAUSI SAROJANI NAGAR LUCKNOW,09270900431,Private Unaided Recognized,Upper Primary to Secondary (6–10),Yes,0,No
-LUCKNOW,SIDDHANT WORLD SCHOOL NEAR ELDECO COLONY VIKALP KHAND CHINHAT LUCKNOW,09270914105,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
+LUCKNOW,SIDDHANT WORLD SCHOOL NEAR ELDECO COLONY VIKALP KHAND CHINHAT LUCKNOW,09270914105,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 LUCKNOW,"SIDDHARTHA GLOBAL SCHOOL MAYA PURAM NEAR BUDDHESHWAR TEMPLE, ALAM NAGAR ROAD LUCKNOW",09270901140,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,10,Yes
 LUCKNOW,SIDHARTH PUBLIC SCHOOL,09270908504,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 LUCKNOW,SINDHI VIDYALAY INTER COLLEGE,09270913220,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,1,Yes
@@ -22549,7 +22549,7 @@ MAHARAJGANJ,SARDAR PATEL INTERMEDIATE COLLEGE SHIV NAGAR MAHARAJGANJ,09571200109
 MAHARAJGANJ,SHRI SHIV SHANKER SINGH UMV RAMPURWA,09570102805,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
 MAHARAJGANJ,SIRTAJ SINGH HUMELA DEVI SMARAK INTER COLLAGE GOPI,09570104306,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,11,Yes
 MAHARAJGANJ,ST JOSEPHS SCHOOL MAHARAJGANJ,09570102021,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
-MAHARAJGANJ,TAGORE.INTER.M.C.,09570107904,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,74,Yes
+MAHARAJGANJ,TAGORE.INTER.M.C.,09570107904,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,74,Yes
 MAHARAJGANJ,VIRATIYA INTER COLLEGE SISWA AMAHAWA,09570103007,Private Unaided Recognized,Secondary only (9–10),No,41,Yes
 MAHARAJGANJ,ADARSH UCHCHTAR MADHYMIK VIDHYALAY SINDURIYA,09571700514,Private Unaided Recognized,Secondary only (9–10),No,113,Yes
 MAHARAJGANJ,DIGVIJAY NATH BALIKA INTERMEDIATE COLLEGE CHOWK BAZAR,09571704905,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,139,Yes
@@ -22732,7 +22732,7 @@ MAHARAJGANJ,SHRI HEERA TRILOKI INDRAWATI SHANTI SANSKRIT U M V SOHARWALIYA KALA,
 MAHARAJGANJ,BHAGWAN JAGANNATH SWAMI INTERMEDIATE COLLEGE BADAHARA MAHANTH,09570306214,Private Unaided Recognized,Secondary only (9–10),No,0,No
 MAHARAJGANJ,CHOKHRAJ TULSYAN SARASWATI VIDYA MANDIR INTERMEDIATE COLLEGE,09570308403,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 MAHARAJGANJ,GIRIJASHANKAR RAMESHWAR PANDEY I C KARIDIHA MAHARAJGANJ,09570303002,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,1,Yes
-MAHARAJGANJ,HANUMAT UCHCHATAR MADHYAMIK VIDYALAYA,09570301503,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,11,Yes
+MAHARAJGANJ,HANUMAT UCHCHATAR MADHYAMIK VIDYALAYA,09570301503,Private Unaided Recognized,Secondary + Higher Secondary (9–12),Yes,11,Yes
 MAHARAJGANJ,INTER COLLEGE LAKSHMIPUR EKDANGA,09570301802,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,117,Yes
 MAHARAJGANJ,JANTA UMV HARPUR PAKDI,09570301905,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,0,No
 MAHARAJGANJ,JAWAHER LAL NEHRU INTER COLLEGE,09570303904,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,76,Yes
@@ -23428,7 +23428,7 @@ MATHURA,RASHTRIYA INTER COLLEGE,09141006110,Government Aided,Upper Primary to Hi
 MATHURA,"RISHIKUL INTERNATIONAL SCHOOL, MATHURA",09141004422,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 MATHURA,RUKMINI DEVI MAGAN LAL ADARSH VIDYALAYA,09141004318,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,0,No
 MATHURA,S.K.D.A. INTER COLLEGE,09141001108,Government Aided,Upper Primary to Higher Secondary (6–12),No,0,No
-MATHURA,SAMIM KHAN INAYAT BANO INTER COLLEGE HAYATPUR,09141004425,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
+MATHURA,SAMIM KHAN INAYAT BANO INTER COLLEGE HAYATPUR,09141004425,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 MATHURA,SH. KISHAN SINGH VADIC INTER COLLEGE,09141004319,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
 MATHURA,SHEEL CHAND K D S V M I NTER COLLEGE,09141004329,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,40,Yes
 MATHURA,SHIKSHA SANSKAR HIGHER SECONDARY SCHOOL JADOPUR,09141006205,Private Unaided Recognized,Secondary only (9–10),No,8,Yes
@@ -23581,7 +23581,7 @@ MATHURA,SHRI KERAN SINGH INTER COLLEGE,09140207206,Private Unaided Recognized,Up
 MATHURA,SHRI KRISHAN H S SHAH.GOOJAR REC.,09140204603,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,2,Yes
 MATHURA,SHRI MONI BABA ADARSH INTER COLLEGE GADAYA LATTIFUR,09140201402,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,1,Yes
 MATHURA,SHRI NAVAL KISHOR INTER COLLEGE,09140200121,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,2,Yes
-MATHURA,SHRI OM PRAKASH H.S.S.,09140207103,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
+MATHURA,SHRI OM PRAKASH H.S.S.,09140207103,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 MATHURA,SHRI SARVESHWAR H S SCHOOL KONH FARAH,09144100914,Private Unaided Recognized,Secondary only (9–10),No,6,Yes
 MATHURA,SHRI SHYAM LAL CHAUHAN H.S.S.,09140205505,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,12,Yes
 MATHURA,SHRIMATI CHARANDEVI SARASWATI VIDHYA MANDIR HS SCHOOL,09144106540,Private Unaided Recognized,Secondary only (9–10),No,51,Yes
@@ -23794,7 +23794,7 @@ MATHURA,SHANTI DEVI H S SCHOOL BATI,09140103313,Private Unaided Recognized,Secon
 MATHURA,SHATI DEVI SHRI NATH BHARGAVA HR. SEC. SCHOOL,09140112024,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
 MATHURA,SHRAWAN INTER COLLEGE,09140112017,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
 MATHURA,SHRI BANKE BIHARI SHYAMSUNDAR INTER COLLEGE,09140102803,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
-MATHURA,SHRI HARI MUKH INTER COLLEGE,09140109002,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,2,Yes
+MATHURA,SHRI HARI MUKH INTER COLLEGE,09140109002,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,2,Yes
 MATHURA,SHRI JI  INTER COLLEGE BAD,09140100607,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
 MATHURA,SHRI KRISHAN INTER COLLEGE,09140100502,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
 MATHURA,SHRI KRISHAN VEDIC KANYA INTER COLLEGE,09140109702,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
@@ -23856,7 +23856,7 @@ MATHURA,PT DEENDAYAL UPADHYAY GOV MODEL INTER COLLEGE KAMAR,09140602510,Departme
 MATHURA,R.DEVI S.BAL V.LADHAULI REC.,09140602402,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
 MATHURA,S R R PUBLIC SCHOOL,09140604903,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,8,Yes
 MATHURA,SETH LAXMINARAYAN SANSKRIT UM VIDYALYA BARSANA,09140603705,Government Aided,Upper Primary to Higher Secondary (6–12),No,0,No
-MATHURA,SHRI BHOLA SHANKER  INTER  COLLEGE  KAMAR,09140602505,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
+MATHURA,SHRI BHOLA SHANKER  INTER  COLLEGE  KAMAR,09140602505,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 MATHURA,SHRI RADHA KRISHNA HIGHER SECONDARY SCHOOL,09140601108,Private Unaided Recognized,Secondary only (9–10),No,0,No
 MATHURA,SRI BRIJESHWARI BALIKA INTER COLLEGE,09140603611,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,30,Yes
 MATHURA,SRI HEERA MEMORIAL H.S.SCHOOL KOSI KALAN,09140606407,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,6,Yes
@@ -24706,7 +24706,7 @@ MEERUT,JANTA INTER COLLEGE BANA MASURI,09070904003,Government Aided,Upper Primar
 MEERUT,JAWAHAR INTER COLLEGE CHOTA M,09070905901,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,47,Yes
 MEERUT,M DAYANAND S  I. COLLEGE,09070901704,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
 MEERUT,RAHWATI  INTER COLLEGE,09070902702,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,87,Yes
-MEERUT,RUDRA INTERNATIONAL PUBLIC SCHOOL,09070903817,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
+MEERUT,RUDRA INTERNATIONAL PUBLIC SCHOOL,09070903817,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 MEERUT,S M PUBLIC SCHOOL,09070905205,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 MEERUT,SAVITRI SONI VIDYA MANDIR ,09070900203,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,30,Yes
 MEERUT,SH 108 Y.S.B.S.S.M.V.,09070903504,Government Aided,Upper Primary to Higher Secondary (6–12),No,15,Yes
@@ -25474,7 +25474,7 @@ MORADABAD,AMEER HAMZA TURKEY INTER COLLEGE BHUDANPUR,09040205620,Private Unaided
 MORADABAD,ANAND SWAROOP SHARMA JHS,09040202308,Private Unaided Recognized,Secondary only (9–10),No,1,Yes
 MORADABAD,ANITA INTER COLLEGE,09040208403,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,1,Yes
 MORADABAD,ASHFAQ HUSAIN INTER COLLEGE,09040200840,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
-MORADABAD,BABU RAM SECONDARY SCHOOL,09040203003,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,4,Yes
+MORADABAD,BABU RAM SECONDARY SCHOOL,09040203003,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,4,Yes
 MORADABAD,BARKAT PUBLIC SCHOOL SARDAR NAGER,09040203004,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,0,No
 MORADABAD,BHAGWAN DAS INTER COLLEGE MAJHRA DEVIPURA,09040200411,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,12,Yes
 MORADABAD,CHANDER SEN MEMORIAL INTER COLLEGE,09040201411,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
@@ -25498,7 +25498,7 @@ MORADABAD,"L.R.  HIGH SCHOOL, SEHAL",09040201905,Private Unaided Recognized,Seco
 MORADABAD,M.H.K HIGHER SECONDARY SCHOOL,09040201413,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,13,Yes
 MORADABAD,MADARSA JAMIA FAROOQIA AZIZUL ULOOM,09040200104,Government Aided,Primary to Higher Secondary (1–12),No,0,No
 MORADABAD,MAHADEV  U.M.V. SATIKHERA,09040205504,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,7,Yes
-MORADABAD,MOH ATAUL HAQ MEMORIAL INTER COLLEGE GODHI HAMEERPUR,09040208806,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
+MORADABAD,MOH ATAUL HAQ MEMORIAL INTER COLLEGE GODHI HAMEERPUR,09040208806,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 MORADABAD,MOHD.RIZWANUL HAQ MEMO.INTER COLLEGE PIPALSANA,09040200858,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,8,Yes
 MORADABAD,NATIONAL INTER COLLEGE BILAQUDAN,09040208216,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,5,Yes
 MORADABAD,NATIONAL PUBLIC SCHOOL BHOJPUR,09040200162,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
@@ -25553,7 +25553,7 @@ MORADABAD,P.C.S. HIGHER SECONDARY SCHOOL,09040307027,Private Unaided Recognized,
 MORADABAD,PREM SHANTI HIGHER SECONDARY SCHOOL BAHORANPUR NAROLI,09040321003,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,0,No
 MORADABAD,"PRETAM KOR SCHOOL,SAHES PUR",09040312401,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 MORADABAD,R.P.V.MANDIR INTER COLLEGE,09040305007,Government Aided,Primary to Higher Secondary (1–12),Yes,82,Yes
-MORADABAD,R.R.INTER COLLEGE BILARI,09040307018,Government Aided,Upper Primary to Higher Secondary (6–12),No,70,Yes
+MORADABAD,R.R.INTER COLLEGE BILARI,09040307018,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,70,Yes
 MORADABAD,RAJKIYA ABHINAV VIDHYALYA NARAYANPUR DEVA,09040318003,Department of Education (Government School),Upper Primary to Higher Secondary (6–12),Yes,81,Yes
 MORADABAD,ROYAL PUBLIC SCHOOL BILARI,09040313107,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,0,No
 MORADABAD,S.B.S.SENIOR SECONDARY SCHOOL HATHIPUR WAHAUDDIN,09040307703,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
@@ -25620,7 +25620,7 @@ MORADABAD,RAHISUDDIN MEMO.HIGHER  SECONDARY SCHOOL,09042007123,Private Unaided R
 MORADABAD,RAINBOW PUBLIC SCHOOL,09042012010,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 MORADABAD,RAJENDRA'S ACADEMY ,09042005307,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 MORADABAD,RAJKIYA HIGHER SECONDARY SCHOOL LADAWALI,09042003806,Department of Education (Government School),Secondary + Higher Secondary (9–12),Yes,67,Yes
-MORADABAD,RAM CHANDER SINGH MEMO INTER COLLEGE,09042006804,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
+MORADABAD,RAM CHANDER SINGH MEMO INTER COLLEGE,09042006804,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 MORADABAD,RASHTRIYA INTER COLLEGE RANA NAGLA,09042002507,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,1,Yes
 MORADABAD,REHBAR E AAM MUSLIM INTER COLLEGE KANTH,09042005211,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,1,Yes
 MORADABAD,RISHI BAL VIDYALYA INTER COLLEGE PATTI MODHA,09042005215,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
@@ -25647,7 +25647,7 @@ MORADABAD,ANISHA KHATOON SECONDARY SCHOOL ALAMPUR,09040600705,Private Unaided Re
 MORADABAD,ARYA KRISHAK INTER COLLEGE,09040609202,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,11,Yes
 MORADABAD,B.S. INTER COLLEGE,09040612005,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,1,Yes
 MORADABAD,BALWANT SINGH SMARAK INTER COLLEGE ADALPUR,09040614106,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,1,Yes
-MORADABAD,BHARAT SINGH MEMORIAL INTER COLLEGE,09040608306,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,1,Yes
+MORADABAD,BHARAT SINGH MEMORIAL INTER COLLEGE,09040608306,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,1,Yes
 MORADABAD,CHAUDHARY KANYA HIGHER SECONDARY SCHOOL MANKUWA MAQSOODPUR,09040603911,Private Unaided Recognized,Secondary only (9–10),No,1,Yes
 MORADABAD,D. N. S. I. C .,09040604115,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,14,Yes
 MORADABAD,DR. VIJENDRA OM KUMAR NATIONAL PUBLIC INTER COLLEGE,09040600119,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
@@ -26252,7 +26252,7 @@ MUZAFFARNAGAR,LALA SUKHLAL S.D. INTER COLLEGE PURKAJI,09020404845,Private Unaide
 MUZAFFARNAGAR,NEW STEPPING STONE SECONDRY SCHOOL PURKAJI,09020404846,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 MUZAFFARNAGAR,PANDIT DEEN DAYAL UPADHYAY RAJKIYA INTER COLLEGE KHAI KHERI MZN,09020404613,Department of Education (Government School),Upper Primary to Higher Secondary (6–12),Yes,59,Yes
 MUZAFFARNAGAR,RAJKUMAR JANTA INTER COLLEGE FALAUDA,09020401607,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
-MUZAFFARNAGAR,SALAR INTER COLLEGE,09020400120,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
+MUZAFFARNAGAR,SALAR INTER COLLEGE,09020400120,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 MUZAFFARNAGAR,SERVODAY INTER COLLEHE KHAIKHERI,09020404612,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 MUZAFFARNAGAR,SHRI PRAN NATH VIDHYA MANDIR INTER COLLEGE PURKAJI,09020404847,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 MUZAFFARNAGAR,SUMITRA DEVI MAHILA INTER COLLEGE CHHAPAR,09020400115,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
@@ -26384,7 +26384,7 @@ MUZAFFARNAGAR,NAV JAGARTI HIGH SCHOOL PURBALIYAN,09020503903,Government Aided,Se
 MUZAFFARNAGAR,RAKHEE PUBLIC SCHOOL SOHANJANI TAGAN SHAHPUR,09020503605,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,78,Yes
 MUZAFFARNAGAR,RASTYA INTER COLLEGE SHAHPUR,09020501131,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,13,Yes
 MUZAFFARNAGAR,SHAHPUR KANYA INTER COLL. SHAHPUR,09020501143,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
-MUZAFFARNAGAR,SHAHWAT PUBLIC SCHOOL SISAULI,09020501819,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,30,Yes
+MUZAFFARNAGAR,SHAHWAT PUBLIC SCHOOL SISAULI,09020501819,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,30,Yes
 MUZAFFARNAGAR,SHRI ARVIND INTER COLLEGE PURA,09020504003,Government Aided,Upper Primary to Higher Secondary (6–12),No,0,No
 MUZAFFARNAGAR,SRI KADAM SINGH S.S. MEMO. BALIKA HIGH SCHOOL BHAURA KHURD,09020504205,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,7,Yes
 MUZAFFARNAGAR,SWAMI KALYAN DEV KANYA INTER COLLEGE KAKRA,09020501312,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,0,No
@@ -26790,7 +26790,7 @@ PRATAPGARH,1554 PT DEVRAJ PANDEY I C KOTHHARA GAURA RANIGANJ,09431801402,Private
 PRATAPGARH,1575 DEV MURAT SINGH GIRLS I C DAMDAM GAURA,09431803305,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 PRATAPGARH,1576 RAM KRIPAL MEMO U M V DURGAGANJ,09431810801,Private Unaided Recognized,Secondary only (9–10),No,0,No
 PRATAPGARH,1585 K P SINGH INTER COLLEGE RAMCHANDRAPUR GAURA,09431809308,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
-PRATAPGARH,1586 ACHARYA SATPATH U M V BASIRAHA RANIGANJ,09431811105,Private Unaided Recognized,Secondary only (9–10),No,0,No
+PRATAPGARH,1586 ACHARYA SATPATH U M V BASIRAHA RANIGANJ,09431811105,Private Unaided Recognized,Secondary only (9–10),Yes,0,No
 PRATAPGARH,AMAR BAHADUR SIKSHAN SANSTHAN,09434102233,Private Unaided Recognized,Secondary only (9–10),No,0,No
 PRATAPGARH,ARJUN RAM M. V. V.,09431801002,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
 PRATAPGARH,ASHA DEVI DUBEY INTER COLLEGE SURWA MISHRPUR,09431808505,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
@@ -26977,7 +26977,7 @@ PRATAPGARH,MADARSA MUHIYUUL ISLAM HIGH SCHOOL,09430910702,Private Unaided Recogn
 PRATAPGARH,MADRSA DARUL BALIKA VIDHALYA,09430906205,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,7,Yes
 PRATAPGARH,MEDHA BALIKA INTER COLLEGE,09430907403,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
 PRATAPGARH,MHAVIR SINGH KHINCHI INTER COLLEGE,09430900102,Government Aided,Upper Primary to Higher Secondary (6–12),No,0,No
-PRATAPGARH,NARENDRA BAHADUR SINGH SHIKSHA SAMITI I C DHANSARI,09430903004,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
+PRATAPGARH,NARENDRA BAHADUR SINGH SHIKSHA SAMITI I C DHANSARI,09430903004,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 PRATAPGARH,PARAS NATH SHUKLA H.S. SCHOOL,09430903803,Private Unaided Recognized,Secondary + Higher Secondary (9–12),Yes,1,Yes
 PRATAPGARH,ROYAL INTERNATIONAL SCHOOL SHAHPUR NAUBASTA,09430903306,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 PRATAPGARH,S.R.INTER COLLEGE,09430905906,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,3,Yes
@@ -27565,7 +27565,7 @@ PRAYAGRAJ,SUBHASH CHANDRA BALIKA U.M.V.,09451303103,Private Unaided Recognized,S
 PRAYAGRAJ,SWAMI VIVEKANAD INTER COLLEGE,09451304702,Government Aided,Upper Primary to Higher Secondary (6–12),No,0,No
 PRAYAGRAJ,U.S. CONVENT U.M.V.,09451306803,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,9,Yes
 PRAYAGRAJ,ABHAY BAL SHIKSHA  NIKETAN,09451505607,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
-PRAYAGRAJ,ADARSH HS S SARAIPITHA,09451509602,Private Unaided Recognized,Secondary only (9–10),No,0,No
+PRAYAGRAJ,ADARSH HS S SARAIPITHA,09451509602,Private Unaided Recognized,Secondary only (9–10),Yes,0,No
 PRAYAGRAJ,BABU ROOP NATH SINGH ATHAI RAM YADAV SMARAK I.C.,09451505203,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,0,No
 PRAYAGRAJ,BAIJ NATH BIND H.S.S.,09451503602,Private Unaided Recognized,Secondary only (9–10),No,0,No
 PRAYAGRAJ,BHARTIYA  SHIKSHAN SEVA SANSTHAN BALIKA,09451504103,Private Unaided Recognized,Secondary only (9–10),No,0,No
@@ -27576,11 +27576,11 @@ PRAYAGRAJ,"GOVERNMENT GIRLS INTER COLLEGE, DHANUPUR",09451501409,Department of E
 PRAYAGRAJ,GRAMYA JYOTI U.P.S. CHATURPATTI,09451506603,Private Unaided Recognized,Secondary only (9–10),Yes,13,Yes
 PRAYAGRAJ,H M F A MEMORIAL SCHOOL,09451511301,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,0,No
 PRAYAGRAJ,H.L.P. H.S.SCHOOL,09451508304,Private Unaided Recognized,Secondary only (9–10),No,0,No
-PRAYAGRAJ,HARI LAL SMARAK U M V SARAI ALAM,09451500706,Private Unaided Recognized,Secondary only (9–10),No,0,No
+PRAYAGRAJ,HARI LAL SMARAK U M V SARAI ALAM,09451500706,Private Unaided Recognized,Secondary only (9–10),Yes,0,No
 PRAYAGRAJ,JANTA I NTER COLLEGE,09451503902,Government Aided,Upper Primary to Higher Secondary (6–12),No,0,No
 PRAYAGRAJ,K.D.PUB LIC INTER COLLEGE,09451500603,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),Yes,0,No
 PRAYAGRAJ,KISHA SHIKSHA NIKTEN  I.C.  NIMITHARIYA,09451500604,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
-PRAYAGRAJ,KISHAN INTERMEDIATE COLLEGE BHOUYIE,09451504902,Government Aided,Upper Primary to Higher Secondary (6–12),No,0,No
+PRAYAGRAJ,KISHAN INTERMEDIATE COLLEGE BHOUYIE,09451504902,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,0,No
 PRAYAGRAJ,KRISHNA NIKETAN U.M.V.,09451507403,Private Unaided Recognized,Secondary only (9–10),No,0,No
 PRAYAGRAJ,LATE. PREM PRAKASH SINGH U.M.V.,09451510703,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,0,No
 PRAYAGRAJ,LT. INDRANI DEVI SHUKLA INTER COLLEGE,09451506703,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
@@ -28199,11 +28199,11 @@ PRAYAGRAJ,VASHISTH VATSALYA PUBLIC SCHOOL,09452209917,Private Unaided Recognized
 PRAYAGRAJ,VEDBHAWAN SANSKRIT U.M.V.,09452200808,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
 PRAYAGRAJ,VIDHAYA DEVI U.M.V.,09452210501,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
 PRAYAGRAJ,VIDHYAWATI DARBARI GIRLS I.C.,09452212405,Government Aided,Primary to Higher Secondary (1–12),Yes,1,Yes
-PRAYAGRAJ,VIDYA VAHINI,09452213603,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
+PRAYAGRAJ,VIDYA VAHINI,09452213603,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 PRAYAGRAJ,VIDYA VALLEY,09454101644,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,0,No
 PRAYAGRAJ,VIKKAN LAL SHAHU INTER COLL.,09452200528,Private Unaided Recognized,Upper Primary to Secondary (6–10),No,0,No
 PRAYAGRAJ,VIVEKA NAND SHIKSHA NIKETAN,09452201010,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
-PRAYAGRAJ,YADGAR HUSEN INTER COLLEGE,09452201703,Government Aided,Primary to Higher Secondary (1–12),No,10,Yes
+PRAYAGRAJ,YADGAR HUSEN INTER COLLEGE,09452201703,Government Aided,Primary to Higher Secondary (1–12),Yes,10,Yes
 PRAYAGRAJ,YAGYA NARAYAN H.S.SCHOOL,09452214507,Private Unaided Recognized,Secondary only (9–10),Yes,0,No
 PRAYAGRAJ,Ymca Centenary School College,09452204802,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,16,Yes
 PRAYAGRAJ,ADARSH INTER COLLEGE MAILHAN,09450603206,Government Aided,Upper Primary to Higher Secondary (6–12),Yes,16,Yes
@@ -28250,7 +28250,7 @@ PRAYAGRAJ,B.L. YADAV U.M.V. BELAKHAS,09450401404,Private Unaided Recognized,Uppe
 PRAYAGRAJ,B.N.D. BALIKA INTER COLLEGE,09450410006,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
 PRAYAGRAJ,BABU RAM ADHAR KEDAR NATH PAL INTER COLLEGE,09450408602,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 PRAYAGRAJ,BADRI PRASAD SMARAK RAMPYARE PATEL U.M.V. SOIRAI BARESTAKALA,09450409302,Private Unaided Recognized,Upper Primary to Secondary (6–10),Yes,0,No
-PRAYAGRAJ,BALRAM BALIKA P.S. DALPATPUR,09450407602,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,6,Yes
+PRAYAGRAJ,BALRAM BALIKA P.S. DALPATPUR,09450407602,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,6,Yes
 PRAYAGRAJ,BANVARI LAL INTER COLLEGE SARAYA HARIRAM HANDIA ALLAHABAD,09450404303,Private Unaided Recognized,Upper Primary to Higher Secondary (6–12),No,0,No
 PRAYAGRAJ,BECHAN RAM GUPTA U.M.V. RITHUWA MADWA BAZAR,09450402503,Private Unaided Recognized,Secondary only (9–10),Yes,0,No
 PRAYAGRAJ,BENI PRASAD YADAV UMV,09450401607,Private Unaided Recognized,Secondary only (9–10),Yes,0,No
@@ -28454,7 +28454,7 @@ PRAYAGRAJ,B.D.H.S INTER COLLEGE,09451703004,Private Unaided Recognized,Upper Pri
 PRAYAGRAJ,BHAGAWATI PRASAD OJHA U.M.V.,09451702402,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,6,Yes
 PRAYAGRAJ,CHAMELA DEVI BALIKA MADHYAMIK VIDYALAY,09451702102,Private Unaided Recognized,Secondary only (9–10),No,0,No
 PRAYAGRAJ,GAYATRI DEVI J.H.S.,09451208502,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,10,Yes
-PRAYAGRAJ,GRAM SEWA INTER COLLEGE,09451204602,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
+PRAYAGRAJ,GRAM SEWA INTER COLLEGE,09451204602,Private Unaided Recognized,Upper Primary + Secondary (6–10),Yes,0,No
 PRAYAGRAJ,GYANODAGAM HIGH SCHOOL,09451205613,Private Unaided Recognized,Upper Primary + Secondary (6–10),No,0,No
 PRAYAGRAJ,I K M INTER COLLEGE,09451205607,Government Aided,Upper Primary to Higher Secondary (6–12),No,13,Yes
 PRAYAGRAJ,J.P.H.S.S.,09451201508,Private Unaided Recognized,Secondary + Higher Secondary (9–12),No,0,No
@@ -29232,7 +29232,7 @@ SAHARANPUR,PANCHSHEEL PUBLIC SCHOOL RAMNAGAR,09010809908,Private Unaided Recogni
 SAHARANPUR,PINE WOOD SCHOOL,09010808607,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,36,Yes
 SAHARANPUR,Pragyan Sthali,09010803506,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,1,Yes
 SAHARANPUR,R.C.P. VEDIC INTER COLLEGE BADULI,09010801805,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
-SAHARANPUR,RAINBOW SCHOOL,09010808608,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
+SAHARANPUR,RAINBOW SCHOOL,09010808608,Private Unaided Recognized,Primary to Higher Secondary (1–12),Yes,0,No
 SAHARANPUR,RAJKIYA HIGH SCHOOL SABDALPUR,09010802912,Department of Education (Government School),Secondary + Higher Secondary (9–12),Yes,10,Yes
 SAHARANPUR,RAMABAI RAJKIYA KANYA VIDHALAY,09010805402,Department of Education (Government School),Upper Primary to Higher Secondary (6–12),Yes,52,Yes
 SAHARANPUR,SARASWATI SADAN INTER COLLEGE SABDALPUR,09010802914,Private Unaided Recognized,Primary to Higher Secondary (1–12),No,0,No
