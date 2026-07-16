@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notification Report — ECO Club Uttar Pradesh</title>
+<title>Notification Report | ECO Club Uttar Pradesh</title>
 <meta name="description" content="ECO Club notification upload status for every Government, Aided and Private school in Uttar Pradesh, filterable by district.">
 <link rel="stylesheet" href="assets/style.css">
 </head>
@@ -11,12 +11,11 @@
 
 <div class="topnav">
   <div class="inner">
-    <a class="brand" href="index.html"><span class="leaf">&#127807;</span> ECO Club — Uttar Pradesh</a>
+    <a class="brand" href="index.html"><span class="leaf">&#127807;</span> ECO Club | Uttar Pradesh</a>
     <nav>
       <a href="index.html">Home</a>
-      <a href="summary.html">Summary</a>
-      <a href="notification.html" class="active">Notification Report</a>
-      <a href="plantation.html">Plantation Report</a>
+      <a href="notification.html" class="active">Notification</a>
+      <a href="plantation.html">Plantation</a>
     </nav>
   </div>
 </div>
@@ -84,7 +83,7 @@
   <div class="pager" id="pager"></div>
 
   <footer class="note">
-    <strong>Data note.</strong> Matched by UDISE code between the school master list and submitted notification records. Private-school coverage is available for a subset of districts only — a district missing from this report's private-school figures does not mean all its private schools have uploaded.
+    <strong>Data note.</strong> Matched by UDISE code between the school master list and submitted notification records. Private-school coverage is available for a subset of districts only | a district missing from this report's private-school figures does not mean all its private schools have uploaded.
   </footer>
 </div>
 
@@ -124,7 +123,7 @@ function renderStrip(dist) {
   const done = filtered.filter(r => r.s === 1).length;
   const label = dist ? titleCase(dist) : 'All Uttar Pradesh';
   document.getElementById('strip').innerHTML = `
-    <span class="item">${label} &mdash; <b>${fmt(total)}</b> schools shown</span>
+    <span class="item">${label} | <b>${fmt(total)}</b> schools shown</span>
     <span class="item"><b style="color:var(--accent-ink)">${fmt(done)}</b> uploaded</span>
     <span class="item"><b style="color:var(--warn)">${fmt(total - done)}</b> pending</span>
   `;
@@ -141,7 +140,7 @@ function renderTable() {
       <tr>
         <td>${CAT_LABEL[r.c] || r.c}</td>
         <td>${titleCase(r.d)}</td>
-        <td>${r.b ? titleCase(r.b) : '—'}</td>
+        <td>${r.b ? titleCase(r.b) : 'N/A'}</td>
         <td class="name">${r.n}</td>
         <td class="num">${r.u}</td>
         <td>${r.s === 1 ? '<span class="status-pill done">Uploaded</span>' : '<span class="status-pill pending">Pending</span>'}</td>

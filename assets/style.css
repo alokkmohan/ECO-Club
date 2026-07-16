@@ -4,9 +4,9 @@
   --ink: #1C2118;
   --muted: #5B6355;
   --line: #DEE2D3;
-  --accent: #3D6B4A;
-  --accent-soft: #E4EEE3;
-  --accent-ink: #2A4B34;
+  --accent: #1E8449;
+  --accent-soft: #E3F3E8;
+  --accent-ink: #196B3B;
   --warn: #B5652E;
   --warn-soft: #F5E6DA;
   --track: #E9EBE1;
@@ -34,9 +34,9 @@ html, body { margin: 0; padding: 0; }
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: -apple-system, "Segoe UI", "Noto Sans", Roboto, Helvetica, Arial, sans-serif;
-  font-size: 15px;
-  line-height: 1.5;
+  font-family: Calibri, Candara, "Segoe UI", Optima, Verdana, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
 a { color: inherit; }
@@ -54,8 +54,8 @@ a { color: inherit; }
   display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
 }
 .topnav .brand {
-  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
-  font-weight: 700; font-size: 18px; text-decoration: none; color: var(--ink);
+  font-family: Calibri, Candara, "Segoe UI", Optima, sans-serif;
+  font-weight: 700; font-size: 19px; text-decoration: none; color: var(--ink);
   display: flex; align-items: center; gap: 8px;
 }
 .topnav .brand .leaf { color: var(--accent); }
@@ -74,9 +74,9 @@ header.page { margin-bottom: 28px; }
   color: var(--accent); font-weight: 700; margin: 0 0 10px;
 }
 h1 {
-  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
-  font-size: clamp(26px, 3.6vw, 36px);
-  font-weight: 600; margin: 0 0 8px; text-wrap: balance; letter-spacing: -0.01em;
+  font-family: Calibri, Candara, "Segoe UI", Optima, sans-serif;
+  font-size: clamp(26px, 3.6vw, 38px);
+  font-weight: 700; margin: 0 0 8px; text-wrap: balance; letter-spacing: -0.01em;
 }
 .dek { color: var(--muted); font-size: 15.5px; max-width: 68ch; margin: 0; }
 
@@ -99,7 +99,7 @@ h1 {
   color: var(--muted); font-weight: 600; margin-bottom: 8px;
 }
 .kpi .value {
-  font-family: Georgia, serif; font-size: 25px; font-weight: 600;
+  font-family: Calibri, Candara, sans-serif; font-size: 25px; font-weight: 700;
   font-variant-numeric: tabular-nums;
   display: flex; align-items: baseline; gap: 6px;
 }
@@ -117,7 +117,7 @@ h1 {
 }
 .card:hover { border-color: var(--accent); transform: translateY(-2px); }
 .card .card-eyebrow { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent); font-weight: 700; }
-.card h2 { font-family: Georgia, serif; font-size: 21px; margin: 0; font-weight: 600; }
+.card h2 { font-family: Calibri, Candara, sans-serif; font-size: 21px; margin: 0; font-weight: 700; }
 .card p { color: var(--muted); font-size: 14px; margin: 0; line-height: 1.55; }
 .card .card-stat { margin-top: auto; padding-top: 10px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .card .card-stat b { color: var(--ink); font-weight: 700; }
