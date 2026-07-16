@@ -125,6 +125,26 @@ function applyFilters() {
   renderTable();
 }
 
+function renderKpis(dist) {
+  const scope = DATA.filter(r => !dist || r.d === dist);
+  const total = scope.length;
+  const done = scope.filter(r => r.s === 1).length;
+  const trees = scope.reduce((a, r) => a + r.t, 0);
+  const byCat = c => {
+    const rows = scope.filter(r => r.c === c);
+    return { total: rows.length, done: rows.filter(r => r.s === 1).length };
+  };
+  const g = byCat('G'), a = byCat('A');
+  document.getElementById('kpis').innerHTML = `
+    <div class="kpi"><div class="label">Total Schools</div><div class="value">${fmt(total)}</div></div>
+    <div class="kpi done"><div class="label">Done</div><div class="value">${fmt(done)}</div></div>
+    <div class="kpi pending"><div class="label">Pending</div><div class="value">${fmt(total - done)}</div></div>
+    <div class="kpi"><div class="label">Government</div><div class="value">${fmt(g.done)}<span class="of">/ ${fmt(g.total)}</span></div></div>
+    <div class="kpi"><div class="label">Aided</div><div class="value">${fmt(a.done)}<span class="of">/ ${fmt(a.total)}</span></div></div>
+    <div class="kpi done"><div class="label">Trees Planted</div><div class="value">${fmt(trees)}</div></div>
+  `;
+}
+
 function renderStrip(dist) {
   const total = filtered.length;
   const done = filtered.filter(r => r.s === 1).length;
@@ -136,6 +156,8 @@ function renderStrip(dist) {
     <span class="item"><b style="color:var(--warn)">${fmt(total - done)}</b> pending</span>
     <span class="item"><b style="color:var(--accent-ink)">${fmt(trees)}</b> trees planted</span>
   `;
+
+  renderKpis(dist);
 
   // School-type-wise breakdown, scoped to district only (ignores category/status/search filters)
   const scope = DATA.filter(r => !dist || r.d === dist);
@@ -235,15 +257,6 @@ function renderTable() {
   const [data, summary] = await Promise.all([loadJSON('data/plantation.json'), loadJSON('data/summary.json')]);
   DATA = data;
   const p = summary.plantation;
-
-  document.getElementById('kpis').innerHTML = `
-    <div class="kpi"><div class="label">Total Schools</div><div class="value">${fmt(p.totalSchools)}</div></div>
-    <div class="kpi done"><div class="label">Done</div><div class="value">${fmt(p.done)}</div></div>
-    <div class="kpi pending"><div class="label">Pending</div><div class="value">${fmt(p.pending)}</div></div>
-    <div class="kpi"><div class="label">Government</div><div class="value">${fmt(p.govtDone)}<span class="of">/ ${fmt(p.govtTotal)}</span></div></div>
-    <div class="kpi"><div class="label">Aided</div><div class="value">${fmt(p.aidedDone)}<span class="of">/ ${fmt(p.aidedTotal)}</span></div></div>
-    <div class="kpi done"><div class="label">Trees Planted</div><div class="value">${fmt(p.treesPlanted)}</div></div>
-  `;
 
   const districts = p.byDistrict.map(d => d.district);
   const urlDist = getParam('district');
