@@ -72,6 +72,7 @@ a { color: inherit; }
 }
 .topnav .brand .leaf { color: var(--accent); }
 .topnav nav { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
+.topnav .gov-logo { height: 34px; width: auto; display: block; flex-shrink: 0; }
 .topnav nav a {
   text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 600;
   padding: 8px 14px; border-radius: 7px;
