@@ -250,8 +250,12 @@ function renderTable() {
   const sel = document.getElementById('districtSel');
   populateDistricts(sel, districts, urlDist);
 
+  const urlCat = getParam('category');
+  if (urlCat) document.getElementById('catSel').value = urlCat;
+
   sel.addEventListener('change', () => { setParam('district', sel.value); applyFilters(); });
-  document.getElementById('catSel').addEventListener('change', applyFilters);
+  const catSelEl = document.getElementById('catSel');
+  catSelEl.addEventListener('change', () => { setParam('category', catSelEl.value); applyFilters(); });
   document.getElementById('statusSel').addEventListener('change', applyFilters);
   document.getElementById('search').addEventListener('input', applyFilters);
   document.getElementById('pdfBtn').addEventListener('click', () => downloadPDF(sel.value));

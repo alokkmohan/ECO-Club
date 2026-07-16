@@ -47,6 +47,24 @@
   .hero h1 { font-size: clamp(28px, 4.5vw, 42px); }
   .hero .dek { margin: 0 auto; }
 
+  .type-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 0 0 36px; }
+  .type-btn {
+    display: flex; flex-direction: column; gap: 14px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 20px; text-decoration: none; color: var(--ink);
+    box-shadow: var(--shadow); transition: transform .15s ease, border-color .15s ease;
+  }
+  .type-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .type-btn .type-top { display: flex; align-items: center; gap: 14px; }
+  .type-btn .ring-wrap-sm { position: relative; flex-shrink: 0; width: 72px; height: 72px; }
+  .type-btn .ring-wrap-sm .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .type-btn .ring-wrap-sm .ring-pct { font-family: Calibri, Candara, sans-serif; font-size: 15px; font-weight: 700; }
+  .type-btn h3 { font-size: 17px; margin: 0 0 2px; font-family: Calibri, Candara, sans-serif; }
+  .type-btn .type-sub { font-size: 12px; color: var(--muted); }
+  .type-btn .type-stats { display: flex; flex-direction: column; gap: 5px; font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+  .type-btn .type-stats b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .type-btn .cta { font-size: 12.5px; font-weight: 700; color: var(--accent-ink); }
+
   .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; margin-bottom: 40px; }
   .chart-card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; box-shadow: var(--shadow); }
   .chart-card h3 { font-family: Calibri, Candara, sans-serif; font-size: 16px; margin: 0 0 4px; }
@@ -82,20 +100,23 @@
 
   <div class="report-grid" id="reportGrid"></div>
 
+  <div class="type-grid" id="typeGrid"></div>
+
   <div class="chart-grid" id="chartGrid"></div>
 </div>
 
 <script src="assets/site.js"></script>
 <script>
-function ring(id, pct, colorVar) {
-  const r = 46, c = 2 * Math.PI * r;
+function ring(pct, colorVar, size) {
+  size = size || 112;
+  const cx = size / 2, r = cx - 10, c = 2 * Math.PI * r, sw = size >= 100 ? 12 : 9;
   const off = c * (1 - pct / 100);
   return `
-    <svg width="112" height="112" viewBox="0 0 112 112" role="img" aria-label="${pct}% complete">
-      <circle cx="56" cy="56" r="${r}" fill="none" stroke="var(--track)" stroke-width="12"/>
-      <circle cx="56" cy="56" r="${r}" fill="none" stroke="${colorVar}" stroke-width="12"
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="${pct}% complete">
+      <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--track)" stroke-width="${sw}"/>
+      <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${colorVar}" stroke-width="${sw}"
         stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"
-        transform="rotate(-90 56 56)"/>
+        transform="rotate(-90 ${cx} ${cx})"/>
     </svg>`;
 }
 
@@ -127,7 +148,7 @@ function barList(rows, valueKey, colorVar, max) {
   document.getElementById('reportGrid').innerHTML = `
     <a class="report-btn" href="notification.html">
       <div class="ring-wrap">
-        ${ring('notif', notifPct, 'var(--accent)')}
+        ${ring(notifPct, 'var(--accent)')}
         <div class="ring-center"><span class="ring-pct">${notifPct}%</span><span class="ring-pct-label">Uploaded</span></div>
       </div>
       <div class="body">
@@ -147,7 +168,7 @@ function barList(rows, valueKey, colorVar, max) {
     </a>
     <a class="report-btn" href="plantation.html">
       <div class="ring-wrap">
-        ${ring('plant', plantPct, 'var(--accent)')}
+        ${ring(plantPct, 'var(--accent)')}
         <div class="ring-center"><span class="ring-pct">${plantPct}%</span><span class="ring-pct-label">Done</span></div>
       </div>
       <div class="body">
@@ -166,6 +187,36 @@ function barList(rows, valueKey, colorVar, max) {
       </div>
     </a>
   `;
+
+  const types = [
+    { key: 'G', label: 'Government Schools', total: n.govtTotal, notifDone: n.govtDone, hasPlant: true, plantTotal: p.govtTotal, plantDone: p.govtDone },
+    { key: 'A', label: 'Aided Schools', total: n.aidedTotal, notifDone: n.aidedDone, hasPlant: true, plantTotal: p.aidedTotal, plantDone: p.aidedDone },
+    { key: 'P', label: 'Private Schools', total: n.privTotal, notifDone: n.privDone, hasPlant: false },
+  ];
+  document.getElementById('typeGrid').innerHTML = types.map(t => {
+    const pct = t.total ? Math.round(t.notifDone / t.total * 100) : 0;
+    const plantLine = t.hasPlant
+      ? `<span>Plantation done <b>${fmt(t.plantDone)} / ${fmt(t.plantTotal)}</b></span>`
+      : `<span>Plantation tracking not applicable</span>`;
+    return `
+    <a class="type-btn" href="notification.html?category=${t.key}">
+      <div class="type-top">
+        <div class="ring-wrap-sm">
+          ${ring(pct, 'var(--accent)', 72)}
+          <div class="ring-center"><span class="ring-pct">${pct}%</span></div>
+        </div>
+        <div>
+          <h3>${t.label}</h3>
+          <div class="type-sub">${fmt(t.total)} schools tracked</div>
+        </div>
+      </div>
+      <div class="type-stats">
+        <span>Notification uploaded <b>${fmt(t.notifDone)} / ${fmt(t.total)}</b></span>
+        ${plantLine}
+      </div>
+      <div class="cta">View ${t.label.split(' ')[0]} schools &rarr;</div>
+    </a>`;
+  }).join('');
 
   const topTrees = [...p.byDistrict].sort((a, b) => b.treesPlanted - a.treesPlanted).slice(0, 8);
   const topPending = [...n.byDistrict]
