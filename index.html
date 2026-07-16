@@ -47,23 +47,28 @@
   .hero h1 { font-size: clamp(28px, 4.5vw, 42px); }
   .hero .dek { margin: 0 auto; }
 
-  .type-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 0 0 36px; }
+  .type-section-label { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 28px 0 12px; }
+  .type-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 0 0 12px; }
   .type-btn {
-    display: flex; flex-direction: column; gap: 14px;
-    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
-    padding: 20px; text-decoration: none; color: var(--ink);
+    display: flex; flex-direction: column; gap: 12px;
+    background: var(--panel); border: 1px solid var(--line); border-top: 4px solid var(--type-c);
+    border-radius: 14px; padding: 18px 20px; text-decoration: none; color: var(--ink);
     box-shadow: var(--shadow); transition: transform .15s ease, border-color .15s ease;
   }
-  .type-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .type-btn:hover { border-color: var(--type-c); border-top-color: var(--type-c); transform: translateY(-2px); }
+  .type-btn.govt { --type-c: var(--type-govt); }
+  .type-btn.aided { --type-c: var(--type-aided); }
+  .type-btn.private { --type-c: var(--type-private); }
   .type-btn .type-top { display: flex; align-items: center; gap: 14px; }
-  .type-btn .ring-wrap-sm { position: relative; flex-shrink: 0; width: 72px; height: 72px; }
+  .type-btn .ring-wrap-sm { position: relative; flex-shrink: 0; width: 64px; height: 64px; }
   .type-btn .ring-wrap-sm .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-  .type-btn .ring-wrap-sm .ring-pct { font-family: Calibri, Candara, sans-serif; font-size: 15px; font-weight: 700; }
-  .type-btn h3 { font-size: 17px; margin: 0 0 2px; font-family: Calibri, Candara, sans-serif; }
+  .type-btn .ring-wrap-sm .ring-pct { font-family: Calibri, Candara, sans-serif; font-size: 14px; font-weight: 700; color: var(--type-c); }
+  .type-btn .type-eyebrow { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; color: var(--type-c); }
+  .type-btn h3 { font-size: 16px; margin: 2px 0 2px; font-family: Calibri, Candara, sans-serif; }
   .type-btn .type-sub { font-size: 12px; color: var(--muted); }
-  .type-btn .type-stats { display: flex; flex-direction: column; gap: 5px; font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+  .type-btn .type-stats { display: flex; flex-direction: column; gap: 5px; font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; }
   .type-btn .type-stats b { color: var(--ink); font-variant-numeric: tabular-nums; }
-  .type-btn .cta { font-size: 12.5px; font-weight: 700; color: var(--accent-ink); }
+  .type-btn .cta { font-size: 12.5px; font-weight: 700; color: var(--type-c); }
 
   .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; margin-bottom: 40px; }
   .chart-card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; box-shadow: var(--shadow); }
@@ -100,7 +105,11 @@
 
   <div class="report-grid" id="reportGrid"></div>
 
-  <div class="type-grid" id="typeGrid"></div>
+  <p class="type-section-label">Notification | by school type</p>
+  <div class="type-grid" id="typeGridNotif"></div>
+
+  <p class="type-section-label">Plantation | by school type</p>
+  <div class="type-grid" id="typeGridPlant"></div>
 
   <div class="chart-grid" id="chartGrid"></div>
 </div>
@@ -188,35 +197,51 @@ function barList(rows, valueKey, colorVar, max) {
     </a>
   `;
 
-  const types = [
-    { key: 'G', label: 'Government Schools', total: n.govtTotal, notifDone: n.govtDone, hasPlant: true, plantTotal: p.govtTotal, plantDone: p.govtDone },
-    { key: 'A', label: 'Aided Schools', total: n.aidedTotal, notifDone: n.aidedDone, hasPlant: true, plantTotal: p.aidedTotal, plantDone: p.aidedDone },
-    { key: 'P', label: 'Private Schools', total: n.privTotal, notifDone: n.privDone, hasPlant: false },
-  ];
-  document.getElementById('typeGrid').innerHTML = types.map(t => {
-    const pct = t.total ? Math.round(t.notifDone / t.total * 100) : 0;
-    const plantLine = t.hasPlant
-      ? `<span>Plantation done <b>${fmt(t.plantDone)} / ${fmt(t.plantTotal)}</b></span>`
-      : `<span>Plantation tracking not applicable</span>`;
+  const TYPE_CLASS = { G: 'govt', A: 'aided', P: 'private' };
+
+  function typeCard(cls, key, label, sub, pct, statLabel, statVal, statTotal, href) {
     return `
-    <a class="type-btn" href="notification.html?category=${t.key}">
+    <a class="type-btn ${cls}" href="${href}">
       <div class="type-top">
         <div class="ring-wrap-sm">
-          ${ring(pct, 'var(--accent)', 72)}
+          ${ring(pct, `var(--type-${cls})`, 64)}
           <div class="ring-center"><span class="ring-pct">${pct}%</span></div>
         </div>
         <div>
-          <h3>${t.label}</h3>
-          <div class="type-sub">${fmt(t.total)} schools tracked</div>
+          <div class="type-eyebrow">${label}</div>
+          <h3>${sub}</h3>
         </div>
       </div>
       <div class="type-stats">
-        <span>Notification uploaded <b>${fmt(t.notifDone)} / ${fmt(t.total)}</b></span>
-        ${plantLine}
+        <span>${statLabel} <b>${fmt(statVal)} / ${fmt(statTotal)}</b></span>
       </div>
-      <div class="cta">View ${t.label.split(' ')[0]} schools &rarr;</div>
+      <div class="cta">View report &rarr;</div>
     </a>`;
+  }
+
+  const notifTypes = [
+    { key: 'G', cls: 'govt', label: 'Government', total: n.govtTotal, done: n.govtDone },
+    { key: 'A', cls: 'aided', label: 'Aided', total: n.aidedTotal, done: n.aidedDone },
+    { key: 'P', cls: 'private', label: 'Private', total: n.privTotal, done: n.privDone },
+  ];
+  document.getElementById('typeGridNotif').innerHTML = notifTypes.map(t => {
+    const pct = t.total ? Math.round(t.done / t.total * 100) : 0;
+    return typeCard(t.cls, t.key, t.label, `${fmt(t.total)} schools`, pct, 'Uploaded', t.done, t.total, `notification.html?category=${t.key}`);
   }).join('');
+
+  const plantTypes = [
+    { key: 'G', cls: 'govt', label: 'Government', total: p.govtTotal, done: p.govtDone },
+    { key: 'A', cls: 'aided', label: 'Aided', total: p.aidedTotal, done: p.aidedDone },
+  ];
+  document.getElementById('typeGridPlant').innerHTML = plantTypes.map(t => {
+    const pct = t.total ? Math.round(t.done / t.total * 100) : 0;
+    return typeCard(t.cls, t.key, t.label, `${fmt(t.total)} schools`, pct, 'Done', t.done, t.total, `plantation.html?category=${t.key}`);
+  }).join('') + `
+    <a class="type-btn private" href="notification.html?category=P" style="justify-content:center;">
+      <div class="type-eyebrow">Private</div>
+      <h3 style="margin-bottom:2px;">Not tracked</h3>
+      <div class="type-sub">Plantation drive currently covers Government and Aided schools only.</div>
+    </a>`;
 
   const topTrees = [...p.byDistrict].sort((a, b) => b.treesPlanted - a.treesPlanted).slice(0, 8);
   const topPending = [...n.byDistrict]
