@@ -62,23 +62,36 @@ a { color: inherit; }
   margin-bottom: 32px;
 }
 .topnav .inner {
-  max-width: 1180px; margin: 0 auto; padding: 16px 24px;
-  display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
+  max-width: 1180px; margin: 0 auto; padding: 14px 24px;
+  display: grid; align-items: center; gap: 10px 24px;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "brand nav logo";
 }
 .topnav .brand {
+  grid-area: brand;
   font-family: Calibri, Candara, "Segoe UI", Optima, sans-serif;
   font-weight: 700; font-size: 19px; text-decoration: none; color: var(--ink);
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: center; gap: 8px; white-space: nowrap;
 }
 .topnav .brand .leaf { color: var(--accent); }
-.topnav nav { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
-.topnav .gov-logo { height: 34px; width: auto; display: block; flex-shrink: 0; }
+.topnav nav { grid-area: nav; display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
+.topnav .gov-logo { grid-area: logo; height: 34px; width: auto; display: block; flex-shrink: 0; justify-self: end; }
 .topnav nav a {
   text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 600;
   padding: 8px 14px; border-radius: 7px;
 }
 .topnav nav a:hover { color: var(--ink); background: var(--accent-soft); }
 .topnav nav a.active { color: var(--accent-ink); background: var(--accent-soft); }
+
+@media (max-width: 640px) {
+  .topnav .inner {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "brand logo"
+      "nav nav";
+  }
+  .topnav nav { justify-content: flex-start; }
+}
 
 /* ── Page header ─────────────────────────────────────────────────────── */
 header.page { margin-bottom: 28px; }
