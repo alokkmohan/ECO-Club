@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECO Club — Uttar Pradesh</title>
+<meta name="description" content="ECO Club Uttar Pradesh — school notification and plantation drive status, district-wise.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="leaf">&#127807;</span> ECO Club — Uttar Pradesh</a>
+    <nav>
+      <a href="index.html" class="active">Home</a>
+      <a href="summary.html">Summary</a>
+      <a href="notification.html">Notification Report</a>
+      <a href="plantation.html">Plantation Report</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="page">
+    <p class="eyebrow">School-wise ECO Club Tracking</p>
+    <h1>Notification uploads &amp; plantation drive, district by district</h1>
+    <p class="dek">Government, Aided and Private secondary schools across Uttar Pradesh — who has uploaded their ECO Club notification, and who has completed the plantation drive. Pick a report below; each one can be filtered to a single district.</p>
+  </header>
+
+  <div class="kpi-row" id="heroKpis"></div>
+
+  <div class="card-grid">
+    <a class="card" href="summary.html">
+      <span class="card-eyebrow">Overview</span>
+      <h2>Summary</h2>
+      <p>State-wide totals and a district-by-district table covering both notification uploads and the plantation drive in one place.</p>
+      <span class="card-stat" id="cardSummaryStat">Loading…</span>
+    </a>
+    <a class="card" href="notification.html">
+      <span class="card-eyebrow">Report</span>
+      <h2>Notification Report</h2>
+      <p>Every Govt, Aided and Private school — has it uploaded its ECO Club notification yet? Filter by district or search by name.</p>
+      <span class="card-stat" id="cardNotifStat">Loading…</span>
+    </a>
+    <a class="card" href="plantation.html">
+      <span class="card-eyebrow">Report</span>
+      <h2>Plantation Report</h2>
+      <p>Govt and Aided secondary schools — plantation drive completion status and trees planted, filterable by district.</p>
+      <span class="card-stat" id="cardPlantStat">Loading…</span>
+    </a>
+  </div>
+
+  <footer class="note">
+    <strong>Data note.</strong> Figures are generated from the ECO Club UP school master list (Government, Aided, Private secondary schools), matched by UDISE code against submitted notification and plantation records. Private-school coverage is currently available for a subset of districts.
+  </footer>
+</div>
+
+<script src="assets/site.js"></script>
+<script>
+(async function () {
+  try {
+    const s = await loadJSON('data/summary.json');
+    const n = s.notification, p = s.plantation;
+
+    document.getElementById('heroKpis').innerHTML = `
+      <div class="kpi"><div class="label">Schools tracked</div><div class="value">${fmt(n.totalSchools)}</div></div>
+      <div class="kpi done"><div class="label">Notification uploaded</div><div class="value">${fmt(n.uploaded)}<span class="of">/ ${fmt(n.totalSchools)}</span></div></div>
+      <div class="kpi pending"><div class="label">Notification pending</div><div class="value">${fmt(n.pending)}</div></div>
+      <div class="kpi done"><div class="label">Plantation done</div><div class="value">${fmt(p.done)}<span class="of">/ ${fmt(p.totalSchools)}</span></div></div>
+      <div class="kpi done"><div class="label">Trees planted</div><div class="value">${fmt(p.treesPlanted)}</div></div>
+    `;
+
+    document.getElementById('cardSummaryStat').innerHTML = `${s.notification.byDistrict.length} districts tracked · generated ${s.generated}`;
+    document.getElementById('cardNotifStat').innerHTML = `<b>${fmt(n.uploaded)}</b> uploaded &middot; <b>${fmt(n.pending)}</b> pending`;
+    document.getElementById('cardPlantStat').innerHTML = `<b>${fmt(p.done)}</b> done &middot; <b>${fmt(p.pending)}</b> pending`;
+  } catch (e) {
+    console.error(e);
+  }
+})();
+</script>
+</body>
+</html>

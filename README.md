@@ -1,151 +1,30 @@
-# 🌱 UP Secondary Schools Eco Club Monitoring Dashboard
+# ECO Club — Uttar Pradesh
 
-A professional Streamlit-based monitoring dashboard for tracking Eco Club activities across Uttar Pradesh secondary schools.
+A static dashboard tracking ECO Club notification uploads and the plantation drive across Government, Aided and Private secondary schools in Uttar Pradesh.
 
-**Last Updated:** January 6, 2026
+**Live site:** https://alokkmohan.github.io/ECO-Club/ (enable GitHub Pages on this repo, source: `main` branch, root)
 
-## 📊 Features
+## Pages
 
-- **Dual Report System**
-  - 📋 Notification Upload Status Report
-  - 🌳 Tree Plantation Report
+- `index.html` — landing page, state-wide headline numbers
+- `summary.html` — every district, both reports, side by side
+- `notification.html` — school-level notification upload status, filterable by district/category/status, searchable
+- `plantation.html` — school-level plantation drive status + trees planted, filterable by district/category/status, searchable
 
-- **Advanced Filtering**
-  - District-wise filtering
-  - School Type filtering (Private/Government)
-  - Status-based filtering (Uploaded/Not Uploaded)
+Both report pages support a `?district=<Name>` URL parameter, so you can share a direct link to a single district's list (e.g. `notification.html?district=SHAHJAHANPUR`).
 
-- **Real-time Metrics**
-  - Total schools count
-  - Upload status tracking
-  - Tree plantation statistics
-  - Auto-updating summaries
+## Data
 
-- **User-Friendly Interface**
-  - Mobile responsive design
-  - Tabbed navigation
-  - Downloadable CSV reports
-  - Loading indicators
+All data lives in `data/*.json`:
 
-## 🚀 Quick Start
+- `summary.json` — state-wide and per-district aggregates for both reports
+- `notification.json` — one record per school: `{d: district, b: block, c: category (G/A/P), n: name, u: udise, s: status (0/1)}`
+- `plantation.json` — same shape plus `t: trees planted`
 
-### Prerequisites
+These are generated from the ECO Club master school list (Government + Aided + Private secondary schools), matched by UDISE code against submitted notification and plantation records. Schools with a madarsa-pattern name are excluded. Private-school coverage is available for a subset of districts only.
 
-- Python 3.8+
-- pip
+To regenerate the data files, run the site-data build script against the current master workbook and drop the resulting JSON into `data/`.
 
-### Installation
+## No backend
 
-1. **Clone the repository**
-```bash
-git clone https://github.com/alokkmohan/ECO-Club.git
-cd ECO-Club
-```
-
-2. **Create virtual environment**
-```bash
-python -m venv venv
-venv\Scripts\activate  # Windows
-```
-
-3. **Install dependencies**
-```bash
-pip install -r requirements.txt
-```
-
-4. **Prepare data files**
-
-Place the following Excel files in the project root:
-- `School Master.xlsx`
-- `All_Schools_with_Notifications_UTTAR PRADESH.xlsx`
-- `UTTAR PRADESH.xlsx`
-
-5. **(Optional) Convert to CSV for faster loading**
-```bash
-python convert_to_csv.py
-```
-
-6. **Run the dashboard**
-```bash
-streamlit run app.py
-```
-
-The dashboard will open at `http://localhost:8501`
-
-## 📁 Project Structure
-
-```
-eco-club-dashboard/
-├── app.py                      # Main Streamlit application
-├── data_service.py             # Data processing logic
-├── convert_to_csv.py           # Excel to CSV converter
-├── requirements.txt            # Python dependencies
-├── README.md                   # This file
-└── .gitignore                  # Git ignore rules
-```
-
-## 📋 Data Files Required
-
-### School Master.xlsx
-Contains all secondary schools with columns:
-- District Name
-- School Name
-- UDISE Code
-- School Management
-- School Category
-
-### All_Schools_with_Notifications_UTTAR PRADESH.xlsx
-Contains UDISE codes of schools that uploaded notifications
-
-### UTTAR PRADESH.xlsx
-Contains tree plantation data with columns:
-- UDISE ID
-- Saplings (tree count)
-
-## 🎨 Dashboard Sections
-
-### Notification Report Tab
-- Filter by district and school type
-- View upload status
-- Download filtered reports
-- Track notification compliance
-
-### Tree Planted Report Tab
-- Filter by district and school type
-- View plantation statistics
-- Download tree reports
-- Monitor tree count across schools
-
-## 🔧 Configuration
-
-The dashboard uses:
-- **Caching**: 10-minute cache for faster performance
-- **Auto-reload**: Updates when data files change
-- **CSV Support**: Automatically uses CSV if available (10-20x faster than Excel)
-
-## 📱 Mobile Support
-
-Fully responsive design that works on:
-- Desktop computers
-- Tablets
-- Mobile phones
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 👨‍💻 Developer
-
-**Alok Mohan**  
-📧 alokmohann@gmail.com  
-🔗 [GitHub](https://github.com/alokkmohan)
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 🙏 Acknowledgments
-
-- Built for Eco Club monitoring in Uttar Pradesh
-- Designed for DIOS, DC, and School Principals
-- Streamlit framework for rapid dashboard development
+Everything here is static HTML/CSS/vanilla JS reading local JSON — no server, no build step. Any static host (GitHub Pages, Netlify, a custom domain) works.

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notification Report — ECO Club Uttar Pradesh</title>
+<meta name="description" content="ECO Club notification upload status for every Government, Aided and Private school in Uttar Pradesh, filterable by district.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="leaf">&#127807;</span> ECO Club — Uttar Pradesh</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="summary.html">Summary</a>
+      <a href="notification.html" class="active">Notification Report</a>
+      <a href="plantation.html">Plantation Report</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="page">
+    <p class="eyebrow">School-level report</p>
+    <h1>Notification upload status</h1>
+    <p class="dek">Has each Government, Aided or Private secondary school uploaded its ECO Club notification? Pick a district to see its full list, or search by school name.</p>
+  </header>
+
+  <div class="kpi-row" id="kpis"></div>
+
+  <div class="toolbar">
+    <div class="field">
+      <label for="districtSel">District</label>
+      <select id="districtSel"></select>
+    </div>
+    <div class="field">
+      <label for="catSel">Category</label>
+      <select id="catSel">
+        <option value="">All Categories</option>
+        <option value="G">Government</option>
+        <option value="A">Aided</option>
+        <option value="P">Private</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="statusSel">Status</label>
+      <select id="statusSel">
+        <option value="">All</option>
+        <option value="1">Uploaded</option>
+        <option value="0">Pending</option>
+      </select>
+    </div>
+    <div class="field search-field">
+      <label for="search">Search school</label>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="text" placeholder="School name…" autocomplete="off">
+    </div>
+    <div class="legend">
+      <span><span class="dot done"></span>Uploaded</span>
+      <span><span class="dot pending"></span>Pending</span>
+    </div>
+  </div>
+
+  <div class="district-strip" id="strip"></div>
+
+  <div class="table-scroll">
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th data-key="c">Category</th>
+          <th data-key="d">District</th>
+          <th data-key="b">Block</th>
+          <th data-key="n">School Name</th>
+          <th data-key="u" class="num">UDISE Code</th>
+          <th data-key="s">Status</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="pager" id="pager"></div>
+
+  <footer class="note">
+    <strong>Data note.</strong> Matched by UDISE code between the school master list and submitted notification records. Private-school coverage is available for a subset of districts only — a district missing from this report's private-school figures does not mean all its private schools have uploaded.
+  </footer>
+</div>
+
+<script src="assets/site.js"></script>
+<script>
+const CAT_LABEL = { G: 'Government', A: 'Aided', P: 'Private' };
+let DATA = [];
+let filtered = [];
+let page = 0;
+const PAGE_SIZE = 50;
+let sortKey = 'd', sortDir = 1;
+
+function applyFilters() {
+  const dist = document.getElementById('districtSel').value;
+  const cat = document.getElementById('catSel').value;
+  const status = document.getElementById('statusSel').value;
+  const q = document.getElementById('search').value.trim().toLowerCase();
+
+  filtered = DATA.filter(r =>
+    (!dist || r.d === dist) &&
+    (!cat || r.c === cat) &&
+    (status === '' || String(r.s) === status) &&
+    (!q || r.n.toLowerCase().includes(q))
+  );
+  filtered.sort((a, b) => {
+    const av = a[sortKey], bv = b[sortKey];
+    if (typeof av === 'string') return av.localeCompare(bv) * sortDir;
+    return (av - bv) * sortDir;
+  });
+  page = 0;
+  renderStrip(dist);
+  renderTable();
+}
+
+function renderStrip(dist) {
+  const total = filtered.length;
+  const done = filtered.filter(r => r.s === 1).length;
+  const label = dist ? titleCase(dist) : 'All Uttar Pradesh';
+  document.getElementById('strip').innerHTML = `
+    <span class="item">${label} &mdash; <b>${fmt(total)}</b> schools shown</span>
+    <span class="item"><b style="color:var(--accent-ink)">${fmt(done)}</b> uploaded</span>
+    <span class="item"><b style="color:var(--warn)">${fmt(total - done)}</b> pending</span>
+  `;
+}
+
+function renderTable() {
+  const start = page * PAGE_SIZE;
+  const rows = filtered.slice(start, start + PAGE_SIZE);
+  const tbody = document.getElementById('tbody');
+  if (!rows.length) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="6">No schools match these filters.</td></tr>`;
+  } else {
+    tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td>${CAT_LABEL[r.c] || r.c}</td>
+        <td>${titleCase(r.d)}</td>
+        <td>${r.b ? titleCase(r.b) : '—'}</td>
+        <td class="name">${r.n}</td>
+        <td class="num">${r.u}</td>
+        <td>${r.s === 1 ? '<span class="status-pill done">Uploaded</span>' : '<span class="status-pill pending">Pending</span>'}</td>
+      </tr>`).join('');
+  }
+
+  document.querySelectorAll('thead th[data-key]').forEach(th => {
+    th.classList.toggle('sorted', th.dataset.key === sortKey);
+    const ex = th.querySelector('.arrow'); if (ex) ex.remove();
+    if (th.dataset.key === sortKey) {
+      const span = document.createElement('span');
+      span.className = 'arrow'; span.textContent = sortDir === 1 ? '▲' : '▼';
+      th.appendChild(span);
+    }
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  document.getElementById('pager').innerHTML = `
+    <span>${fmt(filtered.length)} result${filtered.length === 1 ? '' : 's'} &middot; page ${page + 1} of ${totalPages}</span>
+    <div class="btns">
+      <button id="prevBtn" ${page === 0 ? 'disabled' : ''}>&larr; Prev</button>
+      <button id="nextBtn" ${page >= totalPages - 1 ? 'disabled' : ''}>Next &rarr;</button>
+    </div>`;
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  if (prevBtn) prevBtn.addEventListener('click', () => { page--; renderTable(); window.scrollTo({top: document.querySelector('.table-scroll').offsetTop - 20, behavior: 'smooth'}); });
+  if (nextBtn) nextBtn.addEventListener('click', () => { page++; renderTable(); window.scrollTo({top: document.querySelector('.table-scroll').offsetTop - 20, behavior: 'smooth'}); });
+}
+
+(async function () {
+  const [data, summary] = await Promise.all([loadJSON('data/notification.json'), loadJSON('data/summary.json')]);
+  DATA = data;
+  const n = summary.notification;
+
+  document.getElementById('kpis').innerHTML = `
+    <div class="kpi"><div class="label">Total Schools</div><div class="value">${fmt(n.totalSchools)}</div></div>
+    <div class="kpi done"><div class="label">Uploaded</div><div class="value">${fmt(n.uploaded)}</div></div>
+    <div class="kpi pending"><div class="label">Pending</div><div class="value">${fmt(n.pending)}</div></div>
+    <div class="kpi"><div class="label">Government</div><div class="value">${fmt(n.govtDone)}<span class="of">/ ${fmt(n.govtTotal)}</span></div></div>
+    <div class="kpi"><div class="label">Aided</div><div class="value">${fmt(n.aidedDone)}<span class="of">/ ${fmt(n.aidedTotal)}</span></div></div>
+    <div class="kpi"><div class="label">Private</div><div class="value">${fmt(n.privDone)}<span class="of">/ ${fmt(n.privTotal)}</span></div></div>
+  `;
+
+  const districts = n.byDistrict.map(d => d.district);
+  const urlDist = getParam('district');
+  const sel = document.getElementById('districtSel');
+  populateDistricts(sel, districts, urlDist);
+
+  sel.addEventListener('change', () => { setParam('district', sel.value); applyFilters(); });
+  document.getElementById('catSel').addEventListener('change', applyFilters);
+  document.getElementById('statusSel').addEventListener('change', applyFilters);
+  document.getElementById('search').addEventListener('input', applyFilters);
+  document.querySelectorAll('thead th[data-key]').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if (sortKey === key) sortDir *= -1;
+      else { sortKey = key; sortDir = 1; }
+      renderTable();
+    });
+  });
+
+  applyFilters();
+})();
+</script>
+</body>
+</html>

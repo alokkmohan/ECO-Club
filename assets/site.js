@@ -1,0 +1,28 @@
+const fmt = n => n.toLocaleString('en-IN');
+
+function getParam(name) {
+  return new URLSearchParams(window.location.search).get(name);
+}
+
+function setParam(name, value) {
+  const url = new URL(window.location.href);
+  if (value) url.searchParams.set(name, value);
+  else url.searchParams.delete(name);
+  window.history.replaceState({}, '', url);
+}
+
+async function loadJSON(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error(`Failed to load ${path}`);
+  return res.json();
+}
+
+function populateDistricts(selectEl, districts, selected) {
+  selectEl.innerHTML = '<option value="">All Districts</option>' +
+    districts.map(d => `<option value="${d}">${titleCase(d)}</option>`).join('');
+  if (selected) selectEl.value = selected;
+}
+
+function titleCase(s) {
+  return String(s).toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+}

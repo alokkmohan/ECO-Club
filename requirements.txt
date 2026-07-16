@@ -1,8 +1,0 @@
-streamlit
-pandas
-openpyxl
-plotly
-selenium
-webdriver-manager
-reportlab
-pillow
