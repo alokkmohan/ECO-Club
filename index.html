@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ECO Club Monitoring Dashboard | Uttar Pradesh</title>
 <meta name="description" content="ECO Club Monitoring Dashboard | Uttar Pradesh. Notification upload and plantation drive status, district-wise.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/style.css">
 <style>
   .stat-row {
@@ -142,6 +143,7 @@ function barList(rows, valueKey, colorVar, max) {
 (async function () {
   const s = await loadJSON('data/summary.json');
   const n = s.notification, p = s.plantation;
+  document.getElementById('lastUpdated').textContent = `| Data updated ${s.generated}`;
 
   document.getElementById('statRow').innerHTML = `
     <div class="stat"><div class="stat-label">Government Schools</div><div class="stat-num">${fmt(n.govtTotal)}</div></div>
@@ -265,6 +267,6 @@ function barList(rows, valueKey, colorVar, max) {
   `;
 })();
 </script>
-<footer class="site-footer">Powered by Alok Mohan (Educate Girls)</footer>
+<footer class="site-footer">Powered by Alok Mohan (Educate Girls) <span id="lastUpdated"></span></footer>
 </body>
 </html>

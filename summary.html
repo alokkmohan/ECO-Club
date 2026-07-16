@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Summary | ECO Club Uttar Pradesh</title>
 <meta name="description" content="State-wide and district-wise summary of ECO Club notification uploads and plantation drive status.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -127,6 +128,7 @@ function render() {
 (async function () {
   const s = await loadJSON('data/summary.json');
   const n = s.notification, p = s.plantation;
+  document.getElementById('lastUpdated').textContent = `| Data updated ${s.generated}`;
 
   document.getElementById('kpis').innerHTML = `
     <div class="kpi"><div class="label">Total Schools (Notif.)</div><div class="value">${fmt(n.totalSchools)}</div></div>
@@ -170,6 +172,6 @@ function render() {
   render();
 })();
 </script>
-<footer class="site-footer">Powered by Alok Mohan (Educate Girls)</footer>
+<footer class="site-footer">Powered by Alok Mohan (Educate Girls) <span id="lastUpdated"></span></footer>
 </body>
 </html>

@@ -186,6 +186,11 @@ td.name { font-weight: 500; white-space: normal; min-width: 220px; }
 
 .empty-row td { text-align: center; color: var(--muted); padding: 32px; }
 
+tfoot td {
+  padding: 12px 14px; font-weight: 700; background: var(--accent-soft);
+  border-top: 2px solid var(--line); font-variant-numeric: tabular-nums;
+}
+
 /* ── Pagination ──────────────────────────────────────────────────────── */
 .pager { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
 .pager .btns { display: flex; gap: 6px; }

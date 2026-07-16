@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Plantation Report | ECO Club Uttar Pradesh</title>
 <meta name="description" content="ECO Club plantation drive status for Government and Aided secondary schools in Uttar Pradesh, filterable by district.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -83,6 +84,7 @@
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
+      <tfoot id="tfoot"></tfoot>
     </table>
   </div>
 
@@ -231,6 +233,15 @@ function renderTable() {
       </tr>`).join('');
   }
 
+  const totalDone = filtered.filter(r => r.s === 1).length;
+  const totalTrees = filtered.reduce((a, r) => a + r.t, 0);
+  document.getElementById('tfoot').innerHTML = `
+    <tr>
+      <td colspan="5">Total (${fmt(filtered.length)} school${filtered.length === 1 ? '' : 's'} shown)</td>
+      <td><span style="color:var(--accent-ink)">${fmt(totalDone)} done</span> / <span style="color:var(--warn)">${fmt(filtered.length - totalDone)} pending</span></td>
+      <td class="num">${fmt(totalTrees)}</td>
+    </tr>`;
+
   document.querySelectorAll('thead th[data-key]').forEach(th => {
     th.classList.toggle('sorted', th.dataset.key === sortKey);
     const ex = th.querySelector('.arrow'); if (ex) ex.remove();
@@ -258,6 +269,7 @@ function renderTable() {
   const [data, summary] = await Promise.all([loadJSON('data/plantation.json'), loadJSON('data/summary.json')]);
   DATA = data;
   const p = summary.plantation;
+  document.getElementById('lastUpdated').textContent = `| Data updated ${summary.generated}`;
 
   const districts = p.byDistrict.map(d => d.district);
   const urlDist = getParam('district');
@@ -285,6 +297,6 @@ function renderTable() {
   applyFilters();
 })();
 </script>
-<footer class="site-footer">Powered by Alok Mohan (Educate Girls)</footer>
+<footer class="site-footer">Powered by Alok Mohan (Educate Girls) <span id="lastUpdated"></span></footer>
 </body>
 </html>

@@ -137,7 +137,7 @@ def agg_district(pool, is_plant):
     return sorted(rows, key=lambda r: r['district'])
 
 summary = {
-    'generated': pd.Timestamp.now().strftime('%Y-%m-%d'),
+    'generated': pd.Timestamp.now().strftime('%d %b %Y, %I:%M %p'),
     'notification': {
         'totalSchools': len(notif_pool),
         'uploaded': int(notif_pool['status'].sum()),
