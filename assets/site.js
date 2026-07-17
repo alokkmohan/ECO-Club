@@ -31,8 +31,8 @@ function titleCase(s) {
 (function () {
   const el = document.getElementById('visitCounter');
   if (!el) return;
-  fetch('https://api.countapi.xyz/hit/ecoclubup-dataimpact-in/visits')
+  fetch('https://api.counterapi.dev/v1/ecoclubup-dataimpact-in/visits/up')
     .then(r => r.json())
-    .then(d => { el.textContent = `${d.value.toLocaleString('en-IN')} visits`; })
+    .then(d => { el.textContent = `${d.count.toLocaleString('en-IN')} visits`; })
     .catch(() => { el.remove(); });
 })();
