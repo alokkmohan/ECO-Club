@@ -27,3 +27,12 @@ function populateDistricts(selectEl, districts, selected) {
 function titleCase(s) {
   return String(s).toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
 }
+
+(function () {
+  const el = document.getElementById('visitCounter');
+  if (!el) return;
+  fetch('https://api.countapi.xyz/hit/ecoclubup-dataimpact-in/visits')
+    .then(r => r.json())
+    .then(d => { el.textContent = `${d.value.toLocaleString('en-IN')} visits`; })
+    .catch(() => { el.remove(); });
+})();
