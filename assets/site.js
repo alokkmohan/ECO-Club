@@ -12,7 +12,8 @@ function setParam(name, value) {
 }
 
 async function loadJSON(path) {
-  const res = await fetch(path);
+  const bust = path.includes('?') ? '&' : '?';
+  const res = await fetch(`${path}${bust}v=${Date.now()}`, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Failed to load ${path}`);
   return res.json();
 }
