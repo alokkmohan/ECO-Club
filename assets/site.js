@@ -31,8 +31,10 @@ function titleCase(s) {
 (function () {
   const el = document.getElementById('visitCounter');
   if (!el) return;
-  fetch('https://api.counterapi.dev/v1/ecoclubup-dataimpact-in/visits/up')
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 4000);
+  fetch('https://api.counterapi.dev/v1/ecoclubup-dataimpact-in/visits/up', { signal: ctrl.signal })
     .then(r => r.json())
-    .then(d => { el.textContent = `${d.count.toLocaleString('en-IN')} visits`; })
-    .catch(() => { el.remove(); });
+    .then(d => { clearTimeout(timer); el.textContent = `${d.count.toLocaleString('en-IN')} visits`; })
+    .catch(() => { clearTimeout(timer); el.remove(); });
 })();
