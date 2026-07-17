@@ -247,11 +247,11 @@ function barList(rows, valueKey, colorVar, max) {
     </a>`;
 
   const topTrees = [...p.byDistrict].sort((a, b) => b.treesPlanted - a.treesPlanted).slice(0, 8);
-  const topPending = [...n.byDistrict]
-    .map(d => ({ district: d.district, pending: (d.govtTotal + d.aidedTotal + d.privTotal) - (d.govtDone + d.aidedDone + d.privDone) }))
-    .sort((a, b) => b.pending - a.pending).slice(0, 8);
+  const topUploaded = [...n.byDistrict]
+    .map(d => ({ district: d.district, uploaded: d.govtDone + d.aidedDone + d.privDone }))
+    .sort((a, b) => b.uploaded - a.uploaded).slice(0, 8);
   const maxTrees = Math.max(...topTrees.map(d => d.treesPlanted));
-  const maxPending = Math.max(...topPending.map(d => d.pending));
+  const maxUploaded = Math.max(...topUploaded.map(d => d.uploaded));
 
   document.getElementById('chartGrid').innerHTML = `
     <div class="chart-card">
@@ -260,9 +260,9 @@ function barList(rows, valueKey, colorVar, max) {
       ${barList(topTrees, 'treesPlanted', 'var(--accent)', maxTrees)}
     </div>
     <div class="chart-card">
-      <h3>Top Districts | Notification Pending</h3>
-      <div class="chart-sub">Govt + Aided + Private schools yet to upload</div>
-      ${barList(topPending, 'pending', 'var(--warn)', maxPending)}
+      <h3>Top Districts | Notification Uploaded</h3>
+      <div class="chart-sub">Govt + Aided + Private schools, most uploads</div>
+      ${barList(topUploaded, 'uploaded', 'var(--accent)', maxUploaded)}
     </div>
   `;
 })();
