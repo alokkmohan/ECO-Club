@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Summary | ECO Club Uttar Pradesh</title>
-<meta name="description" content="State-wide and district-wise summary of ECO Club notification uploads and plantation drive status.">
+<title>Report | ECO Club Uttar Pradesh</title>
+<meta name="description" content="District-wise summary of ECO Club schools by type, notification uploads and trees planted.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/style.css">
 </head>
@@ -17,6 +17,7 @@
       <a href="index.html">Home</a>
       <a href="notification.html">Notification</a>
       <a href="plantation.html">Plantation</a>
+      <a href="summary.html" class="active">Report</a>
     </nav>
     <img class="gov-logo" src="assets/samagra-shiksha-logo.jpg" alt="Samagra Shiksha">
   </div>
@@ -24,9 +25,9 @@
 
 <div class="wrap">
   <header class="page">
-    <p class="eyebrow">State-wide overview</p>
-    <h1>Summary | every district, both reports</h1>
-    <p class="dek">Notification upload and plantation drive status side by side for each district. Click a district row's report link to see the school-level list.</p>
+    <p class="eyebrow">District-wise summary</p>
+    <h1>Report</h1>
+    <p class="dek">Every district: how many Government, Aided and Private schools there are, how many uploaded their notification, and how many trees were planted.</p>
   </header>
 
   <div class="kpi-row" id="kpis"></div>
@@ -45,14 +46,13 @@
         <tr>
           <th data-key="rank" class="num">#</th>
           <th data-key="district">District</th>
-          <th data-key="notifTotal" class="num">Notif.<br>Total</th>
-          <th data-key="notifUploaded" class="num">Notif.<br>Uploaded</th>
-          <th data-key="notifPct" class="num">Notif. %</th>
-          <th data-key="plantTotal" class="num">Plant.<br>Total (G+A)</th>
-          <th data-key="plantDone" class="num">Plant.<br>Done</th>
-          <th data-key="plantPct" class="num">Plant. %</th>
+          <th data-key="govtTotal" class="num">Govt<br>Total</th>
+          <th data-key="govtDone" class="num">Govt<br>Uploaded</th>
+          <th data-key="aidedTotal" class="num">Aided<br>Total</th>
+          <th data-key="aidedDone" class="num">Aided<br>Uploaded</th>
+          <th data-key="privTotal" class="num">Private<br>Total</th>
+          <th data-key="privDone" class="num">Private<br>Uploaded</th>
           <th data-key="trees" class="num">Trees<br>Planted</th>
-          <th>Reports</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
@@ -61,14 +61,14 @@
   </div>
 
   <footer class="note">
-    <strong>Reading this table.</strong> "Notif. Total" is Govt + Aided + Private schools tracked for that district (Private coverage is partial). "Plant. Total" is Govt + Aided only, matching the plantation drive's current scope. Use the report links to jump straight to a filtered school-level list for that district.
+    <strong>Reading this table.</strong> "Total" is schools of that type in the district; "Uploaded" is how many have submitted their ECO Club notification. Trees Planted covers Government + Aided schools only (Private schools aren't part of the plantation drive tracking). Private-school coverage is available for a subset of districts.
   </footer>
 </div>
 
 <script src="assets/site.js"></script>
 <script>
 let ROWS = [];
-let sortKey = 'notifPct';
+let sortKey = 'district';
 let sortDir = 1;
 let query = '';
 
@@ -82,20 +82,19 @@ function render() {
 
   const tbody = document.getElementById('tbody');
   if (!rows.length) {
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="10">No district matches "${query}".</td></tr>`;
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="9">No district matches "${query}".</td></tr>`;
   } else {
     tbody.innerHTML = rows.map((r, i) => `
       <tr>
         <td class="num">${i + 1}</td>
         <td class="name">${titleCase(r.district)}</td>
-        <td class="num">${fmt(r.notifTotal)}</td>
-        <td class="num">${fmt(r.notifUploaded)}</td>
-        <td class="num">${r.notifPct}%</td>
-        <td class="num">${fmt(r.plantTotal)}</td>
-        <td class="num">${fmt(r.plantDone)}</td>
-        <td class="num">${r.plantPct}%</td>
+        <td class="num">${fmt(r.govtTotal)}</td>
+        <td class="num">${fmt(r.govtDone)}</td>
+        <td class="num">${fmt(r.aidedTotal)}</td>
+        <td class="num">${fmt(r.aidedDone)}</td>
+        <td class="num">${r.privTotal ? fmt(r.privTotal) : 'N/A'}</td>
+        <td class="num">${r.privTotal ? fmt(r.privDone) : 'N/A'}</td>
         <td class="num">${fmt(r.trees)}</td>
-        <td><a href="notification.html?district=${encodeURIComponent(r.district)}">Notif.</a> &middot; <a href="plantation.html?district=${encodeURIComponent(r.district)}">Plant.</a></td>
       </tr>`).join('');
   }
 
@@ -104,14 +103,13 @@ function render() {
     <tr style="font-weight:700;background:var(--accent-soft);">
       <td></td>
       <td style="padding:12px 14px;">Total (${rows.length} districts)</td>
-      <td class="num" style="padding:12px 14px;">${fmt(sum('notifTotal'))}</td>
-      <td class="num" style="padding:12px 14px;">${fmt(sum('notifUploaded'))}</td>
-      <td class="num" style="padding:12px 14px;">${sum('notifTotal') ? Math.round(sum('notifUploaded')/sum('notifTotal')*100) : 0}%</td>
-      <td class="num" style="padding:12px 14px;">${fmt(sum('plantTotal'))}</td>
-      <td class="num" style="padding:12px 14px;">${fmt(sum('plantDone'))}</td>
-      <td class="num" style="padding:12px 14px;">${sum('plantTotal') ? Math.round(sum('plantDone')/sum('plantTotal')*100) : 0}%</td>
+      <td class="num" style="padding:12px 14px;">${fmt(sum('govtTotal'))}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(sum('govtDone'))}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(sum('aidedTotal'))}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(sum('aidedDone'))}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(sum('privTotal'))}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(sum('privDone'))}</td>
       <td class="num" style="padding:12px 14px;">${fmt(sum('trees'))}</td>
-      <td></td>
     </tr>`;
 
   document.querySelectorAll('thead th[data-key]').forEach(th => {
@@ -131,26 +129,21 @@ function render() {
   document.getElementById('lastUpdated').textContent = `| Data updated ${s.generated}`;
 
   document.getElementById('kpis').innerHTML = `
-    <div class="kpi"><div class="label">Total Schools (Notif.)</div><div class="value">${fmt(n.totalSchools)}</div></div>
+    <div class="kpi"><div class="label">Government Schools</div><div class="value">${fmt(n.govtTotal)}</div></div>
+    <div class="kpi"><div class="label">Aided Schools</div><div class="value">${fmt(n.aidedTotal)}</div></div>
+    <div class="kpi"><div class="label">Private Schools Tracked</div><div class="value">${fmt(n.privTotal)}</div></div>
     <div class="kpi done"><div class="label">Notification Uploaded</div><div class="value">${fmt(n.uploaded)}</div></div>
-    <div class="kpi pending"><div class="label">Notification Pending</div><div class="value">${fmt(n.pending)}</div></div>
-    <div class="kpi done"><div class="label">Plantation Done</div><div class="value">${fmt(p.done)}<span class="of">/ ${fmt(p.totalSchools)}</span></div></div>
     <div class="kpi done"><div class="label">Trees Planted</div><div class="value">${fmt(p.treesPlanted)}</div></div>
   `;
 
   const plantByDist = Object.fromEntries(p.byDistrict.map(d => [d.district, d]));
   ROWS = n.byDistrict.map(d => {
-    const pd = plantByDist[d.district] || { govtTotal: 0, govtDone: 0, aidedTotal: 0, aidedDone: 0, treesPlanted: 0 };
-    const notifTotal = d.govtTotal + d.aidedTotal + d.privTotal;
-    const notifUploaded = d.govtDone + d.aidedDone + d.privDone;
-    const plantTotal = pd.govtTotal + pd.aidedTotal;
-    const plantDone = pd.govtDone + pd.aidedDone;
+    const pd = plantByDist[d.district] || { treesPlanted: 0 };
     return {
       district: d.district,
-      notifTotal, notifUploaded,
-      notifPct: notifTotal ? Math.round(notifUploaded / notifTotal * 100) : 0,
-      plantTotal, plantDone,
-      plantPct: plantTotal ? Math.round(plantDone / plantTotal * 100) : 0,
+      govtTotal: d.govtTotal, govtDone: d.govtDone,
+      aidedTotal: d.aidedTotal, aidedDone: d.aidedDone,
+      privTotal: d.privTotal, privDone: d.privDone,
       trees: pd.treesPlanted,
     };
   });
