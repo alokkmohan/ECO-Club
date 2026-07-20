@@ -52,7 +52,8 @@
           <th data-key="aidedDone" class="num">Aided<br>Uploaded</th>
           <th data-key="privTotal" class="num">Private<br>Total</th>
           <th data-key="privDone" class="num">Private<br>Uploaded</th>
-          <th data-key="trees" class="num">Trees<br>Planted</th>
+          <th data-key="govtTrees" class="num">Govt<br>Trees Planted</th>
+          <th data-key="aidedTrees" class="num">Aided<br>Trees Planted</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
@@ -82,7 +83,7 @@ function render() {
 
   const tbody = document.getElementById('tbody');
   if (!rows.length) {
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="9">No district matches "${query}".</td></tr>`;
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="10">No district matches "${query}".</td></tr>`;
   } else {
     tbody.innerHTML = rows.map((r, i) => `
       <tr>
@@ -94,7 +95,8 @@ function render() {
         <td class="num">${fmt(r.aidedDone)}</td>
         <td class="num">${r.privTotal ? fmt(r.privTotal) : 'N/A'}</td>
         <td class="num">${r.privTotal ? fmt(r.privDone) : 'N/A'}</td>
-        <td class="num">${fmt(r.trees)}</td>
+        <td class="num">${fmt(r.govtTrees)}</td>
+        <td class="num">${fmt(r.aidedTrees)}</td>
       </tr>`).join('');
   }
 
@@ -109,7 +111,8 @@ function render() {
       <td class="num" style="padding:12px 14px;">${fmt(sum('aidedDone'))}</td>
       <td class="num" style="padding:12px 14px;">${fmt(sum('privTotal'))}</td>
       <td class="num" style="padding:12px 14px;">${fmt(sum('privDone'))}</td>
-      <td class="num" style="padding:12px 14px;">${fmt(sum('trees'))}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(sum('govtTrees'))}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(sum('aidedTrees'))}</td>
     </tr>`;
 
   document.querySelectorAll('thead th[data-key]').forEach(th => {
@@ -138,13 +141,13 @@ function render() {
 
   const plantByDist = Object.fromEntries(p.byDistrict.map(d => [d.district, d]));
   ROWS = n.byDistrict.map(d => {
-    const pd = plantByDist[d.district] || { treesPlanted: 0 };
+    const pd = plantByDist[d.district] || { govtTrees: 0, aidedTrees: 0 };
     return {
       district: d.district,
       govtTotal: d.govtTotal, govtDone: d.govtDone,
       aidedTotal: d.aidedTotal, aidedDone: d.aidedDone,
       privTotal: d.privTotal, privDone: d.privDone,
-      trees: pd.treesPlanted,
+      govtTrees: pd.govtTrees, aidedTrees: pd.aidedTrees,
     };
   });
 

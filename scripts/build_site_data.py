@@ -132,6 +132,8 @@ def agg_district(pool, is_plant):
             row['privTotal'] = int(is_p.sum())
             row['privDone'] = int((is_p & (s == 1)).sum())
         else:
+            row['govtTrees'] = int(grp.loc[is_g, 'trees'].sum())
+            row['aidedTrees'] = int(grp.loc[is_a, 'trees'].sum())
             row['treesPlanted'] = int(grp['trees'].sum())
         rows.append(row)
     return sorted(rows, key=lambda r: r['district'])
