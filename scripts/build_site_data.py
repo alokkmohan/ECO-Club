@@ -91,6 +91,14 @@ def build_pool(govt, aided, priv):
 full_pool = build_pool(govt, aided, priv)
 print(f"Full pool (Govt+Aided+Private, madarsa excluded): {len(full_pool):,}")
 
+# Districts whose private data was pulled from the state master list rather
+# than an official district submission
+priv2 = priv.rename(columns={c: c.strip() for c in priv.columns})
+if 'Source' in priv2.columns:
+    raw_source_udise = set(priv2.loc[priv2['Source'] == 'State Master List', 'Udise Code'].apply(norm_udise))
+else:
+    raw_source_udise = set()
+
 notif_pool = full_pool.copy()
 notif_pool['status'] = notif_pool['UDISE_norm'].isin(uploaded_udise).astype(int)
 
@@ -131,6 +139,7 @@ def agg_district(pool, is_plant):
         if not is_plant:
             row['privTotal'] = int(is_p.sum())
             row['privDone'] = int((is_p & (s == 1)).sum())
+            row['privRawSource'] = bool(grp.loc[is_p, 'UDISE_norm'].isin(raw_source_udise).any())
         else:
             row['govtTrees'] = int(grp.loc[is_g, 'trees'].sum())
             row['aidedTrees'] = int(grp.loc[is_a, 'trees'].sum())

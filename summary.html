@@ -62,7 +62,7 @@
   </div>
 
   <footer class="note">
-    <strong>Reading this table.</strong> "Total" is schools of that type in the district; "Uploaded" is how many have submitted their ECO Club notification. Trees Planted covers Government + Aided schools only (Private schools aren't part of the plantation drive tracking). Private-school coverage is available for a subset of districts.
+    <strong>Reading this table.</strong> "Total" is schools of that type in the district; "Uploaded" is how many have submitted their ECO Club notification. Trees Planted covers Government + Aided schools only (Private schools aren't part of the plantation drive tracking). Private-school coverage is available for a subset of districts. <strong>*</strong> next to a district name means its Private school list was sourced from the state master list, not an official district submission.
   </footer>
 </div>
 
@@ -88,7 +88,7 @@ function render() {
     tbody.innerHTML = rows.map((r, i) => `
       <tr>
         <td class="num">${i + 1}</td>
-        <td class="name">${titleCase(r.district)}</td>
+        <td class="name">${titleCase(r.district)}${r.privRawSource ? ' <span title="Private school data sourced from the state master list; district has not yet submitted its own list.">*</span>' : ''}</td>
         <td class="num">${fmt(r.govtTotal)}</td>
         <td class="num">${fmt(r.govtDone)}</td>
         <td class="num">${fmt(r.aidedTotal)}</td>
@@ -147,6 +147,7 @@ function render() {
       govtTotal: d.govtTotal, govtDone: d.govtDone,
       aidedTotal: d.aidedTotal, aidedDone: d.aidedDone,
       privTotal: d.privTotal, privDone: d.privDone,
+      privRawSource: d.privRawSource,
       govtTrees: pd.govtTrees, aidedTrees: pd.aidedTrees,
     };
   });
