@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notification % Summary | ECO Club Uttar Pradesh</title>
+<meta name="description" content="District-wise ECO Club notification upload percentage, ranked high to low.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="leaf">&#127807;</span> ECO Club | Uttar Pradesh</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="notification.html">Notification</a>
+      <a href="plantation.html">Plantation</a>
+      <div class="nav-dropdown open">
+        <a href="summary.html" class="dropdown-toggle active">Reports <span class="caret">&#9662;</span></a>
+        <div class="dropdown-menu">
+          <a href="summary.html">District Summary</a>
+          <a href="notification-percent.html" class="active">Notification % Summary</a>
+          <a href="plantation-target.html">Plantation Target Summary</a>
+        </div>
+      </div>
+    </nav>
+    <img class="gov-logo" src="assets/samagra-shiksha-logo.jpg" alt="Samagra Shiksha">
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="page">
+    <p class="eyebrow">District-wise summary</p>
+    <h1>Notification % Summary</h1>
+    <p class="dek">Every district ranked by ECO Club notification upload percentage, high to low, across Government, Aided and Private schools.</p>
+  </header>
+
+  <div class="kpi-row" id="kpis"></div>
+
+  <div class="toolbar">
+    <div class="field search-field" style="margin-top:14px;">
+      <label for="search">Search district</label>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="text" placeholder="e.g. Shahjahanpur" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="table-scroll">
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th data-key="rank" class="num">#</th>
+          <th data-key="district">District</th>
+          <th data-key="total" class="num">Total Schools</th>
+          <th data-key="uploaded" class="num">Notification Uploaded</th>
+          <th data-key="pct" class="num">Uploaded %</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+      <tfoot id="tfoot"></tfoot>
+    </table>
+  </div>
+
+  <footer class="note">
+    <strong>Reading this table.</strong> "Total Schools" covers Government, Aided and Private secondary schools tracked for the district. "Uploaded %" is Notification Uploaded as a percentage of Total Schools, sorted high to low by default. <strong>*</strong> next to a district name means its Private school list was sourced from the state master list, not an official district submission.
+  </footer>
+</div>
+
+<script src="assets/site.js"></script>
+<script>
+let ROWS = [];
+let sortKey = 'pct';
+let sortDir = -1;
+let query = '';
+
+function render() {
+  let rows = ROWS.filter(r => r.district.toLowerCase().includes(query));
+  rows.sort((a, b) => {
+    const av = a[sortKey], bv = b[sortKey];
+    if (typeof av === 'string') return av.localeCompare(bv) * sortDir;
+    return (av - bv) * sortDir;
+  });
+
+  const tbody = document.getElementById('tbody');
+  if (!rows.length) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="5">No district matches "${query}".</td></tr>`;
+  } else {
+    tbody.innerHTML = rows.map((r, i) => `
+      <tr>
+        <td class="num">${i + 1}</td>
+        <td class="name">${titleCase(r.district)}${r.privRawSource ? ' <span title="Private school data sourced from the state master list; district has not yet submitted its own list.">*</span>' : ''}</td>
+        <td class="num">${fmt(r.total)}</td>
+        <td class="num">${fmt(r.uploaded)}</td>
+        <td class="num">${r.pct.toFixed(1)}%</td>
+      </tr>`).join('');
+  }
+
+  const sum = key => rows.reduce((a, r) => a + r[key], 0);
+  const totalSchools = sum('total'), totalUploaded = sum('uploaded');
+  document.getElementById('tfoot').innerHTML = `
+    <tr style="font-weight:700;background:var(--accent-soft);">
+      <td></td>
+      <td style="padding:12px 14px;">Total (${rows.length} districts)</td>
+      <td class="num" style="padding:12px 14px;">${fmt(totalSchools)}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(totalUploaded)}</td>
+      <td class="num" style="padding:12px 14px;">${totalSchools ? (totalUploaded / totalSchools * 100).toFixed(1) : '0.0'}%</td>
+    </tr>`;
+
+  document.querySelectorAll('thead th[data-key]').forEach(th => {
+    th.classList.toggle('sorted', th.dataset.key === sortKey);
+    const ex = th.querySelector('.arrow'); if (ex) ex.remove();
+    if (th.dataset.key === sortKey) {
+      const span = document.createElement('span');
+      span.className = 'arrow'; span.textContent = sortDir === 1 ? '▲' : '▼';
+      th.appendChild(span);
+    }
+  });
+}
+
+(async function () {
+  const s = await loadJSON('data/summary.json');
+  const n = s.notification;
+  document.getElementById('lastUpdated').textContent = `| Data updated ${s.generated}`;
+
+  document.getElementById('kpis').innerHTML = `
+    <div class="kpi"><div class="label">Total Schools</div><div class="value">${fmt(n.totalSchools)}</div></div>
+    <div class="kpi done"><div class="label">Notification Uploaded</div><div class="value">${fmt(n.uploaded)}</div></div>
+    <div class="kpi done"><div class="label">Statewide %</div><div class="value">${(n.uploaded / n.totalSchools * 100).toFixed(1)}%</div></div>
+  `;
+
+  ROWS = n.byDistrict.map(d => {
+    const total = d.govtTotal + d.aidedTotal + d.privTotal;
+    const uploaded = d.govtDone + d.aidedDone + d.privDone;
+    return {
+      district: d.district, total, uploaded,
+      pct: total ? uploaded / total * 100 : 0,
+      privRawSource: d.privRawSource,
+    };
+  });
+
+  document.querySelectorAll('thead th[data-key]').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if (key === 'rank') return;
+      if (sortKey === key) sortDir *= -1;
+      else { sortKey = key; sortDir = key === 'district' ? 1 : -1; }
+      render();
+    });
+  });
+  document.getElementById('search').addEventListener('input', e => {
+    query = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  render();
+})();
+</script>
+<footer class="site-footer">Powered by Alok Mohan (Educate Girls) <span id="lastUpdated"></span> | <span id="visitCounter">Loading visits…</span></footer>
+</body>
+</html>

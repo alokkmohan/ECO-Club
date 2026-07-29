@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plantation Target Summary | ECO Club Uttar Pradesh</title>
+<meta name="description" content="District-wise plantation target vs. trees planted, ranked by achieved percentage.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="leaf">&#127807;</span> ECO Club | Uttar Pradesh</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="notification.html">Notification</a>
+      <a href="plantation.html">Plantation</a>
+      <div class="nav-dropdown open">
+        <a href="summary.html" class="dropdown-toggle active">Reports <span class="caret">&#9662;</span></a>
+        <div class="dropdown-menu">
+          <a href="summary.html">District Summary</a>
+          <a href="notification-percent.html">Notification % Summary</a>
+          <a href="plantation-target.html" class="active">Plantation Target Summary</a>
+        </div>
+      </div>
+    </nav>
+    <img class="gov-logo" src="assets/samagra-shiksha-logo.jpg" alt="Samagra Shiksha">
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="page">
+    <p class="eyebrow">District-wise summary</p>
+    <h1>Plantation Target Summary</h1>
+    <p class="dek">Every district's plantation target against trees actually planted, ranked by achievement percentage, high to low.</p>
+  </header>
+
+  <div class="kpi-row" id="kpis"></div>
+
+  <div class="toolbar">
+    <div class="field search-field" style="margin-top:14px;">
+      <label for="search">Search district</label>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="text" placeholder="e.g. Meerut" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="table-scroll">
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th data-key="rank" class="num">#</th>
+          <th data-key="district">District</th>
+          <th data-key="target" class="num">Plantation Target</th>
+          <th data-key="treesPlanted" class="num">Trees Planted</th>
+          <th data-key="pct" class="num">Achieved %</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+      <tfoot id="tfoot"></tfoot>
+    </table>
+  </div>
+
+  <footer class="note">
+    <strong>Reading this table.</strong> "Trees Planted" covers Government, Aided and Private secondary schools. "Achieved %" is Trees Planted as a percentage of the district's assigned Plantation Target, sorted high to low by default.
+  </footer>
+</div>
+
+<script src="assets/site.js"></script>
+<script>
+let ROWS = [];
+let sortKey = 'pct';
+let sortDir = -1;
+let query = '';
+
+function render() {
+  let rows = ROWS.filter(r => r.district.toLowerCase().includes(query));
+  rows.sort((a, b) => {
+    const av = a[sortKey], bv = b[sortKey];
+    if (typeof av === 'string') return av.localeCompare(bv) * sortDir;
+    return (av - bv) * sortDir;
+  });
+
+  const tbody = document.getElementById('tbody');
+  if (!rows.length) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="5">No district matches "${query}".</td></tr>`;
+  } else {
+    tbody.innerHTML = rows.map((r, i) => `
+      <tr>
+        <td class="num">${i + 1}</td>
+        <td class="name">${titleCase(r.district)}</td>
+        <td class="num">${r.target ? fmt(r.target) : 'N/A'}</td>
+        <td class="num">${fmt(r.treesPlanted)}</td>
+        <td class="num">${r.target ? r.pct.toFixed(1) + '%' : 'N/A'}</td>
+      </tr>`).join('');
+  }
+
+  const sum = key => rows.reduce((a, r) => a + r[key], 0);
+  const totalTarget = sum('target'), totalTrees = sum('treesPlanted');
+  document.getElementById('tfoot').innerHTML = `
+    <tr style="font-weight:700;background:var(--accent-soft);">
+      <td></td>
+      <td style="padding:12px 14px;">Total (${rows.length} districts)</td>
+      <td class="num" style="padding:12px 14px;">${fmt(totalTarget)}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(totalTrees)}</td>
+      <td class="num" style="padding:12px 14px;">${totalTarget ? (totalTrees / totalTarget * 100).toFixed(1) : '0.0'}%</td>
+    </tr>`;
+
+  document.querySelectorAll('thead th[data-key]').forEach(th => {
+    th.classList.toggle('sorted', th.dataset.key === sortKey);
+    const ex = th.querySelector('.arrow'); if (ex) ex.remove();
+    if (th.dataset.key === sortKey) {
+      const span = document.createElement('span');
+      span.className = 'arrow'; span.textContent = sortDir === 1 ? '▲' : '▼';
+      th.appendChild(span);
+    }
+  });
+}
+
+(async function () {
+  const s = await loadJSON('data/summary.json');
+  const p = s.plantation;
+  document.getElementById('lastUpdated').textContent = `| Data updated ${s.generated}`;
+
+  document.getElementById('kpis').innerHTML = `
+    <div class="kpi"><div class="label">Plantation Target</div><div class="value">${fmt(p.targetTotal)}</div></div>
+    <div class="kpi done"><div class="label">Trees Planted</div><div class="value">${fmt(p.treesPlanted)}</div></div>
+    <div class="kpi done"><div class="label">Statewide %</div><div class="value">${(p.treesPlanted / p.targetTotal * 100).toFixed(1)}%</div></div>
+  `;
+
+  ROWS = p.byDistrict.map(d => ({
+    district: d.district,
+    target: d.target || 0,
+    treesPlanted: d.treesPlanted,
+    pct: d.achievedPct || 0,
+  }));
+
+  document.querySelectorAll('thead th[data-key]').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if (key === 'rank') return;
+      if (sortKey === key) sortDir *= -1;
+      else { sortKey = key; sortDir = key === 'district' ? 1 : -1; }
+      render();
+    });
+  });
+  document.getElementById('search').addEventListener('input', e => {
+    query = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  render();
+})();
+</script>
+<footer class="site-footer">Powered by Alok Mohan (Educate Girls) <span id="lastUpdated"></span> | <span id="visitCounter">Loading visits…</span></footer>
+</body>
+</html>

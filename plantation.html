@@ -17,7 +17,14 @@
       <a href="index.html">Home</a>
       <a href="notification.html">Notification</a>
       <a href="plantation.html" class="active">Plantation</a>
-      <a href="summary.html">Report</a>
+      <div class="nav-dropdown">
+        <a href="summary.html" class="dropdown-toggle">Reports <span class="caret">&#9662;</span></a>
+        <div class="dropdown-menu">
+          <a href="summary.html">District Summary</a>
+          <a href="notification-percent.html">Notification % Summary</a>
+          <a href="plantation-target.html">Plantation Target Summary</a>
+        </div>
+      </div>
     </nav>
     <img class="gov-logo" src="assets/samagra-shiksha-logo.jpg" alt="Samagra Shiksha">
   </div>
@@ -189,7 +196,16 @@ function renderStrip(dist) {
       <div class="cat-of" style="margin-top:2px;">${fmt(catTrees)} trees</div>
     </div>`;
   }).join('');
-  document.getElementById('catBreakdown').innerHTML = chips;
+
+  const scopeTrees = scope.reduce((a, r) => a + r.t, 0);
+  const target = dist ? TARGET_BY_DIST[dist] : STATEWIDE_TARGET;
+  const targetChip = `<div class="cat-chip">
+    <div class="cat-name">Plantation Target</div>
+    <div class="cat-val">${target ? (scopeTrees / target * 100).toFixed(1) + '%' : 'N/A'}<span class="cat-of">${target ? ' achieved' : ''}</span></div>
+    <div class="cat-of" style="margin-top:2px;">${target ? fmt(scopeTrees) + ' / ' + fmt(target) + ' trees' : 'No target set'}</div>
+  </div>`;
+
+  document.getElementById('catBreakdown').innerHTML = chips + targetChip;
 }
 
 function downloadPDF(dist) {

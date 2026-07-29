@@ -29,6 +29,21 @@ function titleCase(s) {
 }
 
 (function () {
+  document.querySelectorAll('.nav-dropdown > .dropdown-toggle').forEach(toggle => {
+    toggle.addEventListener('click', e => {
+      if (window.matchMedia('(hover: hover)').matches) return;
+      e.preventDefault();
+      toggle.closest('.nav-dropdown').classList.toggle('open');
+    });
+  });
+  document.addEventListener('click', e => {
+    document.querySelectorAll('.nav-dropdown.open').forEach(d => {
+      if (!d.contains(e.target)) d.classList.remove('open');
+    });
+  });
+})();
+
+(function () {
   const el = document.getElementById('visitCounter');
   if (!el) return;
   const ctrl = new AbortController();

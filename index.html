@@ -91,7 +91,14 @@
       <a href="index.html" class="active">Home</a>
       <a href="notification.html">Notification</a>
       <a href="plantation.html">Plantation</a>
-      <a href="summary.html">Report</a>
+      <div class="nav-dropdown">
+        <a href="summary.html" class="dropdown-toggle">Reports <span class="caret">&#9662;</span></a>
+        <div class="dropdown-menu">
+          <a href="summary.html">District Summary</a>
+          <a href="notification-percent.html">Notification % Summary</a>
+          <a href="plantation-target.html">Plantation Target Summary</a>
+        </div>
+      </div>
     </nav>
     <img class="gov-logo" src="assets/samagra-shiksha-logo.jpg" alt="Samagra Shiksha">
   </div>
@@ -194,7 +201,12 @@ function barList(rows, valueKey, colorVar, max) {
         <div class="legend-row">
           <span>Govt <b>${fmt(p.govtDone)}/${fmt(p.govtTotal)}</b></span>
           <span>Aided <b>${fmt(p.aidedDone)}/${fmt(p.aidedTotal)}</b></span>
-          <span>Trees <b>${fmt(p.treesPlanted)}</b></span>
+          <span>Private <b>${fmt(p.privDone)}/${fmt(p.privTotal)}</b></span>
+        </div>
+        <div class="legend-row">
+          <span>Trees Planted <b>${fmt(p.treesPlanted)}</b></span>
+          <span>Target <b>${fmt(p.targetTotal)}</b></span>
+          <span>Achieved <b>${(p.treesPlanted / p.targetTotal * 100).toFixed(1)}%</b></span>
         </div>
         <div class="cta">View school-level report &rarr;</div>
       </div>
@@ -236,16 +248,12 @@ function barList(rows, valueKey, colorVar, max) {
   const plantTypes = [
     { key: 'G', cls: 'govt', label: 'Government', total: p.govtTotal, done: p.govtDone },
     { key: 'A', cls: 'aided', label: 'Aided', total: p.aidedTotal, done: p.aidedDone },
+    { key: 'P', cls: 'private', label: 'Private', total: p.privTotal, done: p.privDone },
   ];
   document.getElementById('typeGridPlant').innerHTML = plantTypes.map(t => {
     const pct = t.total ? Math.round(t.done / t.total * 100) : 0;
     return typeCard(t.cls, t.key, t.label, `${fmt(t.total)} schools`, pct, 'Done', t.done, t.total, `plantation.html?category=${t.key}`);
-  }).join('') + `
-    <a class="type-btn private" href="notification.html?category=P" style="justify-content:center;">
-      <div class="type-eyebrow">Private</div>
-      <h3 style="margin-bottom:2px;">Not tracked</h3>
-      <div class="type-sub">Plantation drive currently covers Government and Aided schools only.</div>
-    </a>`;
+  }).join('');
 
   const topTrees = [...p.byDistrict].sort((a, b) => b.treesPlanted - a.treesPlanted).slice(0, 8);
   const topUploaded = [...n.byDistrict]
