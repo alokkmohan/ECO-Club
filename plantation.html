@@ -102,6 +102,8 @@
 <script src="assets/site.js"></script>
 <script>
 const CAT_LABEL = { G: 'Government', A: 'Aided', P: 'Private' };
+let TARGET_BY_DIST = {};
+let STATEWIDE_TARGET = 0;
 let DATA = [];
 let filtered = [];
 let page = 0;
@@ -140,6 +142,8 @@ function renderKpis(dist) {
     return { total: rows.length, done: rows.filter(r => r.s === 1).length };
   };
   const g = byCat('G'), a = byCat('A'), p = byCat('P');
+  const target = dist ? TARGET_BY_DIST[dist] : STATEWIDE_TARGET;
+  const achievedPct = target ? (trees / target * 100).toFixed(1) : null;
   document.getElementById('kpis').innerHTML = `
     <div class="kpi"><div class="label">Total Schools</div><div class="value">${fmt(total)}</div></div>
     <div class="kpi done"><div class="label">Done</div><div class="value">${fmt(done)}</div></div>
@@ -148,6 +152,8 @@ function renderKpis(dist) {
     <div class="kpi"><div class="label">Aided</div><div class="value">${fmt(a.done)}<span class="of">/ ${fmt(a.total)}</span></div></div>
     <div class="kpi"><div class="label">Private</div><div class="value">${p.total ? fmt(p.done) + '<span class="of">/ ' + fmt(p.total) + '</span>' : 'N/A'}</div></div>
     <div class="kpi done"><div class="label">Trees Planted</div><div class="value">${fmt(trees)}</div></div>
+    <div class="kpi"><div class="label">Plantation Target</div><div class="value">${target ? fmt(target) : 'N/A'}</div></div>
+    <div class="kpi done"><div class="label">Achieved %</div><div class="value">${achievedPct !== null ? achievedPct + '%' : 'N/A'}</div></div>
   `;
 }
 
@@ -279,6 +285,9 @@ function renderTable() {
   DATA = data;
   const p = summary.plantation;
   document.getElementById('lastUpdated').textContent = `| Data updated ${summary.generated}`;
+
+  TARGET_BY_DIST = Object.fromEntries(p.byDistrict.map(d => [d.district, d.target]));
+  STATEWIDE_TARGET = p.targetTotal || 0;
 
   const districts = p.byDistrict.map(d => d.district);
   const urlDist = getParam('district');

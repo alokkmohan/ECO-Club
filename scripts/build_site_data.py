@@ -9,6 +9,7 @@ The source folder must contain:
     All_Schools_with_Notifications_UTTAR PRADESH.xlsx
     Eco_Clubs_plantation_Uttar_Pradesh_all_schools.xlsx  (sheet: Schools)
     block.xlsx                         (sheet: Enrolment Details - Class Wise , columns: District Name, Block Name, School Name, UDISE Code)
+    Plantation target.csv              (columns: S.No, District, Target)
 """
 import pandas as pd
 import json, re, os, sys
@@ -48,6 +49,17 @@ govt  = pd.read_excel(os.path.join(BASE, 'Secondary School List .xlsx'), sheet_n
 aided = pd.read_excel(os.path.join(BASE, 'Secondary School List .xlsx'), sheet_name='Aided Schools ')
 priv  = pd.read_excel(os.path.join(BASE, 'Secondary School List .xlsx'), sheet_name='UP Board Private School')
 block = pd.read_excel(os.path.join(BASE, 'block.xlsx'), sheet_name='Enrolment Details - Class Wise ')
+target = pd.read_csv(os.path.join(BASE, 'Plantation target.csv'))
+target.columns = [c.strip() for c in target.columns]
+
+TARGET_DISTRICT_MAP = {
+    'BARABANKI': 'BARA BANKI',
+    'LAKHIMPUR KHERI': 'KHERI',
+    'MAHARAJGANJ': 'MAHRAJGANJ',
+}
+target['District'] = target['District'].astype(str).str.strip().str.upper()
+target['District'] = target['District'].apply(lambda d: TARGET_DISTRICT_MAP.get(d, d))
+target_by_district = target.set_index('District')['Target'].to_dict()
 
 notif['U'] = notif['UDISE ID'].apply(norm_udise)
 uploaded_udise = set(notif['U'])
@@ -147,6 +159,9 @@ def agg_district(pool, is_plant):
             row['aidedTrees'] = int(grp.loc[is_a, 'trees'].sum())
             row['privTrees'] = int(grp.loc[is_p, 'trees'].sum())
             row['treesPlanted'] = int(grp['trees'].sum())
+            tgt = target_by_district.get(dist)
+            row['target'] = int(tgt) if tgt is not None else None
+            row['achievedPct'] = round(row['treesPlanted'] / tgt * 100, 1) if tgt else None
         rows.append(row)
     return sorted(rows, key=lambda r: r['district'])
 
@@ -175,6 +190,7 @@ summary = {
         'aidedDone': int((plant_pool['Category'].eq('A') & (plant_pool['status']==1)).sum()),
         'privTotal': int(plant_pool['Category'].eq('P').sum()),
         'privDone': int((plant_pool['Category'].eq('P') & (plant_pool['status']==1)).sum()),
+        'targetTotal': int(target['Target'].sum()),
         'byDistrict': agg_district(plant_pool, is_plant=True),
     },
 }

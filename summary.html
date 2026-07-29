@@ -55,6 +55,8 @@
           <th data-key="govtTrees" class="num">Govt<br>Trees Planted</th>
           <th data-key="aidedTrees" class="num">Aided<br>Trees Planted</th>
           <th data-key="privTrees" class="num">Private<br>Trees Planted</th>
+          <th data-key="target" class="num">Plantation<br>Target</th>
+          <th data-key="achievedPct" class="num">Achieved<br>%</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
@@ -63,7 +65,7 @@
   </div>
 
   <footer class="note">
-    <strong>Reading this table.</strong> "Total" is schools of that type in the district; "Uploaded" is how many have submitted their ECO Club notification. Trees Planted covers Government, Aided and Private schools. Private-school coverage is available for a subset of districts. <strong>*</strong> next to a district name means its Private school list was sourced from the state master list, not an official district submission.
+    <strong>Reading this table.</strong> "Total" is schools of that type in the district; "Uploaded" is how many have submitted their ECO Club notification. Trees Planted covers Government, Aided and Private schools. Private-school coverage is available for a subset of districts. "Plantation Target" is the district's assigned tree-plantation target; "Achieved %" is Trees Planted as a percentage of that target. <strong>*</strong> next to a district name means its Private school list was sourced from the state master list, not an official district submission.
   </footer>
 </div>
 
@@ -84,7 +86,7 @@ function render() {
 
   const tbody = document.getElementById('tbody');
   if (!rows.length) {
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="11">No district matches "${query}".</td></tr>`;
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="13">No district matches "${query}".</td></tr>`;
   } else {
     tbody.innerHTML = rows.map((r, i) => `
       <tr>
@@ -99,6 +101,8 @@ function render() {
         <td class="num">${fmt(r.govtTrees)}</td>
         <td class="num">${fmt(r.aidedTrees)}</td>
         <td class="num">${r.privTotal ? fmt(r.privTrees) : 'N/A'}</td>
+        <td class="num">${r.target ? fmt(r.target) : 'N/A'}</td>
+        <td class="num">${r.target ? r.achievedPct.toFixed(1) + '%' : 'N/A'}</td>
       </tr>`).join('');
   }
 
@@ -116,6 +120,8 @@ function render() {
       <td class="num" style="padding:12px 14px;">${fmt(sum('govtTrees'))}</td>
       <td class="num" style="padding:12px 14px;">${fmt(sum('aidedTrees'))}</td>
       <td class="num" style="padding:12px 14px;">${fmt(sum('privTrees'))}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(sum('target'))}</td>
+      <td class="num" style="padding:12px 14px;">${sum('target') ? (sum('treesPlanted') / sum('target') * 100).toFixed(1) + '%' : 'N/A'}</td>
     </tr>`;
 
   document.querySelectorAll('thead th[data-key]').forEach(th => {
@@ -144,7 +150,7 @@ function render() {
 
   const plantByDist = Object.fromEntries(p.byDistrict.map(d => [d.district, d]));
   ROWS = n.byDistrict.map(d => {
-    const pd = plantByDist[d.district] || { govtTrees: 0, aidedTrees: 0, privTrees: 0 };
+    const pd = plantByDist[d.district] || { govtTrees: 0, aidedTrees: 0, privTrees: 0, treesPlanted: 0, target: null, achievedPct: null };
     return {
       district: d.district,
       govtTotal: d.govtTotal, govtDone: d.govtDone,
@@ -152,6 +158,7 @@ function render() {
       privTotal: d.privTotal, privDone: d.privDone,
       privRawSource: d.privRawSource,
       govtTrees: pd.govtTrees, aidedTrees: pd.aidedTrees, privTrees: pd.privTrees || 0,
+      treesPlanted: pd.treesPlanted || 0, target: pd.target || 0, achievedPct: pd.achievedPct,
     };
   });
 
