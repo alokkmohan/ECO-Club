@@ -111,7 +111,7 @@ with open(os.path.join(OUT, 'notification.json'), 'w', encoding='utf-8') as f:
     json.dump(notif_records, f, ensure_ascii=False, separators=(',', ':'))
 print(f"notification.json: {len(notif_records):,} records")
 
-plant_pool = full_pool[full_pool['Category'].isin(['G', 'A'])].copy()
+plant_pool = full_pool[full_pool['Category'].isin(['G', 'A', 'P'])].copy()
 plant_pool['status'] = plant_pool['UDISE_norm'].isin(done_udise).astype(int)
 plant_pool['trees'] = plant_pool['UDISE_norm'].map(trees_by_udise).fillna(0).astype(int)
 
@@ -141,8 +141,11 @@ def agg_district(pool, is_plant):
             row['privDone'] = int((is_p & (s == 1)).sum())
             row['privRawSource'] = bool(grp.loc[is_p, 'UDISE_norm'].isin(raw_source_udise).any())
         else:
+            row['privTotal'] = int(is_p.sum())
+            row['privDone'] = int((is_p & (s == 1)).sum())
             row['govtTrees'] = int(grp.loc[is_g, 'trees'].sum())
             row['aidedTrees'] = int(grp.loc[is_a, 'trees'].sum())
+            row['privTrees'] = int(grp.loc[is_p, 'trees'].sum())
             row['treesPlanted'] = int(grp['trees'].sum())
         rows.append(row)
     return sorted(rows, key=lambda r: r['district'])
@@ -170,6 +173,8 @@ summary = {
         'govtDone': int((plant_pool['Category'].eq('G') & (plant_pool['status']==1)).sum()),
         'aidedTotal': int(plant_pool['Category'].eq('A').sum()),
         'aidedDone': int((plant_pool['Category'].eq('A') & (plant_pool['status']==1)).sum()),
+        'privTotal': int(plant_pool['Category'].eq('P').sum()),
+        'privDone': int((plant_pool['Category'].eq('P') & (plant_pool['status']==1)).sum()),
         'byDistrict': agg_district(plant_pool, is_plant=True),
     },
 }

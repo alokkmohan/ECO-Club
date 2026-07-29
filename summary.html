@@ -54,6 +54,7 @@
           <th data-key="privDone" class="num">Private<br>Uploaded</th>
           <th data-key="govtTrees" class="num">Govt<br>Trees Planted</th>
           <th data-key="aidedTrees" class="num">Aided<br>Trees Planted</th>
+          <th data-key="privTrees" class="num">Private<br>Trees Planted</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
@@ -62,7 +63,7 @@
   </div>
 
   <footer class="note">
-    <strong>Reading this table.</strong> "Total" is schools of that type in the district; "Uploaded" is how many have submitted their ECO Club notification. Trees Planted covers Government + Aided schools only (Private schools aren't part of the plantation drive tracking). Private-school coverage is available for a subset of districts. <strong>*</strong> next to a district name means its Private school list was sourced from the state master list, not an official district submission.
+    <strong>Reading this table.</strong> "Total" is schools of that type in the district; "Uploaded" is how many have submitted their ECO Club notification. Trees Planted covers Government, Aided and Private schools. Private-school coverage is available for a subset of districts. <strong>*</strong> next to a district name means its Private school list was sourced from the state master list, not an official district submission.
   </footer>
 </div>
 
@@ -83,7 +84,7 @@ function render() {
 
   const tbody = document.getElementById('tbody');
   if (!rows.length) {
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="10">No district matches "${query}".</td></tr>`;
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="11">No district matches "${query}".</td></tr>`;
   } else {
     tbody.innerHTML = rows.map((r, i) => `
       <tr>
@@ -97,6 +98,7 @@ function render() {
         <td class="num">${r.privTotal ? fmt(r.privDone) : 'N/A'}</td>
         <td class="num">${fmt(r.govtTrees)}</td>
         <td class="num">${fmt(r.aidedTrees)}</td>
+        <td class="num">${r.privTotal ? fmt(r.privTrees) : 'N/A'}</td>
       </tr>`).join('');
   }
 
@@ -113,6 +115,7 @@ function render() {
       <td class="num" style="padding:12px 14px;">${fmt(sum('privDone'))}</td>
       <td class="num" style="padding:12px 14px;">${fmt(sum('govtTrees'))}</td>
       <td class="num" style="padding:12px 14px;">${fmt(sum('aidedTrees'))}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(sum('privTrees'))}</td>
     </tr>`;
 
   document.querySelectorAll('thead th[data-key]').forEach(th => {
@@ -141,14 +144,14 @@ function render() {
 
   const plantByDist = Object.fromEntries(p.byDistrict.map(d => [d.district, d]));
   ROWS = n.byDistrict.map(d => {
-    const pd = plantByDist[d.district] || { govtTrees: 0, aidedTrees: 0 };
+    const pd = plantByDist[d.district] || { govtTrees: 0, aidedTrees: 0, privTrees: 0 };
     return {
       district: d.district,
       govtTotal: d.govtTotal, govtDone: d.govtDone,
       aidedTotal: d.aidedTotal, aidedDone: d.aidedDone,
       privTotal: d.privTotal, privDone: d.privDone,
       privRawSource: d.privRawSource,
-      govtTrees: pd.govtTrees, aidedTrees: pd.aidedTrees,
+      govtTrees: pd.govtTrees, aidedTrees: pd.aidedTrees, privTrees: pd.privTrees || 0,
     };
   });
 

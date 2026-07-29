@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Plantation Report | ECO Club Uttar Pradesh</title>
-<meta name="description" content="ECO Club plantation drive status for Government and Aided secondary schools in Uttar Pradesh, filterable by district.">
+<meta name="description" content="ECO Club plantation drive status for Government, Aided and Private secondary schools in Uttar Pradesh, filterable by district.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/style.css">
 </head>
@@ -27,7 +27,7 @@
   <header class="page">
     <p class="eyebrow">School-level report</p>
     <h1>Plantation drive status</h1>
-    <p class="dek">Has each Government or Aided secondary school completed its plantation drive, and how many trees were planted? Pick a district to see its full list.</p>
+    <p class="dek">Has each Government, Aided or Private secondary school completed its plantation drive, and how many trees were planted? Pick a district to see its full list.</p>
   </header>
 
   <div class="kpi-row" id="kpis"></div>
@@ -43,6 +43,7 @@
         <option value="">All Categories</option>
         <option value="G">Government</option>
         <option value="A">Aided</option>
+        <option value="P">Private</option>
       </select>
     </div>
     <div class="field">
@@ -92,7 +93,7 @@
   <div class="pager" id="pager"></div>
 
   <footer class="note">
-    <strong>Data note.</strong> Matched by UDISE code between the school master list and submitted plantation records. Scope is Government + Aided secondary schools; Private schools are not currently part of the plantation drive tracking.
+    <strong>Data note.</strong> Matched by UDISE code between the school master list and submitted plantation records. Scope is Government + Aided + Private secondary schools. Private-school coverage is available for a subset of districts.
   </footer>
 
   <div class="print-only" id="printArea"></div>
@@ -100,7 +101,7 @@
 
 <script src="assets/site.js"></script>
 <script>
-const CAT_LABEL = { G: 'Government', A: 'Aided' };
+const CAT_LABEL = { G: 'Government', A: 'Aided', P: 'Private' };
 let DATA = [];
 let filtered = [];
 let page = 0;
@@ -138,13 +139,14 @@ function renderKpis(dist) {
     const rows = scope.filter(r => r.c === c);
     return { total: rows.length, done: rows.filter(r => r.s === 1).length };
   };
-  const g = byCat('G'), a = byCat('A');
+  const g = byCat('G'), a = byCat('A'), p = byCat('P');
   document.getElementById('kpis').innerHTML = `
     <div class="kpi"><div class="label">Total Schools</div><div class="value">${fmt(total)}</div></div>
     <div class="kpi done"><div class="label">Done</div><div class="value">${fmt(done)}</div></div>
     <div class="kpi pending"><div class="label">Pending</div><div class="value">${fmt(total - done)}</div></div>
     <div class="kpi"><div class="label">Government</div><div class="value">${fmt(g.done)}<span class="of">/ ${fmt(g.total)}</span></div></div>
     <div class="kpi"><div class="label">Aided</div><div class="value">${fmt(a.done)}<span class="of">/ ${fmt(a.total)}</span></div></div>
+    <div class="kpi"><div class="label">Private</div><div class="value">${p.total ? fmt(p.done) + '<span class="of">/ ' + fmt(p.total) + '</span>' : 'N/A'}</div></div>
     <div class="kpi done"><div class="label">Trees Planted</div><div class="value">${fmt(trees)}</div></div>
   `;
 }
@@ -165,8 +167,14 @@ function renderStrip(dist) {
 
   // School-type-wise breakdown, scoped to district only (ignores category/status/search filters)
   const scope = DATA.filter(r => !dist || r.d === dist);
-  const chips = ['G', 'A'].map(cat => {
+  const chips = ['G', 'A', 'P'].map(cat => {
     const rows = scope.filter(r => r.c === cat);
+    if (!rows.length) {
+      return `<div class="cat-chip">
+        <div class="cat-name">${CAT_LABEL[cat]}</div>
+        <div class="cat-val">N/A</div>
+      </div>`;
+    }
     const catDone = rows.filter(r => r.s === 1).length;
     const catTrees = rows.reduce((a, r) => a + r.t, 0);
     return `<div class="cat-chip">
