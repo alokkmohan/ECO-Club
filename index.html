@@ -163,7 +163,7 @@ function barList(rows, valueKey, colorVar, max) {
   `;
 
   const notifPct = Math.round(n.uploaded / n.totalSchools * 100);
-  const plantPct = Math.round(p.done / p.totalSchools * 100);
+  const plantPct = Math.round(p.treesPlanted / p.targetTotal * 100);
 
   document.getElementById('reportGrid').innerHTML = `
     <a class="report-btn" href="notification.html">
@@ -189,7 +189,7 @@ function barList(rows, valueKey, colorVar, max) {
     <a class="report-btn" href="plantation.html">
       <div class="ring-wrap">
         ${ring(plantPct, 'var(--accent)')}
-        <div class="ring-center"><span class="ring-pct">${plantPct}%</span><span class="ring-pct-label">Done</span></div>
+        <div class="ring-center"><span class="ring-pct">${plantPct}%</span><span class="ring-pct-label">Achieved</span></div>
       </div>
       <div class="body">
         <span class="card-eyebrow">Report</span>
