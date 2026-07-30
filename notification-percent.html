@@ -45,6 +45,10 @@
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input id="search" type="text" placeholder="e.g. Shahjahanpur" autocomplete="off">
     </div>
+    <button class="btn-pdf" id="pdfBtn" type="button">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 19h16"/></svg>
+      Download PDF
+    </button>
   </div>
 
   <div class="table-scroll">
@@ -66,11 +70,14 @@
   <footer class="note">
     <strong>Reading this table.</strong> "Total Schools" covers Government, Aided and Private secondary schools tracked for the district. "Uploaded %" is Notification Uploaded as a percentage of Total Schools, sorted high to low by default. <strong>*</strong> next to a district name means its Private school list was sourced from the state master list, not an official district submission.
   </footer>
+
+  <div class="print-only" id="printArea"></div>
 </div>
 
 <script src="assets/site.js"></script>
 <script>
 let ROWS = [];
+let VISIBLE = [];
 let sortKey = 'pct';
 let sortDir = -1;
 let query = '';
@@ -82,6 +89,7 @@ function render() {
     if (typeof av === 'string') return av.localeCompare(bv) * sortDir;
     return (av - bv) * sortDir;
   });
+  VISIBLE = rows;
 
   const tbody = document.getElementById('tbody');
   if (!rows.length) {
@@ -119,6 +127,38 @@ function render() {
   });
 }
 
+function downloadPDF() {
+  const totalSchools = VISIBLE.reduce((a, r) => a + r.total, 0);
+  const totalUploaded = VISIBLE.reduce((a, r) => a + r.uploaded, 0);
+  const rows = VISIBLE.map((r, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${titleCase(r.district)}${r.privRawSource ? ' *' : ''}</td>
+      <td>${fmt(r.total)}</td>
+      <td>${fmt(r.uploaded)}</td>
+      <td>${r.pct.toFixed(1)}%</td>
+    </tr>`).join('');
+
+  document.getElementById('printArea').innerHTML = `
+    <h1 style="font-size:20px;margin:0 0 4px;">ECO Club | Notification % Summary</h1>
+    <p style="font-size:13px;color:#555;margin:0 0 14px;">
+      ${fmt(VISIBLE.length)} districts &middot; ${fmt(totalUploaded)} of ${fmt(totalSchools)} uploaded (${totalSchools ? (totalUploaded / totalSchools * 100).toFixed(1) : '0.0'}%)
+      &middot; generated ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
+    </p>
+    <table style="width:100%;border-collapse:collapse;font-size:11px;">
+      <thead><tr style="background:#eee;">
+        <th style="border:1px solid #ccc;padding:5px;text-align:left;">#</th>
+        <th style="border:1px solid #ccc;padding:5px;text-align:left;">District</th>
+        <th style="border:1px solid #ccc;padding:5px;text-align:left;">Total Schools</th>
+        <th style="border:1px solid #ccc;padding:5px;text-align:left;">Notification Uploaded</th>
+        <th style="border:1px solid #ccc;padding:5px;text-align:left;">Uploaded %</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  document.title = 'Notification % Summary';
+  window.print();
+}
+
 (async function () {
   const s = await loadJSON('data/summary.json');
   const n = s.notification;
@@ -153,6 +193,7 @@ function render() {
     query = e.target.value.trim().toLowerCase();
     render();
   });
+  document.getElementById('pdfBtn').addEventListener('click', downloadPDF);
 
   render();
 })();
