@@ -7,6 +7,9 @@
 <meta name="description" content="District-wise ECO Club notification upload percentage, ranked high to low.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/style.css">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
 
@@ -45,6 +48,10 @@
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input id="search" type="text" placeholder="e.g. Shahjahanpur" autocomplete="off">
     </div>
+    <button class="btn-pdf" id="excelBtn" type="button">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 19h16"/></svg>
+      Download Excel
+    </button>
     <button class="btn-pdf" id="pdfBtn" type="button">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 19h16"/></svg>
       Download PDF
@@ -70,8 +77,6 @@
   <footer class="note">
     <strong>Reading this table.</strong> "Total Schools" covers Government, Aided and Private secondary schools tracked for the district. "Uploaded %" is Notification Uploaded as a percentage of Total Schools, sorted high to low by default. <strong>*</strong> next to a district name means its Private school list was sourced from the state master list, not an official district submission.
   </footer>
-
-  <div class="print-only" id="printArea"></div>
 </div>
 
 <script src="assets/site.js"></script>
@@ -127,36 +132,35 @@ function render() {
   });
 }
 
-function downloadPDF() {
-  const totalSchools = VISIBLE.reduce((a, r) => a + r.total, 0);
-  const totalUploaded = VISIBLE.reduce((a, r) => a + r.uploaded, 0);
-  const rows = VISIBLE.map((r, i) => `
-    <tr>
-      <td>${i + 1}</td>
-      <td>${titleCase(r.district)}${r.privRawSource ? ' *' : ''}</td>
-      <td>${fmt(r.total)}</td>
-      <td>${fmt(r.uploaded)}</td>
-      <td>${r.pct.toFixed(1)}%</td>
-    </tr>`).join('');
+function downloadExcel() {
+  const aoa = [
+    ['#', 'District', 'Total Schools', 'Notification Uploaded', 'Uploaded %'],
+    ...VISIBLE.map((r, i) => [i + 1, titleCase(r.district) + (r.privRawSource ? ' *' : ''), r.total, r.uploaded, Number(r.pct.toFixed(1))]),
+  ];
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  ws['!cols'] = [{ wch: 5 }, { wch: 26 }, { wch: 14 }, { wch: 20 }, { wch: 12 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Notification % Summary');
+  XLSX.writeFile(wb, 'ECO_Club_UP_Notification_Percent_Summary.xlsx');
+}
 
-  document.getElementById('printArea').innerHTML = `
-    <h1 style="font-size:20px;margin:0 0 4px;">ECO Club | Notification % Summary</h1>
-    <p style="font-size:13px;color:#555;margin:0 0 14px;">
-      ${fmt(VISIBLE.length)} districts &middot; ${fmt(totalUploaded)} of ${fmt(totalSchools)} uploaded (${totalSchools ? (totalUploaded / totalSchools * 100).toFixed(1) : '0.0'}%)
-      &middot; generated ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
-    </p>
-    <table style="width:100%;border-collapse:collapse;font-size:11px;">
-      <thead><tr style="background:#eee;">
-        <th style="border:1px solid #ccc;padding:5px;text-align:left;">#</th>
-        <th style="border:1px solid #ccc;padding:5px;text-align:left;">District</th>
-        <th style="border:1px solid #ccc;padding:5px;text-align:left;">Total Schools</th>
-        <th style="border:1px solid #ccc;padding:5px;text-align:left;">Notification Uploaded</th>
-        <th style="border:1px solid #ccc;padding:5px;text-align:left;">Uploaded %</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>`;
-  document.title = 'Notification % Summary';
-  window.print();
+function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'pt' });
+  doc.setFontSize(14);
+  doc.text('ECO Club | Notification % Summary', 40, 40);
+  doc.setFontSize(9);
+  doc.setTextColor(100);
+  doc.text(`Generated ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}`, 40, 56);
+  doc.autoTable({
+    startY: 70,
+    head: [['#', 'District', 'Total Schools', 'Uploaded', 'Uploaded %']],
+    body: VISIBLE.map((r, i) => [i + 1, titleCase(r.district) + (r.privRawSource ? ' *' : ''), fmt(r.total), fmt(r.uploaded), r.pct.toFixed(1) + '%']),
+    styles: { fontSize: 8, cellPadding: 4 },
+    headStyles: { fillColor: [31, 78, 121] },
+    margin: { left: 40, right: 40 },
+  });
+  doc.save('ECO_Club_UP_Notification_Percent_Summary.pdf');
 }
 
 (async function () {
@@ -193,6 +197,7 @@ function downloadPDF() {
     query = e.target.value.trim().toLowerCase();
     render();
   });
+  document.getElementById('excelBtn').addEventListener('click', downloadExcel);
   document.getElementById('pdfBtn').addEventListener('click', downloadPDF);
 
   render();
