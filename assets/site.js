@@ -29,32 +29,47 @@ function titleCase(s) {
 }
 
 (function () {
-  document.querySelectorAll('.nav-dropdown > .dropdown-toggle').forEach(toggle => {
-    toggle.addEventListener('click', e => {
-      if (window.matchMedia('(hover: hover)').matches) return;
-      e.preventDefault();
-      toggle.closest('.nav-dropdown').classList.toggle('open');
+  // Wrapped defensively so a DOM/API quirk here can never block the rest of
+  // this script file (e.g. the visit counter below) from running.
+  try {
+    document.querySelectorAll('.nav-dropdown > .dropdown-toggle').forEach(toggle => {
+      toggle.addEventListener('click', e => {
+        if (window.matchMedia && window.matchMedia('(hover: hover)').matches) return;
+        e.preventDefault();
+        toggle.closest('.nav-dropdown').classList.toggle('open');
+      });
     });
-  });
-  document.addEventListener('click', e => {
-    document.querySelectorAll('.nav-dropdown.open').forEach(d => {
-      if (!d.contains(e.target)) d.classList.remove('open');
+    document.addEventListener('click', e => {
+      document.querySelectorAll('.nav-dropdown.open').forEach(d => {
+        if (!d.contains(e.target)) d.classList.remove('open');
+      });
     });
-  });
+  } catch (err) { /* non-critical UI enhancement */ }
 })();
 
 (function () {
   const el = document.getElementById('visitCounter');
   if (!el) return;
-  // Some ad-blocker / privacy-extension builds replace window.fetch with a stub
-  // that returns a Promise which never settles (ignoring AbortSignal entirely),
-  // which would otherwise leave this stuck on "Loading visits..." forever.
-  // Racing against an independent timer guarantees we always move past it.
-  const hardTimeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000));
-  Promise.race([
-    fetch('https://api.counterapi.dev/v1/ecoclubup-dataimpact-in/visits/up').then(r => r.json()),
-    hardTimeout,
-  ])
-    .then(d => { el.textContent = `${d.count.toLocaleString('en-IN')} visits`; })
-    .catch(() => { el.remove(); });
+  // Belt-and-suspenders against every failure mode we've seen:
+  //  - old/locked-down browsers without fetch()/Promise -> skip immediately
+  //  - fetch() throwing synchronously (some enterprise/proxy setups) -> try/catch
+  //  - a stub fetch() whose Promise never settles -> race against a hard timer
+  //  - any network/JSON error -> normal .catch()
+  // Whatever happens, this always ends with either a number or the element gone
+  // within ~5 seconds - never stuck on "Loading visits..." forever.
+  if (typeof fetch !== 'function' || typeof Promise !== 'function') {
+    el.remove();
+    return;
+  }
+  try {
+    const hardTimeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000));
+    Promise.race([
+      fetch('https://api.counterapi.dev/v1/ecoclubup-dataimpact-in/visits/up').then(r => r.json()),
+      hardTimeout,
+    ])
+      .then(d => { el.textContent = `${d.count.toLocaleString('en-IN')} visits`; })
+      .catch(() => { el.remove(); });
+  } catch (err) {
+    el.remove();
+  }
 })();
