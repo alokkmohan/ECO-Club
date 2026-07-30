@@ -46,10 +46,15 @@ function titleCase(s) {
 (function () {
   const el = document.getElementById('visitCounter');
   if (!el) return;
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 4000);
-  fetch('https://api.counterapi.dev/v1/ecoclubup-dataimpact-in/visits/up', { signal: ctrl.signal })
-    .then(r => r.json())
-    .then(d => { clearTimeout(timer); el.textContent = `${d.count.toLocaleString('en-IN')} visits`; })
-    .catch(() => { clearTimeout(timer); el.remove(); });
+  // Some ad-blocker / privacy-extension builds replace window.fetch with a stub
+  // that returns a Promise which never settles (ignoring AbortSignal entirely),
+  // which would otherwise leave this stuck on "Loading visits..." forever.
+  // Racing against an independent timer guarantees we always move past it.
+  const hardTimeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000));
+  Promise.race([
+    fetch('https://api.counterapi.dev/v1/ecoclubup-dataimpact-in/visits/up').then(r => r.json()),
+    hardTimeout,
+  ])
+    .then(d => { el.textContent = `${d.count.toLocaleString('en-IN')} visits`; })
+    .catch(() => { el.remove(); });
 })();
