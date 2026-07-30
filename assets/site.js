@@ -28,7 +28,17 @@ function titleCase(s) {
   return String(s).toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
 }
 
-(function () {
+// This file is included near the top of each page, before the nav and footer
+// elements exist, so all DOM lookups must wait for DOMContentLoaded.
+function onDomReady(fn) {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fn);
+  } else {
+    fn();
+  }
+}
+
+onDomReady(function () {
   // Wrapped defensively so a DOM/API quirk here can never block the rest of
   // this script file (e.g. the visit counter below) from running.
   try {
@@ -45,9 +55,9 @@ function titleCase(s) {
       });
     });
   } catch (err) { /* non-critical UI enhancement */ }
-})();
+});
 
-(function () {
+onDomReady(function () {
   const el = document.getElementById('visitCounter');
   if (!el) return;
   // Belt-and-suspenders against every failure mode we've seen:
@@ -72,4 +82,4 @@ function titleCase(s) {
   } catch (err) {
     el.remove();
   }
-})();
+});
