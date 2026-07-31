@@ -18,15 +18,7 @@
     <a class="brand" href="index.html"><span class="leaf">&#127807;</span> ECO Club | Uttar Pradesh</a>
     <nav>
       <a href="index.html">Home</a>
-      <div class="nav-dropdown open">
-        <a href="notification.html" class="dropdown-toggle active">Notification <span class="caret">&#9662;</span></a>
-        <div class="dropdown-menu">
-          <a href="notification.html">All Categories</a>
-          <a href="notification.html?category=G">Government</a>
-          <a href="notification.html?category=A">Aided</a>
-          <a href="notification.html?category=P">Private</a>
-        </div>
-      </div>
+      <a href="notification.html" class="active">Notification</a>
       <a href="plantation.html">Plantation</a>
       <div class="nav-dropdown">
         <a href="summary.html" class="dropdown-toggle">Reports <span class="caret">&#9662;</span></a>
@@ -288,10 +280,6 @@ function renderTable() {
 
   const urlCat = getParam('category');
   if (urlCat) document.getElementById('catSel').value = urlCat;
-  const navSubHref = urlCat ? `notification.html?category=${urlCat}` : 'notification.html';
-  document.querySelectorAll('.nav-dropdown .dropdown-menu a').forEach(a => {
-    if (a.getAttribute('href') === navSubHref) a.classList.add('active');
-  });
 
   sel.addEventListener('change', () => { setParam('district', sel.value); applyFilters(); });
   const catSelEl = document.getElementById('catSel');
