@@ -139,12 +139,13 @@ function ring(pct, colorVar, size) {
     </svg>`;
 }
 
-function barList(rows, valueKey, colorVar, max) {
+function barList(rows, valueKey, colorVar, max, formatter) {
+  formatter = formatter || fmt;
   return rows.map(r => `
     <div class="bar-row">
       <div class="bar-label">${titleCase(r.district)}</div>
       <div class="bar-track2"><div class="bar-fill2" style="width:${Math.max(4, r[valueKey] / max * 100)}%;background:${colorVar}"></div></div>
-      <div class="bar-val">${fmt(r[valueKey])}</div>
+      <div class="bar-val">${formatter(r[valueKey])}</div>
     </div>`).join('');
 }
 
@@ -257,10 +258,13 @@ function barList(rows, valueKey, colorVar, max) {
 
   const topTrees = [...p.byDistrict].sort((a, b) => b.treesPlanted - a.treesPlanted).slice(0, 8);
   const topUploaded = [...n.byDistrict]
-    .map(d => ({ district: d.district, uploaded: d.govtDone + d.aidedDone + d.privDone }))
-    .sort((a, b) => b.uploaded - a.uploaded).slice(0, 8);
+    .map(d => {
+      const total = d.govtTotal + d.aidedTotal + d.privTotal;
+      const uploaded = d.govtDone + d.aidedDone + d.privDone;
+      return { district: d.district, uploaded, total, pct: total ? uploaded / total * 100 : 0 };
+    })
+    .sort((a, b) => b.pct - a.pct).slice(0, 8);
   const maxTrees = Math.max(...topTrees.map(d => d.treesPlanted));
-  const maxUploaded = Math.max(...topUploaded.map(d => d.uploaded));
 
   document.getElementById('chartGrid').innerHTML = `
     <div class="chart-card">
@@ -269,9 +273,9 @@ function barList(rows, valueKey, colorVar, max) {
       ${barList(topTrees, 'treesPlanted', 'var(--accent)', maxTrees)}
     </div>
     <div class="chart-card">
-      <h3>Top Districts | Notification Uploaded</h3>
-      <div class="chart-sub">Govt + Aided + Private schools, most uploads</div>
-      ${barList(topUploaded, 'uploaded', 'var(--accent)', maxUploaded)}
+      <h3>Top Districts | Notification Uploaded %</h3>
+      <div class="chart-sub">Govt + Aided + Private schools, highest upload %</div>
+      ${barList(topUploaded, 'pct', 'var(--accent)', 100, v => v.toFixed(1) + '%')}
     </div>
   `;
 })();
