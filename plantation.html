@@ -7,6 +7,9 @@
 <meta name="description" content="ECO Club plantation drive status for Government, Aided and Private secondary schools in Uttar Pradesh, filterable by district.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/style.css?v=2">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
 
@@ -70,6 +73,10 @@
       <span><span class="dot done"></span>Done</span>
       <span><span class="dot pending"></span>Pending</span>
     </div>
+    <button class="btn-pdf" id="excelBtn" type="button">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 19h16"/></svg>
+      Download Excel
+    </button>
     <button class="btn-pdf" id="pdfBtn" type="button">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 19h16"/></svg>
       Download PDF
@@ -102,8 +109,6 @@
   <footer class="note">
     <strong>Data note.</strong> Matched by UDISE code between the school master list and submitted plantation records. Scope is Government + Aided + Private secondary schools. Private-school coverage is available for a subset of districts.
   </footer>
-
-  <div class="print-only" id="printArea"></div>
 </div>
 
 <script src="assets/site.js?v=4"></script>
@@ -208,41 +213,39 @@ function renderStrip(dist) {
   document.getElementById('catBreakdown').innerHTML = chips + targetChip;
 }
 
+function downloadExcel(dist) {
+  const label = dist ? titleCase(dist) : 'All Uttar Pradesh';
+  const aoa = [
+    ['Category', 'District', 'Block', 'School Name', 'UDISE Code', 'Status', 'Trees Planted'],
+    ...filtered.map(r => [CAT_LABEL[r.c] || r.c, titleCase(r.d), r.b ? titleCase(r.b) : 'N/A', r.n, r.u, r.s === 1 ? 'Done' : 'Pending', r.t]),
+  ];
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  ws['!cols'] = [{ wch: 12 }, { wch: 20 }, { wch: 18 }, { wch: 45 }, { wch: 14 }, { wch: 10 }, { wch: 14 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Plantation Report');
+  XLSX.writeFile(wb, `ECO_Club_UP_Plantation_Report_${label.replace(/\s+/g, '_')}.xlsx`);
+}
+
 function downloadPDF(dist) {
   const label = dist ? titleCase(dist) : 'All Uttar Pradesh';
   const done = filtered.filter(r => r.s === 1).length;
   const trees = filtered.reduce((a, r) => a + r.t, 0);
-  const rows = filtered.map(r => `
-    <tr>
-      <td>${CAT_LABEL[r.c] || r.c}</td>
-      <td>${titleCase(r.d)}</td>
-      <td>${r.b ? titleCase(r.b) : 'N/A'}</td>
-      <td>${r.n}</td>
-      <td>${r.u}</td>
-      <td>${r.s === 1 ? 'Done' : 'Pending'}</td>
-      <td>${fmt(r.t)}</td>
-    </tr>`).join('');
-
-  document.getElementById('printArea').innerHTML = `
-    <h1 style="font-size:20px;margin:0 0 4px;">ECO Club | Plantation Report</h1>
-    <p style="font-size:13px;color:#555;margin:0 0 14px;">
-      ${label} &middot; ${fmt(filtered.length)} schools &middot; ${fmt(done)} done, ${fmt(filtered.length - done)} pending &middot; ${fmt(trees)} trees planted
-      &middot; generated ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
-    </p>
-    <table style="width:100%;border-collapse:collapse;font-size:11px;">
-      <thead><tr style="background:#eee;">
-        <th style="border:1px solid #ccc;padding:5px;text-align:left;">Category</th>
-        <th style="border:1px solid #ccc;padding:5px;text-align:left;">District</th>
-        <th style="border:1px solid #ccc;padding:5px;text-align:left;">Block</th>
-        <th style="border:1px solid #ccc;padding:5px;text-align:left;">School Name</th>
-        <th style="border:1px solid #ccc;padding:5px;text-align:left;">UDISE Code</th>
-        <th style="border:1px solid #ccc;padding:5px;text-align:left;">Status</th>
-        <th style="border:1px solid #ccc;padding:5px;text-align:left;">Trees Planted</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>`;
-  document.title = `Plantation Report - ${label}`;
-  window.print();
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'pt' });
+  doc.setFontSize(14);
+  doc.text('ECO Club | Plantation Report', 40, 40);
+  doc.setFontSize(9);
+  doc.setTextColor(100);
+  doc.text(`${label} · ${fmt(filtered.length)} schools · ${fmt(done)} done, ${fmt(filtered.length - done)} pending · ${fmt(trees)} trees planted · generated ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}`, 40, 56);
+  doc.autoTable({
+    startY: 70,
+    head: [['Category', 'District', 'Block', 'School Name', 'UDISE Code', 'Status', 'Trees Planted']],
+    body: filtered.map(r => [CAT_LABEL[r.c] || r.c, titleCase(r.d), r.b ? titleCase(r.b) : 'N/A', r.n, r.u, r.s === 1 ? 'Done' : 'Pending', fmt(r.t)]),
+    styles: { fontSize: 7, cellPadding: 3 },
+    headStyles: { fillColor: [31, 78, 121] },
+    margin: { left: 40, right: 40 },
+  });
+  doc.save(`ECO_Club_UP_Plantation_Report_${label.replace(/\s+/g, '_')}.pdf`);
 }
 
 function renderTable() {
@@ -318,6 +321,7 @@ function renderTable() {
   catSelEl.addEventListener('change', () => { setParam('category', catSelEl.value); applyFilters(); });
   document.getElementById('statusSel').addEventListener('change', applyFilters);
   document.getElementById('search').addEventListener('input', applyFilters);
+  document.getElementById('excelBtn').addEventListener('click', () => downloadExcel(sel.value));
   document.getElementById('pdfBtn').addEventListener('click', () => downloadPDF(sel.value));
   document.querySelectorAll('thead th[data-key]').forEach(th => {
     th.addEventListener('click', () => {
