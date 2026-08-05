@@ -67,7 +67,7 @@
     <div class="field search-field">
       <label for="search">Search school</label>
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input id="search" type="text" placeholder="School name…" autocomplete="off">
+      <input id="search" type="text" placeholder="School name or UDISE code…" autocomplete="off">
     </div>
     <div class="legend">
       <span><span class="dot done"></span>Done</span>
@@ -132,7 +132,7 @@ function applyFilters() {
     (!dist || r.d === dist) &&
     (!cat || r.c === cat) &&
     (status === '' || String(r.s) === status) &&
-    (!q || r.n.toLowerCase().includes(q))
+    (!q || r.n.toLowerCase().includes(q) || String(r.u).includes(q))
   );
   filtered.sort((a, b) => {
     const av = a[sortKey], bv = b[sortKey];
