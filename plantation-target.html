@@ -112,6 +112,8 @@ function render() {
 
   const sum = key => rows.reduce((a, r) => a + r[key], 0);
   const totalTarget = sum('target'), totalTrees = sum('treesPlanted');
+  const sumAll = key => ROWS.reduce((a, r) => a + r[key], 0);
+  const grandTarget = sumAll('target'), grandTrees = sumAll('treesPlanted');
   document.getElementById('tfoot').innerHTML = `
     <tr style="font-weight:700;background:var(--accent-soft);">
       <td></td>
@@ -119,6 +121,13 @@ function render() {
       <td class="num" style="padding:12px 14px;">${fmt(totalTarget)}</td>
       <td class="num" style="padding:12px 14px;">${fmt(totalTrees)}</td>
       <td class="num" style="padding:12px 14px;">${totalTarget ? (totalTrees / totalTarget * 100).toFixed(1) : '0.0'}%</td>
+    </tr>
+    <tr style="font-weight:700;background:var(--accent);color:#fff;">
+      <td></td>
+      <td style="padding:12px 14px;">Grand Total (all ${ROWS.length} districts)</td>
+      <td class="num" style="padding:12px 14px;">${fmt(grandTarget)}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(grandTrees)}</td>
+      <td class="num" style="padding:12px 14px;">${grandTarget ? (grandTrees / grandTarget * 100).toFixed(1) : '0.0'}%</td>
     </tr>`;
 
   document.querySelectorAll('thead th[data-key]').forEach(th => {
