@@ -141,10 +141,23 @@ function render() {
   });
 }
 
+function totalsRows() {
+  const sum = (arr, key) => arr.reduce((a, r) => a + r[key], 0);
+  const tTarget = sum(VISIBLE, 'target'), tTrees = sum(VISIBLE, 'treesPlanted');
+  const gTarget = sum(ROWS, 'target'), gTrees = sum(ROWS, 'treesPlanted');
+  return {
+    total: ['', `Total (${VISIBLE.length} districts)`, tTarget, tTrees, tTarget ? Number((tTrees / tTarget * 100).toFixed(1)) : 0],
+    grand: ['', `Grand Total (all ${ROWS.length} districts)`, gTarget, gTrees, gTarget ? Number((gTrees / gTarget * 100).toFixed(1)) : 0],
+  };
+}
+
 function downloadExcel() {
+  const t = totalsRows();
   const aoa = [
     ['#', 'District', 'Plantation Target', 'Trees Planted', 'Achieved %'],
     ...VISIBLE.map((r, i) => [i + 1, titleCase(r.district), r.target || 'N/A', r.treesPlanted, r.target ? Number(r.pct.toFixed(1)) : 'N/A']),
+    t.total,
+    t.grand,
   ];
   const ws = XLSX.utils.aoa_to_sheet(aoa);
   ws['!cols'] = [{ wch: 5 }, { wch: 26 }, { wch: 16 }, { wch: 14 }, { wch: 12 }];
@@ -154,6 +167,8 @@ function downloadExcel() {
 }
 
 function downloadPDF() {
+  const t = totalsRows();
+  const fmtRow = r => [r[0], r[1], fmt(r[2]), fmt(r[3]), r[4] + '%'];
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: 'portrait', unit: 'pt' });
   doc.setFontSize(14);
@@ -165,8 +180,10 @@ function downloadPDF() {
     startY: 70,
     head: [['#', 'District', 'Plantation Target', 'Trees Planted', 'Achieved %']],
     body: VISIBLE.map((r, i) => [i + 1, titleCase(r.district), r.target ? fmt(r.target) : 'N/A', fmt(r.treesPlanted), r.target ? r.pct.toFixed(1) + '%' : 'N/A']),
+    foot: [fmtRow(t.total), fmtRow(t.grand)],
     styles: { fontSize: 8, cellPadding: 4 },
     headStyles: { fillColor: [31, 78, 121] },
+    footStyles: { fillColor: [230, 240, 230], textColor: [0, 0, 0], fontStyle: 'bold' },
     margin: { left: 40, right: 40 },
   });
   doc.save('ECO_Club_UP_Plantation_Target_Summary.pdf');
