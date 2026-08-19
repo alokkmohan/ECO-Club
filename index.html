@@ -103,6 +103,7 @@
     <img class="gov-logo" src="assets/samagra-shiksha-logo.jpg" alt="Samagra Shiksha">
   </div>
 </div>
+<div class="update-bar" id="updateBar"></div>
 
 <div class="wrap">
   <div class="hero">
@@ -153,6 +154,7 @@ function barList(rows, valueKey, colorVar, max, formatter) {
   const s = await loadJSON('data/summary.json');
   const n = s.notification, p = s.plantation;
   document.getElementById('lastUpdated').textContent = `| Data updated ${s.generated}`;
+  document.getElementById('updateBar').textContent = `Last Data updated ${s.generated}`;
 
   document.getElementById('statRow').innerHTML = `
     <div class="stat"><div class="stat-label">Government Schools</div><div class="stat-num">${fmt(n.govtTotal)}</div></div>

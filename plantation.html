@@ -32,6 +32,7 @@
     <img class="gov-logo" src="assets/samagra-shiksha-logo.jpg" alt="Samagra Shiksha">
   </div>
 </div>
+<div class="update-bar" id="updateBar"></div>
 
 <div class="wrap">
   <header class="page">
@@ -304,6 +305,7 @@ function renderTable() {
   DATA = data;
   const p = summary.plantation;
   document.getElementById('lastUpdated').textContent = `| Data updated ${summary.generated}`;
+  document.getElementById('updateBar').textContent = `Last Data updated ${summary.generated}`;
 
   TARGET_BY_DIST = Object.fromEntries(p.byDistrict.map(d => [d.district, d.target]));
   STATEWIDE_TARGET = p.targetTotal || 0;

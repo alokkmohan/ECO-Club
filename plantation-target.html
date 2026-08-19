@@ -32,6 +32,7 @@
     <img class="gov-logo" src="assets/samagra-shiksha-logo.jpg" alt="Samagra Shiksha">
   </div>
 </div>
+<div class="update-bar" id="updateBar"></div>
 
 <div class="wrap">
   <header class="page">
@@ -193,6 +194,7 @@ function downloadPDF() {
   const s = await loadJSON('data/summary.json');
   const p = s.plantation;
   document.getElementById('lastUpdated').textContent = `| Data updated ${s.generated}`;
+  document.getElementById('updateBar').textContent = `Last Data updated ${s.generated}`;
 
   document.getElementById('kpis').innerHTML = `
     <div class="kpi"><div class="label">Plantation Target</div><div class="value">${fmt(p.targetTotal)}</div></div>

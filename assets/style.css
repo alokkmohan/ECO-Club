@@ -61,6 +61,15 @@ a { color: inherit; }
   background: var(--panel);
   margin-bottom: 32px;
 }
+.update-bar {
+  background: var(--accent-soft);
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  padding: 6px 12px;
+}
 .topnav .inner {
   max-width: 1180px; margin: 0 auto; padding: 14px 24px;
   display: grid; align-items: center; gap: 10px 24px;

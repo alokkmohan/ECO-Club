@@ -29,6 +29,7 @@
     <img class="gov-logo" src="assets/samagra-shiksha-logo.jpg" alt="Samagra Shiksha">
   </div>
 </div>
+<div class="update-bar" id="updateBar"></div>
 
 <div class="wrap">
   <header class="page">
@@ -146,6 +147,7 @@ function render() {
   const s = await loadJSON('data/summary.json');
   const n = s.notification, p = s.plantation;
   document.getElementById('lastUpdated').textContent = `| Data updated ${s.generated}`;
+  document.getElementById('updateBar').textContent = `Last Data updated ${s.generated}`;
 
   document.getElementById('kpis').innerHTML = `
     <div class="kpi"><div class="label">Government Schools</div><div class="value">${fmt(n.govtTotal)}</div></div>
