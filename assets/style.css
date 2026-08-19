@@ -61,20 +61,16 @@ a { color: inherit; }
   background: var(--panel);
   margin-bottom: 32px;
 }
-.update-bar {
-  background: var(--accent-soft);
-  border-bottom: 1px solid var(--line);
-  text-align: center;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--accent-ink);
-  padding: 6px 12px;
-}
 .topnav .inner {
   max-width: 1180px; margin: 0 auto; padding: 14px 24px;
-  display: grid; align-items: center; gap: 10px 24px;
-  grid-template-columns: auto 1fr auto;
-  grid-template-areas: "brand nav logo";
+  display: grid; align-items: center; gap: 10px 16px;
+  grid-template-columns: auto 1fr auto auto;
+  grid-template-areas: "brand nav logo meta";
+}
+.topnav-updated {
+  grid-area: meta;
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  white-space: nowrap; border-left: 1px solid var(--line); padding-left: 16px;
 }
 .topnav .brand {
   grid-area: brand;
@@ -117,9 +113,11 @@ a { color: inherit; }
     grid-template-columns: 1fr auto;
     grid-template-areas:
       "brand logo"
-      "nav nav";
+      "nav nav"
+      "meta meta";
   }
   .topnav nav { justify-content: flex-start; }
+  .topnav-updated { border-left: none; padding-left: 0; }
   .nav-dropdown .dropdown-menu { position: static; box-shadow: none; margin-top: 2px; display: none; }
   .nav-dropdown.open .dropdown-menu { display: block; }
 }
