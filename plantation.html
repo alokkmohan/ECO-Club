@@ -26,6 +26,7 @@
           <a href="summary.html">District Summary</a>
           <a href="notification-percent.html">Notification % Summary</a>
           <a href="plantation-target.html">Plantation Target Summary</a>
+          <a href="plantation-participation.html">Participation Summary</a>
         </div>
       </div>
     </nav>
@@ -97,6 +98,9 @@
           <th data-key="n">School Name</th>
           <th data-key="u" class="num">UDISE Code</th>
           <th data-key="s">Status</th>
+          <th data-key="st" class="num">Students</th>
+          <th data-key="tc" class="num">Teachers</th>
+          <th data-key="pt" class="num">Total Participants</th>
           <th data-key="t" class="num">Trees Planted</th>
         </tr>
       </thead>
@@ -150,6 +154,9 @@ function renderKpis(dist) {
   const total = scope.length;
   const done = scope.filter(r => r.s === 1).length;
   const trees = scope.reduce((a, r) => a + r.t, 0);
+  const students = scope.reduce((a, r) => a + r.st, 0);
+  const teachers = scope.reduce((a, r) => a + r.tc, 0);
+  const participants = scope.reduce((a, r) => a + r.pt, 0);
   const byCat = c => {
     const rows = scope.filter(r => r.c === c);
     return { total: rows.length, done: rows.filter(r => r.s === 1).length };
@@ -164,6 +171,9 @@ function renderKpis(dist) {
     <div class="kpi"><div class="label">Government</div><div class="value">${fmt(g.done)}<span class="of">/ ${fmt(g.total)}</span></div></div>
     <div class="kpi"><div class="label">Aided</div><div class="value">${fmt(a.done)}<span class="of">/ ${fmt(a.total)}</span></div></div>
     <div class="kpi"><div class="label">Private</div><div class="value">${p.total ? fmt(p.done) + '<span class="of">/ ' + fmt(p.total) + '</span>' : 'N/A'}</div></div>
+    <div class="kpi"><div class="label">Students</div><div class="value">${fmt(students)}</div></div>
+    <div class="kpi"><div class="label">Teachers</div><div class="value">${fmt(teachers)}</div></div>
+    <div class="kpi"><div class="label">Total Participants</div><div class="value">${fmt(participants)}</div></div>
     <div class="kpi done"><div class="label">Trees Planted</div><div class="value">${fmt(trees)}</div></div>
     <div class="kpi"><div class="label">Plantation Target</div><div class="value">${target ? fmt(target) : 'N/A'}</div></div>
     <div class="kpi done"><div class="label">Achieved %</div><div class="value">${achievedPct !== null ? achievedPct + '%' : 'N/A'}</div></div>
@@ -217,11 +227,11 @@ function renderStrip(dist) {
 function downloadExcel(dist) {
   const label = dist ? titleCase(dist) : 'All Uttar Pradesh';
   const aoa = [
-    ['Category', 'District', 'Block', 'School Name', 'UDISE Code', 'Status', 'Trees Planted'],
-    ...filtered.map(r => [CAT_LABEL[r.c] || r.c, titleCase(r.d), r.b ? titleCase(r.b) : 'N/A', r.n, r.u, r.s === 1 ? 'Done' : 'Pending', r.t]),
+    ['Category', 'District', 'Block', 'School Name', 'UDISE Code', 'Status', 'Students', 'Teachers', 'Total Participants', 'Trees Planted'],
+    ...filtered.map(r => [CAT_LABEL[r.c] || r.c, titleCase(r.d), r.b ? titleCase(r.b) : 'N/A', r.n, r.u, r.s === 1 ? 'Done' : 'Pending', r.st, r.tc, r.pt, r.t]),
   ];
   const ws = XLSX.utils.aoa_to_sheet(aoa);
-  ws['!cols'] = [{ wch: 12 }, { wch: 20 }, { wch: 18 }, { wch: 45 }, { wch: 14 }, { wch: 10 }, { wch: 14 }];
+  ws['!cols'] = [{ wch: 12 }, { wch: 20 }, { wch: 18 }, { wch: 45 }, { wch: 14 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 16 }, { wch: 14 }];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Plantation Report');
   XLSX.writeFile(wb, `ECO_Club_UP_Plantation_Report_${label.replace(/\s+/g, '_')}.xlsx`);
@@ -240,8 +250,8 @@ function downloadPDF(dist) {
   doc.text(`${label} · ${fmt(filtered.length)} schools · ${fmt(done)} done, ${fmt(filtered.length - done)} pending · ${fmt(trees)} trees planted · generated ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}`, 40, 56);
   doc.autoTable({
     startY: 70,
-    head: [['Category', 'District', 'Block', 'School Name', 'UDISE Code', 'Status', 'Trees Planted']],
-    body: filtered.map(r => [CAT_LABEL[r.c] || r.c, titleCase(r.d), r.b ? titleCase(r.b) : 'N/A', r.n, r.u, r.s === 1 ? 'Done' : 'Pending', fmt(r.t)]),
+    head: [['Category', 'District', 'Block', 'School Name', 'UDISE Code', 'Status', 'Students', 'Teachers', 'Total Participants', 'Trees Planted']],
+    body: filtered.map(r => [CAT_LABEL[r.c] || r.c, titleCase(r.d), r.b ? titleCase(r.b) : 'N/A', r.n, r.u, r.s === 1 ? 'Done' : 'Pending', fmt(r.st), fmt(r.tc), fmt(r.pt), fmt(r.t)]),
     styles: { fontSize: 7, cellPadding: 3 },
     headStyles: { fillColor: [31, 78, 121] },
     margin: { left: 40, right: 40 },
@@ -254,7 +264,7 @@ function renderTable() {
   const rows = filtered.slice(start, start + PAGE_SIZE);
   const tbody = document.getElementById('tbody');
   if (!rows.length) {
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="7">No schools match these filters.</td></tr>`;
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="10">No schools match these filters.</td></tr>`;
   } else {
     tbody.innerHTML = rows.map(r => `
       <tr>
@@ -264,16 +274,25 @@ function renderTable() {
         <td class="name">${r.n}</td>
         <td class="num">${r.u}</td>
         <td>${r.s === 1 ? '<span class="status-pill done">Done</span>' : '<span class="status-pill pending">Pending</span>'}</td>
+        <td class="num">${fmt(r.st)}</td>
+        <td class="num">${fmt(r.tc)}</td>
+        <td class="num">${fmt(r.pt)}</td>
         <td class="num">${fmt(r.t)}</td>
       </tr>`).join('');
   }
 
   const totalDone = filtered.filter(r => r.s === 1).length;
   const totalTrees = filtered.reduce((a, r) => a + r.t, 0);
+  const totalStudents = filtered.reduce((a, r) => a + r.st, 0);
+  const totalTeachers = filtered.reduce((a, r) => a + r.tc, 0);
+  const totalParticipants = filtered.reduce((a, r) => a + r.pt, 0);
   document.getElementById('tfoot').innerHTML = `
     <tr>
       <td colspan="5">Total (${fmt(filtered.length)} school${filtered.length === 1 ? '' : 's'} shown)</td>
       <td><span style="color:var(--accent-ink)">${fmt(totalDone)} done</span> / <span style="color:var(--warn)">${fmt(filtered.length - totalDone)} pending</span></td>
+      <td class="num">${fmt(totalStudents)}</td>
+      <td class="num">${fmt(totalTeachers)}</td>
+      <td class="num">${fmt(totalParticipants)}</td>
       <td class="num">${fmt(totalTrees)}</td>
     </tr>`;
 

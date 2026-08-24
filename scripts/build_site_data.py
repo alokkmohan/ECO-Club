@@ -67,6 +67,9 @@ uploaded_udise = set(notif['U'])
 plant['U'] = plant['UDISE'].apply(norm_udise)
 done_udise = set(plant['U'])
 trees_by_udise = plant.groupby('U')['Trees Planted'].sum().to_dict()
+students_by_udise = plant.groupby('U')['Students'].sum().to_dict()
+teachers_by_udise = plant.groupby('U')['Teachers'].sum().to_dict()
+participants_by_udise = plant.groupby('U')['Total Participants'].sum().to_dict()
 
 block['U'] = block['UDISE Code'].apply(norm_udise)
 block_by_udise = block.drop_duplicates(subset='U', keep='first').set_index('U')['Block Name']
@@ -126,10 +129,14 @@ print(f"notification.json: {len(notif_records):,} records")
 plant_pool = full_pool[full_pool['Category'].isin(['G', 'A', 'P'])].copy()
 plant_pool['status'] = plant_pool['UDISE_norm'].isin(done_udise).astype(int)
 plant_pool['trees'] = plant_pool['UDISE_norm'].map(trees_by_udise).fillna(0).astype(int)
+plant_pool['students'] = plant_pool['UDISE_norm'].map(students_by_udise).fillna(0).astype(int)
+plant_pool['teachers'] = plant_pool['UDISE_norm'].map(teachers_by_udise).fillna(0).astype(int)
+plant_pool['participants'] = plant_pool['UDISE_norm'].map(participants_by_udise).fillna(0).astype(int)
 
 plant_records = [{
     'd': r.District, 'b': r.Block, 'c': r.Category,
     'n': r._1, 'u': r.UDISE_norm, 's': r.status, 't': r.trees,
+    'st': r.students, 'tc': r.teachers, 'pt': r.participants,
 } for r in plant_pool.itertuples(index=False)]
 
 with open(os.path.join(OUT, 'plantation.json'), 'w', encoding='utf-8') as f:
@@ -159,6 +166,9 @@ def agg_district(pool, is_plant):
             row['aidedTrees'] = int(grp.loc[is_a, 'trees'].sum())
             row['privTrees'] = int(grp.loc[is_p, 'trees'].sum())
             row['treesPlanted'] = int(grp['trees'].sum())
+            row['students'] = int(grp['students'].sum())
+            row['teachers'] = int(grp['teachers'].sum())
+            row['participants'] = int(grp['participants'].sum())
             tgt = target_by_district.get(dist)
             row['target'] = int(tgt) if tgt is not None else None
             row['achievedPct'] = round(row['treesPlanted'] / tgt * 100, 1) if tgt else None
@@ -184,6 +194,9 @@ summary = {
         'done': int(plant_pool['status'].sum()),
         'pending': int((plant_pool['status'] == 0).sum()),
         'treesPlanted': int(plant_pool['trees'].sum()),
+        'students': int(plant_pool['students'].sum()),
+        'teachers': int(plant_pool['teachers'].sum()),
+        'participants': int(plant_pool['participants'].sum()),
         'govtTotal': int(plant_pool['Category'].eq('G').sum()),
         'govtDone': int((plant_pool['Category'].eq('G') & (plant_pool['status']==1)).sum()),
         'aidedTotal': int(plant_pool['Category'].eq('A').sum()),

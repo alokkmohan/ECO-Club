@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Plantation Target Summary | ECO Club Uttar Pradesh</title>
-<meta name="description" content="District-wise plantation target vs. trees planted, ranked by achieved percentage.">
+<title>Participation Summary | ECO Club Uttar Pradesh</title>
+<meta name="description" content="District-wise plantation drive participation: schools, students, teachers, total participants and trees planted, ranked by total participants.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/style.css?v=2">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -25,8 +25,8 @@
         <div class="dropdown-menu">
           <a href="summary.html">District Summary</a>
           <a href="notification-percent.html">Notification % Summary</a>
-          <a href="plantation-target.html" class="active">Plantation Target Summary</a>
-          <a href="plantation-participation.html">Participation Summary</a>
+          <a href="plantation-target.html">Plantation Target Summary</a>
+          <a href="plantation-participation.html" class="active">Participation Summary</a>
         </div>
       </div>
     </nav>
@@ -38,8 +38,8 @@
 <div class="wrap">
   <header class="page">
     <p class="eyebrow">District-wise summary</p>
-    <h1>Plantation Target Summary</h1>
-    <p class="dek">Every district's plantation target against trees actually planted, ranked by achievement percentage, high to low.</p>
+    <h1>Participation Summary</h1>
+    <p class="dek">Every district's plantation drive participation — schools, students, teachers, total participants and trees planted — ranked by total participants, high to low.</p>
   </header>
 
   <div class="kpi-row" id="kpis"></div>
@@ -66,9 +66,11 @@
         <tr>
           <th data-key="rank" class="num">#</th>
           <th data-key="district">District</th>
-          <th data-key="target" class="num">Plantation Target</th>
+          <th data-key="schools" class="num">Schools</th>
+          <th data-key="students" class="num">Students</th>
+          <th data-key="teachers" class="num">Teachers</th>
+          <th data-key="participants" class="num">Total Participants</th>
           <th data-key="treesPlanted" class="num">Trees Planted</th>
-          <th data-key="pct" class="num">Achieved %</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
@@ -77,7 +79,7 @@
   </div>
 
   <footer class="note">
-    <strong>Reading this table.</strong> "Trees Planted" covers Government, Aided and Private secondary schools. "Achieved %" is Trees Planted as a percentage of the district's assigned Plantation Target, sorted high to low by default.
+    <strong>Reading this table.</strong> "Schools" is the count of Government, Aided and Private secondary schools with a plantation record. Students, Teachers and Total Participants are summed from each school's plantation submission. Sorted by Total Participants, high to low, by default.
   </footer>
 </div>
 
@@ -85,7 +87,7 @@
 <script>
 let ROWS = [];
 let VISIBLE = [];
-let sortKey = 'pct';
+let sortKey = 'participants';
 let sortDir = -1;
 let query = '';
 
@@ -100,36 +102,39 @@ function render() {
 
   const tbody = document.getElementById('tbody');
   if (!rows.length) {
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="5">No district matches "${query}".</td></tr>`;
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="7">No district matches "${query}".</td></tr>`;
   } else {
     tbody.innerHTML = rows.map((r, i) => `
       <tr>
         <td class="num">${i + 1}</td>
         <td class="name">${titleCase(r.district)}</td>
-        <td class="num">${r.target ? fmt(r.target) : 'N/A'}</td>
+        <td class="num">${fmt(r.schools)}</td>
+        <td class="num">${fmt(r.students)}</td>
+        <td class="num">${fmt(r.teachers)}</td>
+        <td class="num">${fmt(r.participants)}</td>
         <td class="num">${fmt(r.treesPlanted)}</td>
-        <td class="num">${r.target ? r.pct.toFixed(1) + '%' : 'N/A'}</td>
       </tr>`).join('');
   }
 
-  const sum = key => rows.reduce((a, r) => a + r[key], 0);
-  const totalTarget = sum('target'), totalTrees = sum('treesPlanted');
-  const sumAll = key => ROWS.reduce((a, r) => a + r[key], 0);
-  const grandTarget = sumAll('target'), grandTrees = sumAll('treesPlanted');
+  const t = totalsRows();
   document.getElementById('tfoot').innerHTML = `
     <tr style="font-weight:700;background:var(--accent-soft);">
       <td></td>
-      <td style="padding:12px 14px;">Total (${rows.length} districts)</td>
-      <td class="num" style="padding:12px 14px;">${fmt(totalTarget)}</td>
-      <td class="num" style="padding:12px 14px;">${fmt(totalTrees)}</td>
-      <td class="num" style="padding:12px 14px;">${totalTarget ? (totalTrees / totalTarget * 100).toFixed(1) : '0.0'}%</td>
+      <td style="padding:12px 14px;">${t.total[1]}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(t.total[2])}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(t.total[3])}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(t.total[4])}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(t.total[5])}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(t.total[6])}</td>
     </tr>
     <tr style="font-weight:700;background:var(--accent);color:#fff;">
       <td></td>
-      <td style="padding:12px 14px;">Grand Total (all ${ROWS.length} districts)</td>
-      <td class="num" style="padding:12px 14px;">${fmt(grandTarget)}</td>
-      <td class="num" style="padding:12px 14px;">${fmt(grandTrees)}</td>
-      <td class="num" style="padding:12px 14px;">${grandTarget ? (grandTrees / grandTarget * 100).toFixed(1) : '0.0'}%</td>
+      <td style="padding:12px 14px;">${t.grand[1]}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(t.grand[2])}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(t.grand[3])}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(t.grand[4])}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(t.grand[5])}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(t.grand[6])}</td>
     </tr>`;
 
   document.querySelectorAll('thead th[data-key]').forEach(th => {
@@ -145,70 +150,77 @@ function render() {
 
 function totalsRows() {
   const sum = (arr, key) => arr.reduce((a, r) => a + r[key], 0);
-  const tTarget = sum(VISIBLE, 'target'), tTrees = sum(VISIBLE, 'treesPlanted');
-  const gTarget = sum(ROWS, 'target'), gTrees = sum(ROWS, 'treesPlanted');
   return {
-    total: ['', `Total (${VISIBLE.length} districts)`, tTarget, tTrees, tTarget ? Number((tTrees / tTarget * 100).toFixed(1)) : 0],
-    grand: ['', `Grand Total (all ${ROWS.length} districts)`, gTarget, gTrees, gTarget ? Number((gTrees / gTarget * 100).toFixed(1)) : 0],
+    total: ['', `Total (${VISIBLE.length} districts)`, sum(VISIBLE, 'schools'), sum(VISIBLE, 'students'), sum(VISIBLE, 'teachers'), sum(VISIBLE, 'participants'), sum(VISIBLE, 'treesPlanted')],
+    grand: ['', `Grand Total (all ${ROWS.length} districts)`, sum(ROWS, 'schools'), sum(ROWS, 'students'), sum(ROWS, 'teachers'), sum(ROWS, 'participants'), sum(ROWS, 'treesPlanted')],
   };
 }
 
 function downloadExcel() {
   const t = totalsRows();
   const aoa = [
-    ['#', 'District', 'Plantation Target', 'Trees Planted', 'Achieved %'],
-    ...VISIBLE.map((r, i) => [i + 1, titleCase(r.district), r.target || 'N/A', r.treesPlanted, r.target ? Number(r.pct.toFixed(1)) : 'N/A']),
+    ['#', 'District', 'Schools', 'Students', 'Teachers', 'Total Participants', 'Trees Planted'],
+    ...VISIBLE.map((r, i) => [i + 1, titleCase(r.district), r.schools, r.students, r.teachers, r.participants, r.treesPlanted]),
     t.total,
     t.grand,
   ];
   const ws = XLSX.utils.aoa_to_sheet(aoa);
-  ws['!cols'] = [{ wch: 5 }, { wch: 26 }, { wch: 16 }, { wch: 14 }, { wch: 12 }];
+  ws['!cols'] = [{ wch: 5 }, { wch: 26 }, { wch: 10 }, { wch: 12 }, { wch: 12 }, { wch: 18 }, { wch: 14 }];
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Plantation Target Summary');
-  XLSX.writeFile(wb, 'ECO_Club_UP_Plantation_Target_Summary.xlsx');
+  XLSX.utils.book_append_sheet(wb, ws, 'Participation Summary');
+  XLSX.writeFile(wb, 'ECO_Club_UP_Participation_Summary.xlsx');
 }
 
 function downloadPDF() {
   const t = totalsRows();
-  const fmtRow = r => [r[0], r[1], fmt(r[2]), fmt(r[3]), r[4] + '%'];
+  const fmtRow = r => [r[0], r[1], fmt(r[2]), fmt(r[3]), fmt(r[4]), fmt(r[5]), fmt(r[6])];
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: 'portrait', unit: 'pt' });
   doc.setFontSize(14);
-  doc.text('ECO Club | Plantation Target Summary', 40, 40);
+  doc.text('ECO Club | Participation Summary', 40, 40);
   doc.setFontSize(9);
   doc.setTextColor(100);
   doc.text(`Generated ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}`, 40, 56);
   doc.autoTable({
     startY: 70,
-    head: [['#', 'District', 'Plantation Target', 'Trees Planted', 'Achieved %']],
-    body: VISIBLE.map((r, i) => [i + 1, titleCase(r.district), r.target ? fmt(r.target) : 'N/A', fmt(r.treesPlanted), r.target ? r.pct.toFixed(1) + '%' : 'N/A']),
+    head: [['#', 'District', 'Schools', 'Students', 'Teachers', 'Total Participants', 'Trees Planted']],
+    body: VISIBLE.map((r, i) => [i + 1, titleCase(r.district), fmt(r.schools), fmt(r.students), fmt(r.teachers), fmt(r.participants), fmt(r.treesPlanted)]),
     foot: [fmtRow(t.total), fmtRow(t.grand)],
     styles: { fontSize: 8, cellPadding: 4 },
     headStyles: { fillColor: [31, 78, 121] },
     footStyles: { fillColor: [230, 240, 230], textColor: [0, 0, 0], fontStyle: 'bold' },
     margin: { left: 40, right: 40 },
   });
-  doc.save('ECO_Club_UP_Plantation_Target_Summary.pdf');
+  doc.save('ECO_Club_UP_Participation_Summary.pdf');
 }
 
 (async function () {
-  const s = await loadJSON('data/summary.json');
-  const p = s.plantation;
+  const [plant, s] = await Promise.all([loadJSON('data/plantation.json'), loadJSON('data/summary.json')]);
   document.getElementById('lastUpdated').textContent = `| Data updated ${s.generated}`;
   document.getElementById('updateBar').textContent = `Last Data updated ${s.generated}`;
 
-  document.getElementById('kpis').innerHTML = `
-    <div class="kpi"><div class="label">Plantation Target</div><div class="value">${fmt(p.targetTotal)}</div></div>
-    <div class="kpi done"><div class="label">Trees Planted</div><div class="value">${fmt(p.treesPlanted)}</div></div>
-    <div class="kpi done"><div class="label">Statewide %</div><div class="value">${(p.treesPlanted / p.targetTotal * 100).toFixed(1)}%</div></div>
-  `;
+  const byDist = {};
+  plant.forEach(r => {
+    if (!byDist[r.d]) byDist[r.d] = { district: r.d, schools: 0, students: 0, teachers: 0, participants: 0, treesPlanted: 0 };
+    const d = byDist[r.d];
+    d.schools++;
+    d.students += r.st;
+    d.teachers += r.tc;
+    d.participants += r.pt;
+    d.treesPlanted += r.t;
+  });
+  ROWS = Object.values(byDist);
 
-  ROWS = p.byDistrict.map(d => ({
-    district: d.district,
-    target: d.target || 0,
-    treesPlanted: d.treesPlanted,
-    pct: d.achievedPct || 0,
-  }));
+  const grandStudents = ROWS.reduce((a, r) => a + r.students, 0);
+  const grandTeachers = ROWS.reduce((a, r) => a + r.teachers, 0);
+  const grandParticipants = ROWS.reduce((a, r) => a + r.participants, 0);
+  const grandTrees = ROWS.reduce((a, r) => a + r.treesPlanted, 0);
+  document.getElementById('kpis').innerHTML = `
+    <div class="kpi"><div class="label">Students</div><div class="value">${fmt(grandStudents)}</div></div>
+    <div class="kpi"><div class="label">Teachers</div><div class="value">${fmt(grandTeachers)}</div></div>
+    <div class="kpi done"><div class="label">Total Participants</div><div class="value">${fmt(grandParticipants)}</div></div>
+    <div class="kpi done"><div class="label">Trees Planted</div><div class="value">${fmt(grandTrees)}</div></div>
+  `;
 
   document.querySelectorAll('thead th[data-key]').forEach(th => {
     th.addEventListener('click', () => {
