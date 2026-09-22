@@ -208,6 +208,13 @@ summary = {
     },
 }
 
-with open(os.path.join(OUT, 'summary.json'), 'w', encoding='utf-8') as f:
+summary_path = os.path.join(OUT, 'summary.json')
+if os.path.exists(summary_path):
+    with open(summary_path, encoding='utf-8') as f:
+        existing = json.load(f)
+    if 'quiz' in existing:
+        summary['quiz'] = existing['quiz']
+
+with open(summary_path, 'w', encoding='utf-8') as f:
     json.dump(summary, f, ensure_ascii=False, separators=(',', ':'))
 print("summary.json written")

@@ -98,6 +98,8 @@
           <a href="notification-percent.html">Notification % Summary</a>
           <a href="plantation-target.html">Plantation Target Summary</a>
           <a href="plantation-participation.html">Participation Summary</a>
+          <a href="quiz-summary.html">Swachhata Quiz Summary</a>
+          <a href="quiz-schools.html">Swachhata Quiz School List</a>
         </div>
       </div>
     </nav>
@@ -153,7 +155,7 @@ function barList(rows, valueKey, colorVar, max, formatter) {
 
 (async function () {
   const s = await loadJSON('data/summary.json');
-  const n = s.notification, p = s.plantation;
+  const n = s.notification, p = s.plantation, q = s.quiz || {};
   document.getElementById('lastUpdated').textContent = `| Data updated ${s.generated}`;
   document.getElementById('updateBar').textContent = `Last Data updated ${s.generated}`;
 
@@ -213,6 +215,42 @@ function barList(rows, valueKey, colorVar, max, formatter) {
           <span>Achieved <b>${(p.treesPlanted / p.targetTotal * 100).toFixed(1)}%</b></span>
         </div>
         <div class="cta">View school-level report &rarr;</div>
+      </div>
+    </a>
+    <a class="report-btn" href="quiz-summary.html">
+      <div class="ring-wrap">
+        ${ring(q.secondaryPct || 0, 'var(--accent)')}
+        <div class="ring-center"><span class="ring-pct">${(q.secondaryPct || 0).toFixed(1)}%</span><span class="ring-pct-label">Secondary</span></div>
+      </div>
+      <div class="body">
+        <span class="card-eyebrow">Report</span>
+        <h2>Swachhata Hi Seva Quiz — Participants</h2>
+        <div class="legend-row">
+          <span>Total Participants <b>${fmt(q.totalParticipants || 0)}</b></span>
+        </div>
+        <div class="legend-row">
+          <span><span class="dot done"></span>Secondary <b>${fmt(q.secondaryParticipants || 0)}</b></span>
+          <span><span class="dot pending"></span>Basic / Other <b>${fmt(q.basicParticipants || 0)}</b></span>
+        </div>
+        <div class="cta">View participation summary &rarr;</div>
+      </div>
+    </a>
+    <a class="report-btn" href="quiz-schools.html">
+      <div class="ring-wrap">
+        ${ring(q.totalSchools ? Math.round(q.secondarySchools / q.totalSchools * 100) : 0, 'var(--accent)')}
+        <div class="ring-center"><span class="ring-pct">${fmt(q.secondarySchools || 0)}</span><span class="ring-pct-label">Secondary</span></div>
+      </div>
+      <div class="body">
+        <span class="card-eyebrow">Report</span>
+        <h2>Swachhata Hi Seva Quiz — Schools</h2>
+        <div class="legend-row">
+          <span>Schools Participated <b>${fmt(q.totalSchools || 0)}</b></span>
+        </div>
+        <div class="legend-row">
+          <span><span class="dot done"></span>Secondary <b>${fmt(q.secondarySchools || 0)}</b></span>
+          <span><span class="dot pending"></span>Basic / Other <b>${fmt(q.basicSchools || 0)}</b></span>
+        </div>
+        <div class="cta">View school list &rarr;</div>
       </div>
     </a>
   `;
