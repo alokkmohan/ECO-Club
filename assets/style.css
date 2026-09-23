@@ -62,10 +62,12 @@ a { color: inherit; }
   margin-bottom: 32px;
 }
 .topnav .inner {
-  max-width: 1180px; margin: 0 auto; padding: 14px 24px;
-  display: grid; align-items: center; gap: 10px 16px;
+  max-width: 1180px; margin: 0 auto; padding: 12px 24px 10px;
+  display: grid; align-items: center; gap: 6px 16px;
   grid-template-columns: auto 1fr auto auto;
-  grid-template-areas: "brand nav logo meta";
+  grid-template-areas:
+    "brand .    meta logo"
+    "nav   nav  nav  nav";
 }
 .topnav-updated {
   grid-area: meta;
@@ -79,11 +81,14 @@ a { color: inherit; }
   display: flex; align-items: center; gap: 8px; white-space: nowrap;
 }
 .topnav .brand .leaf { color: var(--accent); }
-.topnav nav { grid-area: nav; display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
+.topnav nav {
+  grid-area: nav; display: flex; gap: 2px; justify-content: center; flex-wrap: wrap;
+  margin-top: 6px; padding-top: 8px; border-top: 1px solid var(--line);
+}
 .topnav .gov-logo { grid-area: logo; height: 34px; width: auto; display: block; flex-shrink: 0; justify-self: end; }
 .topnav nav a {
-  text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 600;
-  padding: 8px 14px; border-radius: 7px;
+  text-decoration: none; color: var(--muted); font-size: 13.5px; font-weight: 600;
+  padding: 7px 12px; border-radius: 7px; white-space: nowrap;
 }
 .topnav nav a:hover { color: var(--ink); background: var(--accent-soft); }
 .topnav nav a.active { color: var(--accent-ink); background: var(--accent-soft); }
@@ -113,8 +118,8 @@ a { color: inherit; }
     grid-template-columns: 1fr auto;
     grid-template-areas:
       "brand logo"
-      "nav nav"
-      "meta meta";
+      "meta meta"
+      "nav nav";
   }
   .topnav nav { justify-content: flex-start; }
   .topnav-updated { border-left: none; padding-left: 0; }

@@ -6,7 +6,7 @@
 <title>ECO Club Monitoring Dashboard | Uttar Pradesh</title>
 <meta name="description" content="ECO Club Monitoring Dashboard | Uttar Pradesh. Notification upload, plantation drive, Swachhata Hi Seva Quiz and E-Waste Collection status, district-wise.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-<link rel="stylesheet" href="assets/style.css?v=2">
+<link rel="stylesheet" href="assets/style.css?v=3">
 <style>
   .stat-row {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
@@ -125,6 +125,12 @@
 
   <p class="type-section-label">Plantation | by school type</p>
   <div class="type-grid" id="typeGridPlant"></div>
+
+  <p class="type-section-label">Swachhata Quiz | by school type</p>
+  <div class="type-grid" id="typeGridQuiz"></div>
+
+  <p class="type-section-label">E-Waste Collection | by school type</p>
+  <div class="type-grid" id="typeGridEwaste"></div>
 
   <div class="chart-grid" id="chartGrid"></div>
 </div>
@@ -298,6 +304,26 @@ function barList(rows, valueKey, colorVar, max, formatter) {
   document.getElementById('typeGridPlant').innerHTML = plantTypes.map(t => {
     const pct = t.total ? Math.round(t.done / t.total * 100) : 0;
     return typeCard(t.cls, t.key, t.label, `${fmt(t.total)} schools`, pct, 'Done', t.done, t.total, `plantation.html?category=${t.key}`);
+  }).join('');
+
+  const quizTypes = [
+    { key: 'G', cls: 'govt', label: 'Government', total: n.govtTotal, done: q.govtSchools || 0 },
+    { key: 'A', cls: 'aided', label: 'Aided', total: n.aidedTotal, done: q.aidedSchools || 0 },
+    { key: 'P', cls: 'private', label: 'Private', total: n.privTotal, done: q.privSchools || 0 },
+  ];
+  document.getElementById('typeGridQuiz').innerHTML = quizTypes.map(t => {
+    const pct = t.total ? Math.round(t.done / t.total * 100) : 0;
+    return typeCard(t.cls, t.key, t.label, `${fmt(t.total)} schools`, pct, 'Participated', t.done, t.total, `quiz.html?category=${t.key}`);
+  }).join('');
+
+  const ewasteTypes = [
+    { key: 'G', cls: 'govt', label: 'Government', total: n.govtTotal, done: ew.govtSchools || 0 },
+    { key: 'A', cls: 'aided', label: 'Aided', total: n.aidedTotal, done: ew.aidedSchools || 0 },
+    { key: 'P', cls: 'private', label: 'Private', total: n.privTotal, done: ew.privSchools || 0 },
+  ];
+  document.getElementById('typeGridEwaste').innerHTML = ewasteTypes.map(t => {
+    const pct = t.total ? Math.round(t.done / t.total * 100) : 0;
+    return typeCard(t.cls, t.key, t.label, `${fmt(t.total)} schools`, pct, 'Participated', t.done, t.total, `ewaste.html?category=${t.key}`);
   }).join('');
 
   const topTrees = [...p.byDistrict].sort((a, b) => b.treesPlanted - a.treesPlanted).slice(0, 8);
