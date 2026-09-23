@@ -91,15 +91,13 @@
       <a href="index.html" class="active">Home</a>
       <a href="notification.html">Notification</a>
       <a href="plantation.html">Plantation</a>
+      <a href="quiz.html">Swachhata Quiz</a>
       <div class="nav-dropdown">
         <a href="summary.html" class="dropdown-toggle">Reports <span class="caret">&#9662;</span></a>
         <div class="dropdown-menu">
           <a href="summary.html">District Summary</a>
           <a href="notification-percent.html">Notification % Summary</a>
           <a href="plantation-target.html">Plantation Target Summary</a>
-          <a href="plantation-participation.html">Participation Summary</a>
-          <a href="quiz-summary.html">Swachhata Quiz Summary</a>
-          <a href="quiz-schools.html">Swachhata Quiz School List</a>
         </div>
       </div>
     </nav>
@@ -217,7 +215,7 @@ function barList(rows, valueKey, colorVar, max, formatter) {
         <div class="cta">View school-level report &rarr;</div>
       </div>
     </a>
-    <a class="report-btn" href="quiz-summary.html">
+    <a class="report-btn" href="quiz.html">
       <div class="ring-wrap">
         ${ring(q.avgPercent || 0, 'var(--accent)')}
         <div class="ring-center"><span class="ring-pct">${q.avgPercent || 0}%</span><span class="ring-pct-label">Avg Score</span></div>
@@ -226,15 +224,13 @@ function barList(rows, valueKey, colorVar, max, formatter) {
         <span class="card-eyebrow">Report</span>
         <h2>Swachhata Hi Seva Quiz</h2>
         <div class="legend-row">
-          <span>Secondary Schools Participated <b>${fmt(q.totalSchools || 0)}</b></span>
-          <span>Total Participants <b>${fmt(q.totalParticipants || 0)}</b></span>
+          <span><span class="dot done"></span>Participated <b>${fmt(q.participatedSchools || 0)}</b></span>
+          <span><span class="dot pending"></span>Not Participated <b>${fmt(q.notParticipatedSchools || 0)}</b></span>
         </div>
         <div class="legend-row">
-          <span>Govt <b>${fmt(q.govtSchools || 0)}</b></span>
-          <span>Aided <b>${fmt(q.aidedSchools || 0)}</b></span>
-          <span>Private <b>${fmt(q.privSchools || 0)}</b></span>
+          <span>Total Participants <b>${fmt(q.totalParticipants || 0)}</b></span>
         </div>
-        <div class="cta">View quiz summary &rarr;</div>
+        <div class="cta">View school-level report &rarr;</div>
       </div>
     </a>
   `;

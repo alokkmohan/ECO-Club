@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Plantation Target Summary | ECO Club Uttar Pradesh</title>
-<meta name="description" content="District-wise plantation target vs. trees planted, ranked by achieved percentage.">
+<meta name="description" content="District-wise plantation target, participation and trees planted, ranked by achieved percentage.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/style.css?v=2">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -20,15 +20,13 @@
       <a href="index.html">Home</a>
       <a href="notification.html">Notification</a>
       <a href="plantation.html">Plantation</a>
+      <a href="quiz.html">Swachhata Quiz</a>
       <div class="nav-dropdown open">
         <a href="summary.html" class="dropdown-toggle active">Reports <span class="caret">&#9662;</span></a>
         <div class="dropdown-menu">
           <a href="summary.html">District Summary</a>
           <a href="notification-percent.html">Notification % Summary</a>
           <a href="plantation-target.html" class="active">Plantation Target Summary</a>
-          <a href="plantation-participation.html">Participation Summary</a>
-          <a href="quiz-summary.html">Swachhata Quiz Summary</a>
-          <a href="quiz-schools.html">Swachhata Quiz School List</a>
         </div>
       </div>
     </nav>
@@ -41,7 +39,7 @@
   <header class="page">
     <p class="eyebrow">District-wise summary</p>
     <h1>Plantation Target Summary</h1>
-    <p class="dek">Every district's plantation target against trees actually planted, ranked by achievement percentage, high to low.</p>
+    <p class="dek">Every district's plantation drive — schools, students, teachers, total participants, trees planted against target — ranked by achievement percentage, high to low.</p>
   </header>
 
   <div class="kpi-row" id="kpis"></div>
@@ -68,6 +66,10 @@
         <tr>
           <th data-key="rank" class="num">#</th>
           <th data-key="district">District</th>
+          <th data-key="schools" class="num">Schools</th>
+          <th data-key="students" class="num">Students</th>
+          <th data-key="teachers" class="num">Teachers</th>
+          <th data-key="participants" class="num">Total Participants</th>
           <th data-key="target" class="num">Plantation Target</th>
           <th data-key="treesPlanted" class="num">Trees Planted</th>
           <th data-key="pct" class="num">Achieved %</th>
@@ -79,7 +81,7 @@
   </div>
 
   <footer class="note">
-    <strong>Reading this table.</strong> "Trees Planted" covers Government, Aided and Private secondary schools. "Achieved %" is Trees Planted as a percentage of the district's assigned Plantation Target, sorted high to low by default.
+    <strong>Reading this table.</strong> "Schools", "Students", "Teachers" and "Total Participants" cover Government, Aided and Private secondary schools with a plantation record. "Achieved %" is Trees Planted as a percentage of the district's assigned Plantation Target, sorted high to low by default.
   </footer>
 </div>
 
@@ -102,37 +104,38 @@ function render() {
 
   const tbody = document.getElementById('tbody');
   if (!rows.length) {
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="5">No district matches "${query}".</td></tr>`;
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="9">No district matches "${query}".</td></tr>`;
   } else {
     tbody.innerHTML = rows.map((r, i) => `
       <tr>
         <td class="num">${i + 1}</td>
         <td class="name">${titleCase(r.district)}</td>
+        <td class="num">${fmt(r.schools)}</td>
+        <td class="num">${fmt(r.students)}</td>
+        <td class="num">${fmt(r.teachers)}</td>
+        <td class="num">${fmt(r.participants)}</td>
         <td class="num">${r.target ? fmt(r.target) : 'N/A'}</td>
         <td class="num">${fmt(r.treesPlanted)}</td>
         <td class="num">${r.target ? r.pct.toFixed(1) + '%' : 'N/A'}</td>
       </tr>`).join('');
   }
 
-  const sum = key => rows.reduce((a, r) => a + r[key], 0);
-  const totalTarget = sum('target'), totalTrees = sum('treesPlanted');
-  const sumAll = key => ROWS.reduce((a, r) => a + r[key], 0);
-  const grandTarget = sumAll('target'), grandTrees = sumAll('treesPlanted');
-  document.getElementById('tfoot').innerHTML = `
-    <tr style="font-weight:700;background:var(--accent-soft);">
+  const t = totalsRows();
+  const renderFoot = (row, style) => `
+    <tr style="font-weight:700;${style}">
       <td></td>
-      <td style="padding:12px 14px;">Total (${rows.length} districts)</td>
-      <td class="num" style="padding:12px 14px;">${fmt(totalTarget)}</td>
-      <td class="num" style="padding:12px 14px;">${fmt(totalTrees)}</td>
-      <td class="num" style="padding:12px 14px;">${totalTarget ? (totalTrees / totalTarget * 100).toFixed(1) : '0.0'}%</td>
-    </tr>
-    <tr style="font-weight:700;background:var(--accent);color:#fff;">
-      <td></td>
-      <td style="padding:12px 14px;">Grand Total (all ${ROWS.length} districts)</td>
-      <td class="num" style="padding:12px 14px;">${fmt(grandTarget)}</td>
-      <td class="num" style="padding:12px 14px;">${fmt(grandTrees)}</td>
-      <td class="num" style="padding:12px 14px;">${grandTarget ? (grandTrees / grandTarget * 100).toFixed(1) : '0.0'}%</td>
+      <td style="padding:12px 14px;">${row[1]}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(row[2])}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(row[3])}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(row[4])}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(row[5])}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(row[6])}</td>
+      <td class="num" style="padding:12px 14px;">${fmt(row[7])}</td>
+      <td class="num" style="padding:12px 14px;">${row[8]}%</td>
     </tr>`;
+  document.getElementById('tfoot').innerHTML =
+    renderFoot(t.total, 'background:var(--accent-soft);') +
+    renderFoot(t.grand, 'background:var(--accent);color:#fff;');
 
   document.querySelectorAll('thead th[data-key]').forEach(th => {
     th.classList.toggle('sorted', th.dataset.key === sortKey);
@@ -147,24 +150,27 @@ function render() {
 
 function totalsRows() {
   const sum = (arr, key) => arr.reduce((a, r) => a + r[key], 0);
-  const tTarget = sum(VISIBLE, 'target'), tTrees = sum(VISIBLE, 'treesPlanted');
-  const gTarget = sum(ROWS, 'target'), gTrees = sum(ROWS, 'treesPlanted');
+  const row = (arr, label) => {
+    const tTarget = sum(arr, 'target'), tTrees = sum(arr, 'treesPlanted');
+    return ['', label, sum(arr, 'schools'), sum(arr, 'students'), sum(arr, 'teachers'), sum(arr, 'participants'),
+      tTarget, tTrees, tTarget ? Number((tTrees / tTarget * 100).toFixed(1)) : 0];
+  };
   return {
-    total: ['', `Total (${VISIBLE.length} districts)`, tTarget, tTrees, tTarget ? Number((tTrees / tTarget * 100).toFixed(1)) : 0],
-    grand: ['', `Grand Total (all ${ROWS.length} districts)`, gTarget, gTrees, gTarget ? Number((gTrees / gTarget * 100).toFixed(1)) : 0],
+    total: row(VISIBLE, `Total (${VISIBLE.length} districts)`),
+    grand: row(ROWS, `Grand Total (all ${ROWS.length} districts)`),
   };
 }
 
 function downloadExcel() {
   const t = totalsRows();
   const aoa = [
-    ['#', 'District', 'Plantation Target', 'Trees Planted', 'Achieved %'],
-    ...VISIBLE.map((r, i) => [i + 1, titleCase(r.district), r.target || 'N/A', r.treesPlanted, r.target ? Number(r.pct.toFixed(1)) : 'N/A']),
+    ['#', 'District', 'Schools', 'Students', 'Teachers', 'Total Participants', 'Plantation Target', 'Trees Planted', 'Achieved %'],
+    ...VISIBLE.map((r, i) => [i + 1, titleCase(r.district), r.schools, r.students, r.teachers, r.participants, r.target || 'N/A', r.treesPlanted, r.target ? Number(r.pct.toFixed(1)) : 'N/A']),
     t.total,
     t.grand,
   ];
   const ws = XLSX.utils.aoa_to_sheet(aoa);
-  ws['!cols'] = [{ wch: 5 }, { wch: 26 }, { wch: 16 }, { wch: 14 }, { wch: 12 }];
+  ws['!cols'] = [{ wch: 5 }, { wch: 24 }, { wch: 10 }, { wch: 12 }, { wch: 12 }, { wch: 18 }, { wch: 16 }, { wch: 14 }, { wch: 12 }];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Plantation Target Summary');
   XLSX.writeFile(wb, 'ECO_Club_UP_Plantation_Target_Summary.xlsx');
@@ -172,9 +178,9 @@ function downloadExcel() {
 
 function downloadPDF() {
   const t = totalsRows();
-  const fmtRow = r => [r[0], r[1], fmt(r[2]), fmt(r[3]), r[4] + '%'];
+  const fmtRow = r => [r[0], r[1], fmt(r[2]), fmt(r[3]), fmt(r[4]), fmt(r[5]), fmt(r[6]), fmt(r[7]), r[8] + '%'];
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation: 'portrait', unit: 'pt' });
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'pt' });
   doc.setFontSize(14);
   doc.text('ECO Club | Plantation Target Summary', 40, 40);
   doc.setFontSize(9);
@@ -182,8 +188,8 @@ function downloadPDF() {
   doc.text(`Generated ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}`, 40, 56);
   doc.autoTable({
     startY: 70,
-    head: [['#', 'District', 'Plantation Target', 'Trees Planted', 'Achieved %']],
-    body: VISIBLE.map((r, i) => [i + 1, titleCase(r.district), r.target ? fmt(r.target) : 'N/A', fmt(r.treesPlanted), r.target ? r.pct.toFixed(1) + '%' : 'N/A']),
+    head: [['#', 'District', 'Schools', 'Students', 'Teachers', 'Total Participants', 'Plantation Target', 'Trees Planted', 'Achieved %']],
+    body: VISIBLE.map((r, i) => [i + 1, titleCase(r.district), fmt(r.schools), fmt(r.students), fmt(r.teachers), fmt(r.participants), r.target ? fmt(r.target) : 'N/A', fmt(r.treesPlanted), r.target ? r.pct.toFixed(1) + '%' : 'N/A']),
     foot: [fmtRow(t.total), fmtRow(t.grand)],
     styles: { fontSize: 8, cellPadding: 4 },
     headStyles: { fillColor: [31, 78, 121] },
@@ -200,6 +206,9 @@ function downloadPDF() {
   document.getElementById('updateBar').textContent = `Last Data updated ${s.generated}`;
 
   document.getElementById('kpis').innerHTML = `
+    <div class="kpi"><div class="label">Students</div><div class="value">${fmt(p.students)}</div></div>
+    <div class="kpi"><div class="label">Teachers</div><div class="value">${fmt(p.teachers)}</div></div>
+    <div class="kpi"><div class="label">Total Participants</div><div class="value">${fmt(p.participants)}</div></div>
     <div class="kpi"><div class="label">Plantation Target</div><div class="value">${fmt(p.targetTotal)}</div></div>
     <div class="kpi done"><div class="label">Trees Planted</div><div class="value">${fmt(p.treesPlanted)}</div></div>
     <div class="kpi done"><div class="label">Statewide %</div><div class="value">${(p.treesPlanted / p.targetTotal * 100).toFixed(1)}%</div></div>
@@ -207,6 +216,10 @@ function downloadPDF() {
 
   ROWS = p.byDistrict.map(d => ({
     district: d.district,
+    schools: (d.govtTotal || 0) + (d.aidedTotal || 0) + (d.privTotal || 0),
+    students: d.students || 0,
+    teachers: d.teachers || 0,
+    participants: d.participants || 0,
     target: d.target || 0,
     treesPlanted: d.treesPlanted,
     pct: d.achievedPct || 0,
