@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notification Report | ECO Club Uttar Pradesh</title>
-<meta name="description" content="ECO Club notification upload status for every Government, Aided and Private school in Uttar Pradesh, filterable by district.">
+<title>E-Waste Collection | ECO Club Uttar Pradesh</title>
+<meta name="description" content="E-Waste collection drive status for Secondary schools in Uttar Pradesh, filterable by district.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/style.css?v=2">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -18,10 +18,10 @@
     <a class="brand" href="index.html"><span class="leaf">&#127807;</span> ECO Club | Uttar Pradesh</a>
     <nav>
       <a href="index.html">Home</a>
-      <a href="notification.html" class="active">Notification</a>
+      <a href="notification.html">Notification</a>
       <a href="plantation.html">Plantation</a>
       <a href="quiz.html">Swachhata Quiz</a>
-      <a href="ewaste.html">E-Waste Collection</a>
+      <a href="ewaste.html" class="active">E-Waste Collection</a>
       <div class="nav-dropdown">
         <a href="summary.html" class="dropdown-toggle">Reports <span class="caret">&#9662;</span></a>
         <div class="dropdown-menu">
@@ -39,8 +39,8 @@
 <div class="wrap">
   <header class="page">
     <p class="eyebrow">School-level report</p>
-    <h1>Notification upload status</h1>
-    <p class="dek">Has each Government, Aided or Private secondary school uploaded its ECO Club notification? Pick a district to see its full list, or search by school name.</p>
+    <h1>E-Waste Collection Drive</h1>
+    <p class="dek">Has each Government, Aided or Private secondary school reported an E-Waste collection activity, and how many students took part? Pick a district to see its full list.</p>
   </header>
 
   <div class="kpi-row" id="kpis"></div>
@@ -63,8 +63,8 @@
       <label for="statusSel">Status</label>
       <select id="statusSel">
         <option value="">All</option>
-        <option value="1">Uploaded</option>
-        <option value="0">Pending</option>
+        <option value="1">Participated</option>
+        <option value="0">Not Participated</option>
       </select>
     </div>
     <div class="field search-field">
@@ -73,8 +73,8 @@
       <input id="search" type="text" placeholder="School name or UDISE code…" autocomplete="off">
     </div>
     <div class="legend">
-      <span><span class="dot done"></span>Uploaded</span>
-      <span><span class="dot pending"></span>Pending</span>
+      <span><span class="dot done"></span>Participated</span>
+      <span><span class="dot pending"></span>Not Participated</span>
     </div>
     <button class="btn-pdf" id="excelBtn" type="button">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 19h16"/></svg>
@@ -87,7 +87,6 @@
   </div>
 
   <div class="district-strip" id="strip"></div>
-  <div class="cat-breakdown" id="catBreakdown"></div>
 
   <div class="table-scroll">
     <table id="dataTable">
@@ -95,10 +94,12 @@
         <tr>
           <th data-key="c">Category</th>
           <th data-key="d">District</th>
-          <th data-key="b">Block</th>
           <th data-key="n">School Name</th>
           <th data-key="u" class="num">UDISE Code</th>
           <th data-key="s">Status</th>
+          <th data-key="p" class="num">Participants</th>
+          <th data-key="items" class="num">Items Collected</th>
+          <th data-key="w" class="num">Workshops</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
@@ -109,7 +110,7 @@
   <div class="pager" id="pager"></div>
 
   <footer class="note">
-    <strong>Data note.</strong> Matched by UDISE code between the school master list and submitted notification records. Private-school coverage is available for a subset of districts only | a district missing from this report's private-school figures does not mean all its private schools have uploaded.
+    <strong>Data note.</strong> Matched by UDISE code between the ECO Club secondary school master list and E-Waste activity submissions. Scope is Government + Aided + Private secondary schools.
   </footer>
 </div>
 
@@ -148,6 +149,8 @@ function renderKpis(dist) {
   const scope = DATA.filter(r => !dist || r.d === dist);
   const total = scope.length;
   const done = scope.filter(r => r.s === 1).length;
+  const totalParticipants = scope.reduce((a, r) => a + r.p, 0);
+  const totalItems = scope.reduce((a, r) => a + r.items, 0);
   const byCat = c => {
     const rows = scope.filter(r => r.c === c);
     return { total: rows.length, done: rows.filter(r => r.s === 1).length };
@@ -155,71 +158,65 @@ function renderKpis(dist) {
   const g = byCat('G'), a = byCat('A'), p = byCat('P');
   document.getElementById('kpis').innerHTML = `
     <div class="kpi"><div class="label">Total Schools</div><div class="value">${fmt(total)}</div></div>
-    <div class="kpi done"><div class="label">Uploaded</div><div class="value">${fmt(done)}</div></div>
-    <div class="kpi pending"><div class="label">Pending</div><div class="value">${fmt(total - done)}</div></div>
+    <div class="kpi done"><div class="label">Participated</div><div class="value">${fmt(done)}</div></div>
+    <div class="kpi pending"><div class="label">Not Participated</div><div class="value">${fmt(total - done)}</div></div>
     <div class="kpi"><div class="label">Government</div><div class="value">${fmt(g.done)}<span class="of">/ ${fmt(g.total)}</span></div></div>
     <div class="kpi"><div class="label">Aided</div><div class="value">${fmt(a.done)}<span class="of">/ ${fmt(a.total)}</span></div></div>
     <div class="kpi"><div class="label">Private</div><div class="value">${fmt(p.done)}<span class="of">/ ${fmt(p.total)}</span></div></div>
+    <div class="kpi done"><div class="label">Total Participants</div><div class="value">${fmt(totalParticipants)}</div></div>
+    <div class="kpi done"><div class="label">Items Collected</div><div class="value">${fmt(totalItems)}</div></div>
   `;
 }
 
 function renderStrip(dist) {
   const total = filtered.length;
   const done = filtered.filter(r => r.s === 1).length;
+  const totalParticipants = filtered.reduce((a, r) => a + r.p, 0);
+  const totalItems = filtered.reduce((a, r) => a + r.items, 0);
   const label = dist ? titleCase(dist) : 'All Uttar Pradesh';
   document.getElementById('strip').innerHTML = `
     <span class="item">${label} | <b>${fmt(total)}</b> schools shown</span>
-    <span class="item"><b style="color:var(--accent-ink)">${fmt(done)}</b> uploaded</span>
-    <span class="item"><b style="color:var(--warn)">${fmt(total - done)}</b> pending</span>
+    <span class="item"><b style="color:var(--accent-ink)">${fmt(done)}</b> participated</span>
+    <span class="item"><b style="color:var(--warn)">${fmt(total - done)}</b> not participated</span>
+    <span class="item"><b style="color:var(--accent-ink)">${fmt(totalItems)}</b> items collected</span>
   `;
 
   renderKpis(dist);
-
-  // School-type-wise breakdown, scoped to district only (ignores category/status/search filters)
-  const scope = DATA.filter(r => !dist || r.d === dist);
-  const chips = ['G', 'A', 'P'].map(cat => {
-    const rows = scope.filter(r => r.c === cat);
-    const catDone = rows.filter(r => r.s === 1).length;
-    return `<div class="cat-chip">
-      <div class="cat-name">${CAT_LABEL[cat]}</div>
-      <div class="cat-val">${fmt(catDone)}<span class="cat-of"> / ${fmt(rows.length)} uploaded</span></div>
-    </div>`;
-  }).join('');
-  document.getElementById('catBreakdown').innerHTML = chips;
 }
 
 function downloadExcel(dist) {
   const label = dist ? titleCase(dist) : 'All Uttar Pradesh';
   const aoa = [
-    ['Category', 'District', 'Block', 'School Name', 'UDISE Code', 'Status'],
-    ...filtered.map(r => [CAT_LABEL[r.c] || r.c, titleCase(r.d), r.b ? titleCase(r.b) : 'N/A', r.n, r.u, r.s === 1 ? 'Uploaded' : 'Pending']),
+    ['Category', 'District', 'School Name', 'UDISE Code', 'Status', 'Participants', 'Items Collected', 'Workshops'],
+    ...filtered.map(r => [CAT_LABEL[r.c] || r.c, titleCase(r.d), r.n, r.u, r.s === 1 ? 'Participated' : 'Not Participated', r.p, r.items, r.w]),
   ];
   const ws = XLSX.utils.aoa_to_sheet(aoa);
-  ws['!cols'] = [{ wch: 12 }, { wch: 20 }, { wch: 18 }, { wch: 45 }, { wch: 14 }, { wch: 10 }];
+  ws['!cols'] = [{ wch: 12 }, { wch: 20 }, { wch: 45 }, { wch: 14 }, { wch: 16 }, { wch: 12 }, { wch: 14 }, { wch: 10 }];
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Notification Report');
-  XLSX.writeFile(wb, `ECO_Club_UP_Notification_Report_${label.replace(/\s+/g, '_')}.xlsx`);
+  XLSX.utils.book_append_sheet(wb, ws, 'E-Waste Collection');
+  XLSX.writeFile(wb, `ECO_Club_UP_EWaste_${label.replace(/\s+/g, '_')}.xlsx`);
 }
 
 function downloadPDF(dist) {
   const label = dist ? titleCase(dist) : 'All Uttar Pradesh';
   const done = filtered.filter(r => r.s === 1).length;
+  const totalItems = filtered.reduce((a, r) => a + r.items, 0);
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: 'portrait', unit: 'pt' });
   doc.setFontSize(14);
-  doc.text('ECO Club | Notification Report', 40, 40);
+  doc.text('ECO Club | E-Waste Collection Drive', 40, 40);
   doc.setFontSize(9);
   doc.setTextColor(100);
-  doc.text(`${label} · ${fmt(filtered.length)} schools · ${fmt(done)} uploaded, ${fmt(filtered.length - done)} pending · generated ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}`, 40, 56);
+  doc.text(`${label} · ${fmt(filtered.length)} schools · ${fmt(done)} participated, ${fmt(filtered.length - done)} not participated · ${fmt(totalItems)} items collected · generated ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}`, 40, 56);
   doc.autoTable({
     startY: 70,
-    head: [['Category', 'District', 'Block', 'School Name', 'UDISE Code', 'Status']],
-    body: filtered.map(r => [CAT_LABEL[r.c] || r.c, titleCase(r.d), r.b ? titleCase(r.b) : 'N/A', r.n, r.u, r.s === 1 ? 'Uploaded' : 'Pending']),
+    head: [['Category', 'District', 'School Name', 'UDISE Code', 'Status', 'Participants', 'Items Collected', 'Workshops']],
+    body: filtered.map(r => [CAT_LABEL[r.c] || r.c, titleCase(r.d), r.n, r.u, r.s === 1 ? 'Participated' : 'Not Participated', fmt(r.p), fmt(r.items), fmt(r.w)]),
     styles: { fontSize: 7, cellPadding: 3 },
     headStyles: { fillColor: [31, 78, 121] },
     margin: { left: 40, right: 40 },
   });
-  doc.save(`ECO_Club_UP_Notification_Report_${label.replace(/\s+/g, '_')}.pdf`);
+  doc.save(`ECO_Club_UP_EWaste_${label.replace(/\s+/g, '_')}.pdf`);
 }
 
 function renderTable() {
@@ -227,24 +224,32 @@ function renderTable() {
   const rows = filtered.slice(start, start + PAGE_SIZE);
   const tbody = document.getElementById('tbody');
   if (!rows.length) {
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="6">No schools match these filters.</td></tr>`;
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="8">No schools match these filters.</td></tr>`;
   } else {
     tbody.innerHTML = rows.map(r => `
       <tr>
         <td>${CAT_LABEL[r.c] || r.c}</td>
         <td>${titleCase(r.d)}</td>
-        <td>${r.b ? titleCase(r.b) : 'N/A'}</td>
         <td class="name">${r.n}</td>
         <td class="num">${r.u}</td>
-        <td>${r.s === 1 ? '<span class="status-pill done">Uploaded</span>' : '<span class="status-pill pending">Pending</span>'}</td>
+        <td>${r.s === 1 ? '<span class="status-pill done">Participated</span>' : '<span class="status-pill pending">Not Participated</span>'}</td>
+        <td class="num">${fmt(r.p)}</td>
+        <td class="num">${fmt(r.items)}</td>
+        <td class="num">${fmt(r.w)}</td>
       </tr>`).join('');
   }
 
   const totalDone = filtered.filter(r => r.s === 1).length;
+  const totalParticipants = filtered.reduce((a, r) => a + r.p, 0);
+  const totalItems = filtered.reduce((a, r) => a + r.items, 0);
+  const totalWorkshops = filtered.reduce((a, r) => a + r.w, 0);
   document.getElementById('tfoot').innerHTML = `
     <tr>
-      <td colspan="5">Total (${fmt(filtered.length)} school${filtered.length === 1 ? '' : 's'} shown)</td>
-      <td><span style="color:var(--accent-ink)">${fmt(totalDone)} uploaded</span> / <span style="color:var(--warn)">${fmt(filtered.length - totalDone)} pending</span></td>
+      <td colspan="4">Total (${fmt(filtered.length)} school${filtered.length === 1 ? '' : 's'} shown)</td>
+      <td><span style="color:var(--accent-ink)">${fmt(totalDone)} participated</span> / <span style="color:var(--warn)">${fmt(filtered.length - totalDone)} not participated</span></td>
+      <td class="num">${fmt(totalParticipants)}</td>
+      <td class="num">${fmt(totalItems)}</td>
+      <td class="num">${fmt(totalWorkshops)}</td>
     </tr>`;
 
   document.querySelectorAll('thead th[data-key]').forEach(th => {
@@ -271,13 +276,12 @@ function renderTable() {
 }
 
 (async function () {
-  const [data, summary] = await Promise.all([loadJSON('data/notification.json'), loadJSON('data/summary.json')]);
+  const [data, summary] = await Promise.all([loadJSON('data/ewaste.json'), loadJSON('data/summary.json')]);
   DATA = data;
-  const n = summary.notification;
   document.getElementById('lastUpdated').textContent = `| Data updated ${summary.generated}`;
   document.getElementById('updateBar').textContent = `Last Data updated ${summary.generated}`;
 
-  const districts = n.byDistrict.map(d => d.district);
+  const districts = [...new Set(DATA.map(r => r.d))].sort();
   const urlDist = getParam('district');
   const sel = document.getElementById('districtSel');
   populateDistricts(sel, districts, urlDist);

@@ -92,6 +92,7 @@
       <a href="notification.html">Notification</a>
       <a href="plantation.html">Plantation</a>
       <a href="quiz.html">Swachhata Quiz</a>
+      <a href="ewaste.html">E-Waste Collection</a>
       <div class="nav-dropdown">
         <a href="summary.html" class="dropdown-toggle">Reports <span class="caret">&#9662;</span></a>
         <div class="dropdown-menu">
@@ -153,7 +154,7 @@ function barList(rows, valueKey, colorVar, max, formatter) {
 
 (async function () {
   const s = await loadJSON('data/summary.json');
-  const n = s.notification, p = s.plantation, q = s.quiz || {};
+  const n = s.notification, p = s.plantation, q = s.quiz || {}, ew = s.ewaste || {};
   document.getElementById('lastUpdated').textContent = `| Data updated ${s.generated}`;
   document.getElementById('updateBar').textContent = `Last Data updated ${s.generated}`;
 
@@ -229,6 +230,25 @@ function barList(rows, valueKey, colorVar, max, formatter) {
         </div>
         <div class="legend-row">
           <span>Total Participants <b>${fmt(q.totalParticipants || 0)}</b></span>
+        </div>
+        <div class="cta">View school-level report &rarr;</div>
+      </div>
+    </a>
+    <a class="report-btn" href="ewaste.html">
+      <div class="ring-wrap">
+        ${ring(ew.totalSchools ? Math.round(ew.participatedSchools / ew.totalSchools * 100) : 0, 'var(--accent)')}
+        <div class="ring-center"><span class="ring-pct">${fmt(ew.participatedSchools || 0)}</span><span class="ring-pct-label">Participated</span></div>
+      </div>
+      <div class="body">
+        <span class="card-eyebrow">Report</span>
+        <h2>E-Waste Collection Drive</h2>
+        <div class="legend-row">
+          <span><span class="dot done"></span>Participated <b>${fmt(ew.participatedSchools || 0)}</b></span>
+          <span><span class="dot pending"></span>Not Participated <b>${fmt(ew.notParticipatedSchools || 0)}</b></span>
+        </div>
+        <div class="legend-row">
+          <span>Total Participants <b>${fmt(ew.totalParticipants || 0)}</b></span>
+          <span>Items Collected <b>${fmt(ew.totalItemsCollected || 0)}</b></span>
         </div>
         <div class="cta">View school-level report &rarr;</div>
       </div>
