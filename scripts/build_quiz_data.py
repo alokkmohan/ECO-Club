@@ -58,6 +58,9 @@ for d, ucol, cat in [(govt, 'UDISE Code', 'G'), (aided, 'UDISE Code', 'A'), (pri
 
 quiz['Category'] = quiz['U'].map(cat_map)  # G/A/P if matched to our secondary master, else NaN (Basic/other)
 
+# Only Secondary schools (matched to the ECO Club master list) are kept from here on.
+quiz = quiz[quiz['Category'].notna()].copy()
+
 by_school = quiz.groupby('U').agg(
     n=('School Name', 'first'),
     d=('District', 'first'),
@@ -69,35 +72,21 @@ by_school['pct'] = by_school['pct'].round(1)
 by_school = by_school.sort_values('p', ascending=False)
 
 quiz_records = [{
-    'u': r.u, 'n': r.n, 'd': r.d, 'c': (r.c if isinstance(r.c, str) else None),
+    'u': r.u, 'n': r.n, 'd': r.d, 'c': r.c,
     'p': int(r.p), 'pct': float(r.pct),
 } for r in by_school.itertuples(index=False)]
 
 with open(os.path.join(OUT, 'quiz.json'), 'w', encoding='utf-8') as f:
     json.dump(quiz_records, f, ensure_ascii=False, separators=(',', ':'))
-print(f"quiz.json: {len(quiz_records):,} school records")
-
-total_participants = len(quiz)
-secondary_mask = quiz['Category'].notna()
-secondary_participants = int(secondary_mask.sum())
-basic_participants = int((~secondary_mask).sum())
-total_schools = quiz['U'].nunique()
-secondary_schools = quiz.loc[secondary_mask, 'U'].nunique()
-basic_schools = quiz.loc[~secondary_mask, 'U'].nunique()
+print(f"quiz.json: {len(quiz_records):,} secondary school records")
 
 quiz_summary = {
-    'totalParticipants': total_participants,
-    'secondaryParticipants': secondary_participants,
-    'basicParticipants': basic_participants,
-    'secondaryPct': round(secondary_participants / total_participants * 100, 2) if total_participants else 0,
-    'basicPct': round(basic_participants / total_participants * 100, 2) if total_participants else 0,
-    'totalSchools': int(total_schools),
-    'secondarySchools': int(secondary_schools),
-    'basicSchools': int(basic_schools),
+    'totalParticipants': int(len(quiz)),
+    'totalSchools': int(quiz['U'].nunique()),
     'govtSchools': int(by_school[by_school['c'] == 'G'].shape[0]),
     'aidedSchools': int(by_school[by_school['c'] == 'A'].shape[0]),
     'privSchools': int(by_school[by_school['c'] == 'P'].shape[0]),
-    'avgPercent': round(float(quiz['Percent'].mean()), 1),
+    'avgPercent': round(float(quiz['Percent'].mean()), 1) if len(quiz) else 0,
 }
 
 summary_path = os.path.join(OUT, 'summary.json')

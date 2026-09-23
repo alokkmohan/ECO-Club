@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Swachhata Quiz | Summary | ECO Club Uttar Pradesh</title>
-<meta name="description" content="District-wise Swachhata Hi Seva Quiz participation summary — Secondary vs Basic schools, Uttar Pradesh.">
+<meta name="description" content="District-wise Swachhata Hi Seva Quiz participation summary for Secondary schools, Uttar Pradesh.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/style.css?v=2">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -41,7 +41,7 @@
   <header class="page">
     <p class="eyebrow">District-wise summary</p>
     <h1>Swachhata Hi Seva Quiz — Summary</h1>
-    <p class="dek">District-wise quiz participation, split between Secondary schools (matched against the ECO Club master list) and Basic/Other schools, sorted by total participants, high to low.</p>
+    <p class="dek">District-wise quiz participation for Secondary schools (Government, Aided and Private, matched against the ECO Club master list), sorted by total participants, high to low.</p>
   </header>
 
   <div class="kpi-row" id="kpis"></div>
@@ -69,11 +69,11 @@
           <th data-key="rank" class="num">#</th>
           <th data-key="district">District</th>
           <th data-key="schools" class="num">Schools</th>
-          <th data-key="secSchools" class="num">Secondary Schools</th>
-          <th data-key="basicSchools" class="num">Basic / Other Schools</th>
-          <th data-key="secParticipants" class="num">Secondary Participants</th>
-          <th data-key="basicParticipants" class="num">Basic / Other Participants</th>
+          <th data-key="govtSchools" class="num">Govt</th>
+          <th data-key="aidedSchools" class="num">Aided</th>
+          <th data-key="privSchools" class="num">Private</th>
           <th data-key="totalParticipants" class="num">Total Participants</th>
+          <th data-key="avgPct" class="num">Avg Score %</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
@@ -82,7 +82,7 @@
   </div>
 
   <footer class="note">
-    <strong>Reading this table.</strong> "Secondary Schools/Participants" are matched to the ECO Club Government/Aided/Private secondary school master list. "Basic / Other" covers schools not in that master list. Sorted by Total Participants, high to low, by default.
+    <strong>Reading this table.</strong> Scope is Secondary schools only — matched by UDISE code against the ECO Club Government/Aided/Private secondary school master list. Sorted by Total Participants, high to low, by default.
   </footer>
 </div>
 
@@ -112,11 +112,11 @@ function render() {
         <td class="num">${i + 1}</td>
         <td class="name">${titleCase(r.district)}</td>
         <td class="num">${fmt(r.schools)}</td>
-        <td class="num">${fmt(r.secSchools)}</td>
-        <td class="num">${fmt(r.basicSchools)}</td>
-        <td class="num">${fmt(r.secParticipants)}</td>
-        <td class="num">${fmt(r.basicParticipants)}</td>
+        <td class="num">${fmt(r.govtSchools)}</td>
+        <td class="num">${fmt(r.aidedSchools)}</td>
+        <td class="num">${fmt(r.privSchools)}</td>
         <td class="num">${fmt(r.totalParticipants)}</td>
+        <td class="num">${r.avgPct.toFixed(1)}%</td>
       </tr>`).join('');
   }
 
@@ -130,7 +130,7 @@ function render() {
       <td class="num" style="padding:12px 14px;">${fmt(row[4])}</td>
       <td class="num" style="padding:12px 14px;">${fmt(row[5])}</td>
       <td class="num" style="padding:12px 14px;">${fmt(row[6])}</td>
-      <td class="num" style="padding:12px 14px;">${fmt(row[7])}</td>
+      <td class="num" style="padding:12px 14px;">${row[7]}%</td>
     </tr>`;
   document.getElementById('tfoot').innerHTML =
     renderFoot(t.total, 'background:var(--accent-soft);') +
@@ -149,8 +149,9 @@ function render() {
 
 function totalsRows() {
   const sum = (arr, key) => arr.reduce((a, r) => a + r[key], 0);
-  const keys = ['schools', 'secSchools', 'basicSchools', 'secParticipants', 'basicParticipants', 'totalParticipants'];
-  const row = (arr, label) => ['', label, ...keys.map(k => sum(arr, k))];
+  const avgOf = arr => arr.length ? Number((sum(arr, 'avgPct') / arr.length).toFixed(1)) : 0;
+  const keys = ['schools', 'govtSchools', 'aidedSchools', 'privSchools', 'totalParticipants'];
+  const row = (arr, label) => ['', label, ...keys.map(k => sum(arr, k)), avgOf(arr)];
   return {
     total: row(VISIBLE, `Total (${VISIBLE.length} districts)`),
     grand: row(ROWS, `Grand Total (all ${ROWS.length} districts)`),
@@ -160,13 +161,13 @@ function totalsRows() {
 function downloadExcel() {
   const t = totalsRows();
   const aoa = [
-    ['#', 'District', 'Schools', 'Secondary Schools', 'Basic / Other Schools', 'Secondary Participants', 'Basic / Other Participants', 'Total Participants'],
-    ...VISIBLE.map((r, i) => [i + 1, titleCase(r.district), r.schools, r.secSchools, r.basicSchools, r.secParticipants, r.basicParticipants, r.totalParticipants]),
+    ['#', 'District', 'Schools', 'Govt', 'Aided', 'Private', 'Total Participants', 'Avg Score %'],
+    ...VISIBLE.map((r, i) => [i + 1, titleCase(r.district), r.schools, r.govtSchools, r.aidedSchools, r.privSchools, r.totalParticipants, Number(r.avgPct.toFixed(1))]),
     t.total,
     t.grand,
   ];
   const ws = XLSX.utils.aoa_to_sheet(aoa);
-  ws['!cols'] = [{ wch: 5 }, { wch: 24 }, { wch: 10 }, { wch: 16 }, { wch: 18 }, { wch: 18 }, { wch: 20 }, { wch: 16 }];
+  ws['!cols'] = [{ wch: 5 }, { wch: 24 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 18 }, { wch: 12 }];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Swachhata Quiz Summary');
   XLSX.writeFile(wb, 'ECO_Club_UP_Swachhata_Quiz_Summary.xlsx');
@@ -174,7 +175,7 @@ function downloadExcel() {
 
 function downloadPDF() {
   const t = totalsRows();
-  const fmtRow = r => [r[0], r[1], fmt(r[2]), fmt(r[3]), fmt(r[4]), fmt(r[5]), fmt(r[6]), fmt(r[7])];
+  const fmtRow = r => [r[0], r[1], fmt(r[2]), fmt(r[3]), fmt(r[4]), fmt(r[5]), fmt(r[6]), r[7] + '%'];
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: 'landscape', unit: 'pt' });
   doc.setFontSize(14);
@@ -184,8 +185,8 @@ function downloadPDF() {
   doc.text(`Generated ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}`, 40, 56);
   doc.autoTable({
     startY: 70,
-    head: [['#', 'District', 'Schools', 'Secondary Schools', 'Basic / Other Schools', 'Secondary Participants', 'Basic / Other Participants', 'Total Participants']],
-    body: VISIBLE.map((r, i) => [i + 1, titleCase(r.district), fmt(r.schools), fmt(r.secSchools), fmt(r.basicSchools), fmt(r.secParticipants), fmt(r.basicParticipants), fmt(r.totalParticipants)]),
+    head: [['#', 'District', 'Schools', 'Govt', 'Aided', 'Private', 'Total Participants', 'Avg Score %']],
+    body: VISIBLE.map((r, i) => [i + 1, titleCase(r.district), fmt(r.schools), fmt(r.govtSchools), fmt(r.aidedSchools), fmt(r.privSchools), fmt(r.totalParticipants), r.avgPct.toFixed(1) + '%']),
     foot: [fmtRow(t.total), fmtRow(t.grand)],
     styles: { fontSize: 8, cellPadding: 4 },
     headStyles: { fillColor: [31, 78, 121] },
@@ -202,22 +203,24 @@ function downloadPDF() {
 
   const byDist = {};
   quiz.forEach(r => {
-    if (!byDist[r.d]) byDist[r.d] = { district: r.d, schools: 0, secSchools: 0, basicSchools: 0, secParticipants: 0, basicParticipants: 0, totalParticipants: 0 };
+    if (!byDist[r.d]) byDist[r.d] = { district: r.d, schools: 0, govtSchools: 0, aidedSchools: 0, privSchools: 0, totalParticipants: 0, pctSum: 0 };
     const d = byDist[r.d];
     d.schools++;
     d.totalParticipants += r.p;
-    if (r.c) { d.secSchools++; d.secParticipants += r.p; }
-    else { d.basicSchools++; d.basicParticipants += r.p; }
+    d.pctSum += r.pct;
+    if (r.c === 'G') d.govtSchools++;
+    else if (r.c === 'A') d.aidedSchools++;
+    else if (r.c === 'P') d.privSchools++;
   });
-  ROWS = Object.values(byDist);
+  ROWS = Object.values(byDist).map(d => ({ ...d, avgPct: d.schools ? d.pctSum / d.schools : 0 }));
 
   const q = s.quiz || {};
   document.getElementById('kpis').innerHTML = `
     <div class="kpi done"><div class="label">Total Participants</div><div class="value">${fmt(q.totalParticipants || 0)}</div></div>
-    <div class="kpi"><div class="label">Secondary</div><div class="value">${fmt(q.secondaryParticipants || 0)}<span class="of">${q.secondaryPct || 0}%</span></div></div>
-    <div class="kpi"><div class="label">Basic / Other</div><div class="value">${fmt(q.basicParticipants || 0)}<span class="of">${q.basicPct || 0}%</span></div></div>
     <div class="kpi done"><div class="label">Schools Participated</div><div class="value">${fmt(q.totalSchools || 0)}</div></div>
-    <div class="kpi"><div class="label">Secondary Schools</div><div class="value">${fmt(q.secondarySchools || 0)}</div></div>
+    <div class="kpi"><div class="label">Government</div><div class="value">${fmt(q.govtSchools || 0)}</div></div>
+    <div class="kpi"><div class="label">Aided</div><div class="value">${fmt(q.aidedSchools || 0)}</div></div>
+    <div class="kpi"><div class="label">Private</div><div class="value">${fmt(q.privSchools || 0)}</div></div>
     <div class="kpi"><div class="label">Avg Score</div><div class="value">${q.avgPercent || 0}%</div></div>
   `;
 

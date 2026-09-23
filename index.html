@@ -219,38 +219,22 @@ function barList(rows, valueKey, colorVar, max, formatter) {
     </a>
     <a class="report-btn" href="quiz-summary.html">
       <div class="ring-wrap">
-        ${ring(q.secondaryPct || 0, 'var(--accent)')}
-        <div class="ring-center"><span class="ring-pct">${(q.secondaryPct || 0).toFixed(1)}%</span><span class="ring-pct-label">Secondary</span></div>
+        ${ring(q.avgPercent || 0, 'var(--accent)')}
+        <div class="ring-center"><span class="ring-pct">${q.avgPercent || 0}%</span><span class="ring-pct-label">Avg Score</span></div>
       </div>
       <div class="body">
         <span class="card-eyebrow">Report</span>
-        <h2>Swachhata Hi Seva Quiz — Participants</h2>
+        <h2>Swachhata Hi Seva Quiz</h2>
         <div class="legend-row">
+          <span>Secondary Schools Participated <b>${fmt(q.totalSchools || 0)}</b></span>
           <span>Total Participants <b>${fmt(q.totalParticipants || 0)}</b></span>
         </div>
         <div class="legend-row">
-          <span><span class="dot done"></span>Secondary <b>${fmt(q.secondaryParticipants || 0)}</b></span>
-          <span><span class="dot pending"></span>Basic / Other <b>${fmt(q.basicParticipants || 0)}</b></span>
+          <span>Govt <b>${fmt(q.govtSchools || 0)}</b></span>
+          <span>Aided <b>${fmt(q.aidedSchools || 0)}</b></span>
+          <span>Private <b>${fmt(q.privSchools || 0)}</b></span>
         </div>
-        <div class="cta">View participation summary &rarr;</div>
-      </div>
-    </a>
-    <a class="report-btn" href="quiz-schools.html">
-      <div class="ring-wrap">
-        ${ring(q.totalSchools ? Math.round(q.secondarySchools / q.totalSchools * 100) : 0, 'var(--accent)')}
-        <div class="ring-center"><span class="ring-pct">${fmt(q.secondarySchools || 0)}</span><span class="ring-pct-label">Secondary</span></div>
-      </div>
-      <div class="body">
-        <span class="card-eyebrow">Report</span>
-        <h2>Swachhata Hi Seva Quiz — Schools</h2>
-        <div class="legend-row">
-          <span>Schools Participated <b>${fmt(q.totalSchools || 0)}</b></span>
-        </div>
-        <div class="legend-row">
-          <span><span class="dot done"></span>Secondary <b>${fmt(q.secondarySchools || 0)}</b></span>
-          <span><span class="dot pending"></span>Basic / Other <b>${fmt(q.basicSchools || 0)}</b></span>
-        </div>
-        <div class="cta">View school list &rarr;</div>
+        <div class="cta">View quiz summary &rarr;</div>
       </div>
     </a>
   `;
