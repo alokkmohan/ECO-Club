@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz &amp; E-Waste Summary | ECO Club Uttar Pradesh</title>
-<meta name="description" content="District-wise Swachhata Hi Seva Quiz and E-Waste Collection drive participation summary, Uttar Pradesh.">
+<title>Swachhata Quiz Summary | ECO Club Uttar Pradesh</title>
+<meta name="description" content="District-wise Swachhata Hi Seva Quiz participation summary for Secondary schools, Uttar Pradesh.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/style.css?v=2">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -28,7 +28,8 @@
           <a href="summary.html">District Summary</a>
           <a href="notification-percent.html">Notification % Summary</a>
           <a href="plantation-target.html">Plantation Target Summary</a>
-          <a href="quiz-ewaste-summary.html" class="active">Quiz &amp; E-Waste Summary</a>
+          <a href="quiz-summary.html" class="active">Swachhata Quiz Summary</a>
+          <a href="ewaste-summary.html">E-Waste Summary</a>
         </div>
       </div>
     </nav>
@@ -40,8 +41,8 @@
 <div class="wrap">
   <header class="page">
     <p class="eyebrow">District-wise summary</p>
-    <h1>Quiz &amp; E-Waste Summary</h1>
-    <p class="dek">Every district's Swachhata Hi Seva Quiz and E-Waste Collection drive participation, side by side, sorted by combined participants, high to low.</p>
+    <h1>Swachhata Hi Seva Quiz — Summary</h1>
+    <p class="dek">District-wise quiz participation for Secondary schools (Government, Aided and Private, matched against the ECO Club master list), sorted by total participants, high to low.</p>
   </header>
 
   <div class="kpi-row" id="kpis"></div>
@@ -68,11 +69,11 @@
         <tr>
           <th data-key="rank" class="num">#</th>
           <th data-key="district">District</th>
-          <th data-key="quizSchools" class="num">Quiz<br>Schools Participated</th>
-          <th data-key="quizParticipants" class="num">Quiz<br>Participants</th>
-          <th data-key="ewasteSchools" class="num">E-Waste<br>Schools Participated</th>
-          <th data-key="ewasteParticipants" class="num">E-Waste<br>Participants</th>
-          <th data-key="ewasteItems" class="num">E-Waste<br>Items Collected</th>
+          <th data-key="schools" class="num">Schools Participated</th>
+          <th data-key="govtSchools" class="num">Govt</th>
+          <th data-key="aidedSchools" class="num">Aided</th>
+          <th data-key="privSchools" class="num">Private</th>
+          <th data-key="totalParticipants" class="num">Total Participants</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
@@ -81,7 +82,7 @@
   </div>
 
   <footer class="note">
-    <strong>Reading this table.</strong> Scope is Secondary schools only (Government, Aided, Private), matched by UDISE code against the ECO Club master list. Sorted by combined Quiz + E-Waste participants, high to low, by default.
+    <strong>Reading this table.</strong> Scope is Secondary schools only that participated in the Swachhata Hi Seva Quiz — matched by UDISE code against the ECO Club Government/Aided/Private secondary school master list. Sorted by Total Participants, high to low, by default.
   </footer>
 </div>
 
@@ -89,7 +90,7 @@
 <script>
 let ROWS = [];
 let VISIBLE = [];
-let sortKey = 'combined';
+let sortKey = 'totalParticipants';
 let sortDir = -1;
 let query = '';
 
@@ -110,11 +111,11 @@ function render() {
       <tr>
         <td class="num">${i + 1}</td>
         <td class="name">${titleCase(r.district)}</td>
-        <td class="num">${fmt(r.quizSchools)}</td>
-        <td class="num">${fmt(r.quizParticipants)}</td>
-        <td class="num">${fmt(r.ewasteSchools)}</td>
-        <td class="num">${fmt(r.ewasteParticipants)}</td>
-        <td class="num">${fmt(r.ewasteItems)}</td>
+        <td class="num">${fmt(r.schools)}</td>
+        <td class="num">${fmt(r.govtSchools)}</td>
+        <td class="num">${fmt(r.aidedSchools)}</td>
+        <td class="num">${fmt(r.privSchools)}</td>
+        <td class="num">${fmt(r.totalParticipants)}</td>
       </tr>`).join('');
   }
 
@@ -146,7 +147,7 @@ function render() {
 
 function totalsRows() {
   const sum = (arr, key) => arr.reduce((a, r) => a + r[key], 0);
-  const keys = ['quizSchools', 'quizParticipants', 'ewasteSchools', 'ewasteParticipants', 'ewasteItems'];
+  const keys = ['schools', 'govtSchools', 'aidedSchools', 'privSchools', 'totalParticipants'];
   const row = (arr, label) => ['', label, ...keys.map(k => sum(arr, k))];
   return {
     total: row(VISIBLE, `Total (${VISIBLE.length} districts)`),
@@ -157,16 +158,16 @@ function totalsRows() {
 function downloadExcel() {
   const t = totalsRows();
   const aoa = [
-    ['#', 'District', 'Quiz Schools Participated', 'Quiz Participants', 'E-Waste Schools Participated', 'E-Waste Participants', 'E-Waste Items Collected'],
-    ...VISIBLE.map((r, i) => [i + 1, titleCase(r.district), r.quizSchools, r.quizParticipants, r.ewasteSchools, r.ewasteParticipants, r.ewasteItems]),
+    ['#', 'District', 'Schools Participated', 'Govt', 'Aided', 'Private', 'Total Participants'],
+    ...VISIBLE.map((r, i) => [i + 1, titleCase(r.district), r.schools, r.govtSchools, r.aidedSchools, r.privSchools, r.totalParticipants]),
     t.total,
     t.grand,
   ];
   const ws = XLSX.utils.aoa_to_sheet(aoa);
-  ws['!cols'] = [{ wch: 5 }, { wch: 24 }, { wch: 18 }, { wch: 16 }, { wch: 20 }, { wch: 18 }, { wch: 18 }];
+  ws['!cols'] = [{ wch: 5 }, { wch: 24 }, { wch: 18 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 16 }];
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Quiz & E-Waste Summary');
-  XLSX.writeFile(wb, 'ECO_Club_UP_Quiz_EWaste_Summary.xlsx');
+  XLSX.utils.book_append_sheet(wb, ws, 'Swachhata Quiz Summary');
+  XLSX.writeFile(wb, 'ECO_Club_UP_Swachhata_Quiz_Summary.xlsx');
 }
 
 function downloadPDF() {
@@ -175,55 +176,48 @@ function downloadPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: 'landscape', unit: 'pt' });
   doc.setFontSize(14);
-  doc.text('ECO Club | Quiz & E-Waste Summary', 40, 40);
+  doc.text('ECO Club | Swachhata Hi Seva Quiz — Summary', 40, 40);
   doc.setFontSize(9);
   doc.setTextColor(100);
   doc.text(`Generated ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}`, 40, 56);
   doc.autoTable({
     startY: 70,
-    head: [['#', 'District', 'Quiz Schools Participated', 'Quiz Participants', 'E-Waste Schools Participated', 'E-Waste Participants', 'E-Waste Items Collected']],
-    body: VISIBLE.map((r, i) => [i + 1, titleCase(r.district), fmt(r.quizSchools), fmt(r.quizParticipants), fmt(r.ewasteSchools), fmt(r.ewasteParticipants), fmt(r.ewasteItems)]),
+    head: [['#', 'District', 'Schools Participated', 'Govt', 'Aided', 'Private', 'Total Participants']],
+    body: VISIBLE.map((r, i) => [i + 1, titleCase(r.district), fmt(r.schools), fmt(r.govtSchools), fmt(r.aidedSchools), fmt(r.privSchools), fmt(r.totalParticipants)]),
     foot: [fmtRow(t.total), fmtRow(t.grand)],
     styles: { fontSize: 8, cellPadding: 4 },
     headStyles: { fillColor: [31, 78, 121] },
     footStyles: { fillColor: [230, 240, 230], textColor: [0, 0, 0], fontStyle: 'bold' },
     margin: { left: 40, right: 40 },
   });
-  doc.save('ECO_Club_UP_Quiz_EWaste_Summary.pdf');
+  doc.save('ECO_Club_UP_Swachhata_Quiz_Summary.pdf');
 }
 
 (async function () {
-  const [quiz, ewaste, s] = await Promise.all([loadJSON('data/quiz.json'), loadJSON('data/ewaste.json'), loadJSON('data/summary.json')]);
+  const [quiz, s] = await Promise.all([loadJSON('data/quiz.json'), loadJSON('data/summary.json')]);
   document.getElementById('lastUpdated').textContent = `| Data updated ${s.generated}`;
   document.getElementById('updateBar').textContent = `Last Data updated ${s.generated}`;
 
   const byDist = {};
-  const ensure = d => {
-    if (!byDist[d]) byDist[d] = { district: d, quizSchools: 0, quizParticipants: 0, ewasteSchools: 0, ewasteParticipants: 0, ewasteItems: 0 };
-    return byDist[d];
-  };
   quiz.forEach(r => {
     if (r.s !== 1) return;
-    const d = ensure(r.d);
-    d.quizSchools++;
-    d.quizParticipants += r.p;
+    if (!byDist[r.d]) byDist[r.d] = { district: r.d, schools: 0, govtSchools: 0, aidedSchools: 0, privSchools: 0, totalParticipants: 0 };
+    const d = byDist[r.d];
+    d.schools++;
+    d.totalParticipants += r.p;
+    if (r.c === 'G') d.govtSchools++;
+    else if (r.c === 'A') d.aidedSchools++;
+    else if (r.c === 'P') d.privSchools++;
   });
-  ewaste.forEach(r => {
-    if (r.s !== 1) return;
-    const d = ensure(r.d);
-    d.ewasteSchools++;
-    d.ewasteParticipants += r.p;
-    d.ewasteItems += r.items;
-  });
-  ROWS = Object.values(byDist).map(r => ({ ...r, combined: r.quizParticipants + r.ewasteParticipants }));
+  ROWS = Object.values(byDist);
 
-  const q = s.quiz || {}, ew = s.ewaste || {};
+  const q = s.quiz || {};
   document.getElementById('kpis').innerHTML = `
-    <div class="kpi done"><div class="label">Quiz Schools Participated</div><div class="value">${fmt(q.participatedSchools || 0)}</div></div>
-    <div class="kpi done"><div class="label">Quiz Participants</div><div class="value">${fmt(q.totalParticipants || 0)}</div></div>
-    <div class="kpi done"><div class="label">E-Waste Schools Participated</div><div class="value">${fmt(ew.participatedSchools || 0)}</div></div>
-    <div class="kpi done"><div class="label">E-Waste Participants</div><div class="value">${fmt(ew.totalParticipants || 0)}</div></div>
-    <div class="kpi"><div class="label">E-Waste Items Collected</div><div class="value">${fmt(ew.totalItemsCollected || 0)}</div></div>
+    <div class="kpi done"><div class="label">Schools Participated</div><div class="value">${fmt(q.participatedSchools || 0)}</div></div>
+    <div class="kpi done"><div class="label">Total Participants</div><div class="value">${fmt(q.totalParticipants || 0)}</div></div>
+    <div class="kpi"><div class="label">Government</div><div class="value">${fmt(q.govtSchools || 0)}</div></div>
+    <div class="kpi"><div class="label">Aided</div><div class="value">${fmt(q.aidedSchools || 0)}</div></div>
+    <div class="kpi"><div class="label">Private</div><div class="value">${fmt(q.privSchools || 0)}</div></div>
   `;
 
   document.querySelectorAll('thead th[data-key]').forEach(th => {
