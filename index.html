@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ECO Club Monitoring Dashboard | Uttar Pradesh</title>
-<meta name="description" content="ECO Club Monitoring Dashboard | Uttar Pradesh. Notification upload, plantation drive, Swachhata Hi Seva Quiz and E-Waste Collection status, district-wise.">
+<meta name="description" content="ECO Club Monitoring Dashboard | Uttar Pradesh. Notification upload, plantation drive, Swachhata Hi Seva and E-Waste Collection status, district-wise.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/style.css?v=3">
 <style>
@@ -91,7 +91,7 @@
       <a href="index.html" class="active">Home</a>
       <a href="notification.html">Notification</a>
       <a href="plantation.html">Plantation</a>
-      <a href="quiz.html">Swachhata Quiz</a>
+      <a href="quiz.html">Swachhata Hi Seva</a>
       <a href="ewaste.html">E-Waste Collection</a>
       <div class="nav-dropdown">
         <a href="summary.html" class="dropdown-toggle">Reports <span class="caret">&#9662;</span></a>
@@ -99,7 +99,7 @@
           <a href="summary.html">District Summary</a>
           <a href="notification-percent.html">Notification % Summary</a>
           <a href="plantation-target.html">Plantation Target Summary</a>
-          <a href="quiz-summary.html">Swachhata Quiz Summary</a>
+          <a href="quiz-summary.html">Swachhata Hi Seva Summary</a>
           <a href="ewaste-summary.html">E-Waste Summary</a>
         </div>
       </div>
@@ -113,7 +113,7 @@
   <div class="hero">
     <p class="eyebrow">Government of Uttar Pradesh</p>
     <h1>ECO Club Monitoring Dashboard</h1>
-    <p class="dek">Notification uploads, the plantation drive, the Swachhata Hi Seva Quiz and the E-Waste Collection drive, tracked school by school across every district.</p>
+    <p class="dek">Notification uploads, the plantation drive, Swachhata Hi Seva and the E-Waste Collection drive, tracked school by school across every district.</p>
   </div>
 
   <div class="stat-row" id="statRow"></div>
@@ -126,7 +126,7 @@
   <p class="type-section-label">Plantation | by school type</p>
   <div class="type-grid" id="typeGridPlant"></div>
 
-  <p class="type-section-label">Swachhata Quiz | by school type</p>
+  <p class="type-section-label">Swachhata Hi Seva | by school type</p>
   <div class="type-grid" id="typeGridQuiz"></div>
 
   <p class="type-section-label">E-Waste Collection | by school type</p>
@@ -173,13 +173,14 @@ function barList(rows, valueKey, colorVar, max, formatter) {
     <div class="stat accent"><div class="stat-label">Notification Uploaded</div><div class="stat-num">${fmt(n.uploaded)}</div><div class="stat-of">of ${fmt(n.totalSchools)} schools</div></div>
     <div class="stat accent"><div class="stat-label">Plantation Done</div><div class="stat-num">${fmt(p.done)}</div><div class="stat-of">of ${fmt(p.totalSchools)} schools</div></div>
     <div class="stat accent"><div class="stat-label">Trees Planted</div><div class="stat-num">${fmt(p.treesPlanted)}</div></div>
-    <div class="stat accent"><div class="stat-label">Swachhata Quiz Participants</div><div class="stat-num">${fmt(q.totalParticipants || 0)}</div><div class="stat-of">${fmt(q.participatedSchools || 0)} schools</div></div>
+    <div class="stat accent"><div class="stat-label">Swachhata Hi Seva Participants</div><div class="stat-num">${fmt(q.totalParticipants || 0)}</div><div class="stat-of">${fmt(q.participatedSchools || 0)} schools</div></div>
     <div class="stat accent"><div class="stat-label">E-Waste Items Collected</div><div class="stat-num">${fmt(ew.totalItemsCollected || 0)}</div><div class="stat-of">${fmt(ew.participatedSchools || 0)} schools</div></div>
   `;
 
   const notifPct = Math.round(n.uploaded / n.totalSchools * 100);
   const plantPct = Math.round(p.treesPlanted / p.targetTotal * 100);
   const ewPct = ew.totalSchools ? Math.round(ew.participatedSchools / ew.totalSchools * 100) : 0;
+  const quizPct = q.totalSchools ? Math.round(q.participatedSchools / q.totalSchools * 100) : 0;
 
   document.getElementById('reportGrid').innerHTML = `
     <a class="report-btn" href="notification.html">
@@ -229,18 +230,19 @@ function barList(rows, valueKey, colorVar, max, formatter) {
     </a>
     <a class="report-btn" href="quiz.html">
       <div class="ring-wrap">
-        ${ring(q.avgPercent || 0, 'var(--accent)')}
-        <div class="ring-center"><span class="ring-pct">${q.avgPercent || 0}%</span><span class="ring-pct-label">Avg Score</span></div>
+        ${ring(quizPct, 'var(--accent)')}
+        <div class="ring-center"><span class="ring-pct">${quizPct}%</span><span class="ring-pct-label">Participated</span></div>
       </div>
       <div class="body">
         <span class="card-eyebrow">Report</span>
-        <h2>Swachhata Hi Seva Quiz</h2>
+        <h2>Swachhata Hi Seva</h2>
         <div class="legend-row">
           <span><span class="dot done"></span>Participated <b>${fmt(q.participatedSchools || 0)}</b></span>
           <span><span class="dot pending"></span>Not Participated <b>${fmt(q.notParticipatedSchools || 0)}</b></span>
         </div>
         <div class="legend-row">
           <span>Total Participants <b>${fmt(q.totalParticipants || 0)}</b></span>
+          <span>Bins Installed <b>${fmt(q.binsInstalledSchools || 0)}</b></span>
         </div>
         <div class="cta">View school-level report &rarr;</div>
       </div>

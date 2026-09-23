@@ -1,16 +1,24 @@
 """
-Regenerate data/quiz.json and the 'quiz' section of data/summary.json from the
-Swachhata Hi Seva Quiz workbook, matched against the ECO Club secondary school
-master list. Every Secondary school (Government/Aided/Private) is included,
-whether or not it participated, so the report can show both Participated and
-Not Participated schools (like the Notification and Plantation reports).
+Regenerate data/quiz.json and the 'quiz' section of data/summary.json from
+the Swachhata Hi Seva School Activity Report workbook, matched against the
+ECO Club secondary school master list. Every Secondary school
+(Government/Aided/Private) is included, whether or not it submitted a
+report, so the report can show both Participated and Not Participated
+schools (like Notification/Plantation/E-Waste).
+
+NOTE: this replaced the old per-student quiz-score export (sheet 'Students',
+with Score/Percent/Badge columns). The current source is a school-level
+self-reported activity checklist (sheet 'School reports') covering things
+like four-bin waste segregation, awareness activities, waste audits,
+composting and exposure visits, plus Students/Teachers/Community Members
+Participated counts. There is no score/percent anymore.
 
 Usage:
-    python build_quiz_data.py <path-to-master-data-folder> <path-to-quiz-xlsx>
+    python build_quiz_data.py <path-to-master-data-folder> <path-to-swachhata-xlsx>
 
 The master-data folder must contain:
     Secondary School List .xlsx   (sheets: Govt Schools, Aided Schools , UP Board Private School)
-The quiz file must be the Swachhata Hi Seva Quiz.xlsx export (sheet: Students).
+The source file must be the SwachhataHiSeva_SchoolReports_*.xlsx export (sheet: School reports).
 """
 import pandas as pd
 import json, re, os, sys
@@ -20,7 +28,7 @@ if len(sys.argv) < 3:
     sys.exit(1)
 
 BASE = sys.argv[1]
-QUIZ_PATH = sys.argv[2]
+SWACHHATA_PATH = sys.argv[2]
 OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data')
 os.makedirs(OUT, exist_ok=True)
 
@@ -44,9 +52,9 @@ def norm_dist(v):
     n = str(v).strip().upper()
     return DISTRICT_MAP.get(n, n)
 
-print("Loading quiz data...")
-quiz = pd.read_excel(QUIZ_PATH, sheet_name='Students')
-quiz['U'] = quiz['UDISE Code'].apply(norm_udise)
+print("Loading Swachhata Hi Seva school activity data...")
+sw = pd.read_excel(SWACHHATA_PATH, sheet_name='School reports')
+sw['U'] = sw['UDISE Code'].apply(norm_udise)
 
 print("Loading school master...")
 govt  = pd.read_excel(os.path.join(BASE, 'Secondary School List .xlsx'), sheet_name='Govt Schools')
@@ -84,21 +92,25 @@ def build_pool(govt, aided, priv):
 pool = build_pool(govt, aided, priv)
 print(f"Secondary school pool (Govt+Aided+Private, madarsa excluded): {len(pool):,}")
 
-by_school = quiz.groupby('U').agg(
-    p=('Student Name', 'count'),
-    pct=('Percent', 'mean'),
-).reset_index().rename(columns={'U': 'UDISE_norm'})
-by_school['pct'] = by_school['pct'].round(1)
-participants_by_udise = by_school.set_index('UDISE_norm')['p'].to_dict()
-pct_by_udise = by_school.set_index('UDISE_norm')['pct'].to_dict()
+sw_by_udise = sw.drop_duplicates(subset='U', keep='first').set_index('U')
+students_by_udise = sw_by_udise['Q4 Students Participated'].to_dict()
+teachers_by_udise = sw_by_udise['Q5 Teachers Participated'].to_dict()
+community_by_udise = sw_by_udise['Q6 Community Members Participated'].to_dict()
+bins_by_udise = (sw_by_udise['Q1 Four Bins Installed'] == 'Yes, all four installed').to_dict()
+audit_by_udise = (sw_by_udise['Q7 Solid Waste Audit'] == 'Yes').to_dict()
 
-pool['p'] = pool['UDISE_norm'].map(participants_by_udise).fillna(0).astype(int)
-pool['pct'] = pool['UDISE_norm'].map(pct_by_udise).fillna(0).astype(float)
-pool['s'] = (pool['p'] > 0).astype(int)
+pool['st'] = pool['UDISE_norm'].map(students_by_udise).fillna(0).astype(int)
+pool['tc'] = pool['UDISE_norm'].map(teachers_by_udise).fillna(0).astype(int)
+pool['cm'] = pool['UDISE_norm'].map(community_by_udise).fillna(0).astype(int)
+pool['p'] = pool['st'] + pool['tc'] + pool['cm']
+pool['bins'] = pool['UDISE_norm'].map(bins_by_udise).fillna(False).astype(int)
+pool['audit'] = pool['UDISE_norm'].map(audit_by_udise).fillna(False).astype(int)
+pool['s'] = pool['UDISE_norm'].isin(set(sw['U'])).astype(int)
 
 quiz_records = [{
     'd': r.District, 'c': r.Category, 'n': r._1, 'u': r.UDISE_norm,
-    's': int(r.s), 'p': int(r.p), 'pct': float(r.pct),
+    's': int(r.s), 'st': int(r.st), 'tc': int(r.tc), 'cm': int(r.cm), 'p': int(r.p),
+    'bins': int(r.bins), 'audit': int(r.audit),
 } for r in pool.itertuples(index=False)]
 
 with open(os.path.join(OUT, 'quiz.json'), 'w', encoding='utf-8') as f:
@@ -106,17 +118,19 @@ with open(os.path.join(OUT, 'quiz.json'), 'w', encoding='utf-8') as f:
 print(f"quiz.json: {len(quiz_records):,} secondary school records")
 
 participated = pool[pool['s'] == 1]
-secondary_udise = set(pool['UDISE_norm'])
-quiz_secondary_students = quiz[quiz['U'].isin(secondary_udise)]
 quiz_summary = {
     'totalSchools': int(len(pool)),
     'participatedSchools': int(len(participated)),
     'notParticipatedSchools': int(len(pool) - len(participated)),
     'totalParticipants': int(participated['p'].sum()),
+    'totalStudents': int(participated['st'].sum()),
+    'totalTeachers': int(participated['tc'].sum()),
+    'totalCommunity': int(participated['cm'].sum()),
+    'binsInstalledSchools': int(participated['bins'].sum()),
+    'wasteAuditSchools': int(participated['audit'].sum()),
     'govtSchools': int((participated['Category'] == 'G').sum()),
     'aidedSchools': int((participated['Category'] == 'A').sum()),
     'privSchools': int((participated['Category'] == 'P').sum()),
-    'avgPercent': round(float(quiz_secondary_students['Percent'].mean()), 1) if len(quiz_secondary_students) else 0,
 }
 
 summary_path = os.path.join(OUT, 'summary.json')
