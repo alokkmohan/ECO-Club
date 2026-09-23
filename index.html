@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ECO Club Monitoring Dashboard | Uttar Pradesh</title>
-<meta name="description" content="ECO Club Monitoring Dashboard | Uttar Pradesh. Notification upload and plantation drive status, district-wise.">
+<meta name="description" content="ECO Club Monitoring Dashboard | Uttar Pradesh. Notification upload, plantation drive, Swachhata Hi Seva Quiz and E-Waste Collection status, district-wise.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/style.css?v=2">
 <style>
@@ -113,7 +113,7 @@
   <div class="hero">
     <p class="eyebrow">Government of Uttar Pradesh</p>
     <h1>ECO Club Monitoring Dashboard</h1>
-    <p class="dek">Notification uploads and the plantation drive, tracked school by school across every district.</p>
+    <p class="dek">Notification uploads, the plantation drive, the Swachhata Hi Seva Quiz and the E-Waste Collection drive, tracked school by school across every district.</p>
   </div>
 
   <div class="stat-row" id="statRow"></div>
@@ -171,6 +171,7 @@ function barList(rows, valueKey, colorVar, max, formatter) {
 
   const notifPct = Math.round(n.uploaded / n.totalSchools * 100);
   const plantPct = Math.round(p.treesPlanted / p.targetTotal * 100);
+  const ewPct = ew.totalSchools ? Math.round(ew.participatedSchools / ew.totalSchools * 100) : 0;
 
   document.getElementById('reportGrid').innerHTML = `
     <a class="report-btn" href="notification.html">
@@ -238,8 +239,8 @@ function barList(rows, valueKey, colorVar, max, formatter) {
     </a>
     <a class="report-btn" href="ewaste.html">
       <div class="ring-wrap">
-        ${ring(ew.totalSchools ? Math.round(ew.participatedSchools / ew.totalSchools * 100) : 0, 'var(--accent)')}
-        <div class="ring-center"><span class="ring-pct">${fmt(ew.participatedSchools || 0)}</span><span class="ring-pct-label">Participated</span></div>
+        ${ring(ewPct, 'var(--accent)')}
+        <div class="ring-center"><span class="ring-pct">${ewPct}%</span><span class="ring-pct-label">Participated</span></div>
       </div>
       <div class="body">
         <span class="card-eyebrow">Report</span>
