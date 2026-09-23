@@ -173,6 +173,8 @@ function barList(rows, valueKey, colorVar, max, formatter) {
     <div class="stat accent"><div class="stat-label">Notification Uploaded</div><div class="stat-num">${fmt(n.uploaded)}</div><div class="stat-of">of ${fmt(n.totalSchools)} schools</div></div>
     <div class="stat accent"><div class="stat-label">Plantation Done</div><div class="stat-num">${fmt(p.done)}</div><div class="stat-of">of ${fmt(p.totalSchools)} schools</div></div>
     <div class="stat accent"><div class="stat-label">Trees Planted</div><div class="stat-num">${fmt(p.treesPlanted)}</div></div>
+    <div class="stat accent"><div class="stat-label">Swachhata Quiz Participants</div><div class="stat-num">${fmt(q.totalParticipants || 0)}</div><div class="stat-of">${fmt(q.participatedSchools || 0)} schools</div></div>
+    <div class="stat accent"><div class="stat-label">E-Waste Items Collected</div><div class="stat-num">${fmt(ew.totalItemsCollected || 0)}</div><div class="stat-of">${fmt(ew.participatedSchools || 0)} schools</div></div>
   `;
 
   const notifPct = Math.round(n.uploaded / n.totalSchools * 100);
