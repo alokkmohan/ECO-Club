@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search School | ECO Club Uttar Pradesh</title>
+<meta name="description" content="Search a school by UDISE code and see its Notification, Plantation, Swachhata Hi Seva and E-Waste Collection status in one place.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/style.css?v=3">
+<style>
+  .search-box { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; margin: 10px 0 30px; }
+  .search-box .field { flex: 1; min-width: 240px; }
+  .search-box input { width: 100%; font-size: 16px; padding: 12px 14px; }
+  .search-box button {
+    padding: 12px 22px; border-radius: 8px; border: none; background: var(--accent);
+    color: #fff; font-weight: 700; font-size: 14px; cursor: pointer; white-space: nowrap;
+  }
+  .search-box button:hover { background: var(--accent-ink); }
+
+  .hint, .not-found { color: var(--muted); font-size: 14.5px; padding: 18px 0; }
+  .not-found { color: var(--warn); font-weight: 600; }
+
+  .school-card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 22px 26px; box-shadow: var(--shadow); margin-bottom: 22px;
+  }
+  .school-card h2 { font-family: Calibri, Candara, sans-serif; font-size: 22px; margin: 4px 0 10px; }
+  .school-card .meta-row { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13.5px; color: var(--muted); }
+  .school-card .meta-row b { color: var(--ink); }
+  .cat-pill {
+    display: inline-block; font-size: 11.5px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em; padding: 3px 10px; border-radius: 999px; margin-bottom: 8px;
+  }
+  .cat-pill.G { background: var(--type-govt-soft); color: var(--type-govt); }
+  .cat-pill.A { background: var(--type-aided-soft); color: var(--type-aided); }
+  .cat-pill.P { background: var(--type-private-soft); color: var(--type-private); }
+
+  .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+  .status-card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 20px 22px; box-shadow: var(--shadow);
+  }
+  .status-card h3 { font-family: Calibri, Candara, sans-serif; font-size: 16px; margin: 0 0 12px; }
+  .yn-pill {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700;
+    padding: 5px 12px; border-radius: 999px; margin-bottom: 12px;
+  }
+  .yn-pill.yes { background: var(--accent-soft); color: var(--accent-ink); }
+  .yn-pill.no { background: var(--warn-soft); color: var(--warn); }
+  .yn-pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .status-card .stat-list { display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; color: var(--muted); }
+  .status-card .stat-list b { color: var(--ink); font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="leaf">&#127807;</span> ECO Club | Uttar Pradesh</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="notification.html">Notification</a>
+      <a href="plantation.html">Plantation</a>
+      <a href="quiz.html">Swachhata Hi Seva</a>
+      <a href="ewaste.html">E-Waste Collection</a>
+      <a href="search.html" class="active">Search School</a>
+      <div class="nav-dropdown">
+        <a href="summary.html" class="dropdown-toggle">Reports <span class="caret">&#9662;</span></a>
+        <div class="dropdown-menu">
+          <a href="summary.html">District Summary</a>
+          <a href="notification-percent.html">Notification % Summary</a>
+          <a href="plantation-target.html">Plantation Target Summary</a>
+          <a href="quiz-summary.html">Swachhata Hi Seva Summary</a>
+          <a href="ewaste-summary.html">E-Waste Summary</a>
+        </div>
+      </div>
+    </nav>
+    <img class="gov-logo" src="assets/samagra-shiksha-logo.jpg" alt="Samagra Shiksha">
+    <span class="topnav-updated" id="updateBar"></span>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="page">
+    <p class="eyebrow">School-level lookup</p>
+    <h1>Search School by UDISE Code</h1>
+    <p class="dek">Enter a UDISE code to see that school's Notification, Plantation, Swachhata Hi Seva and E-Waste Collection status, all in one place.</p>
+  </header>
+
+  <div class="search-box">
+    <div class="field">
+      <label for="udiseInput">UDISE Code</label>
+      <input id="udiseInput" type="text" inputmode="numeric" placeholder="e.g. 9150207401" autocomplete="off">
+    </div>
+    <button id="searchBtn" type="button">Search</button>
+  </div>
+
+  <div id="result">
+    <p class="hint">UDISE code daal kar Search dabayein — school ka naam, category, aur Notification / Plantation / Swachhata Hi Seva / E-Waste status ek saath dikhega.</p>
+  </div>
+</div>
+
+<script src="assets/site.js?v=4"></script>
+<script>
+const CAT_LABEL = { G: 'Government', A: 'Aided', P: 'Private' };
+let NOTIF = {}, PLANT = {}, QUIZ = {}, EWASTE = {};
+
+function normUdise(v) {
+  return String(v).trim().split('.')[0].replace(/^0+/, '');
+}
+
+function yn(cond) {
+  return cond
+    ? '<span class="yn-pill yes">Yes</span>'
+    : '<span class="yn-pill no">No</span>';
+}
+
+function renderResult(u) {
+  const n = NOTIF[u];
+  if (!n) {
+    document.getElementById('result').innerHTML = `
+      <p class="not-found">UDISE code "${u}" ECO Club ke secondary school master list (Government/Aided/Private) mein nahi mila. Code dobara check karein.</p>`;
+    return;
+  }
+  const p = PLANT[u];
+  const q = QUIZ[u];
+  const e = EWASTE[u];
+
+  document.getElementById('result').innerHTML = `
+    <div class="school-card">
+      <span class="cat-pill ${n.c}">${CAT_LABEL[n.c] || n.c}</span>
+      <h2>${n.n}</h2>
+      <div class="meta-row">
+        <span>District <b>${titleCase(n.d)}</b></span>
+        <span>Block <b>${n.b ? titleCase(n.b) : 'N/A'}</b></span>
+        <span>UDISE Code <b>${n.u}</b></span>
+      </div>
+    </div>
+    <div class="status-grid">
+      <div class="status-card">
+        <h3>Notification</h3>
+        ${yn(n.s === 1)}
+        <div class="stat-list">
+          <span>Status <b>${n.s === 1 ? 'Uploaded' : 'Pending'}</b></span>
+        </div>
+      </div>
+      <div class="status-card">
+        <h3>Plantation</h3>
+        ${yn(!!p && p.s === 1)}
+        <div class="stat-list">
+          ${p ? `
+            <span>Trees Planted <b>${fmt(p.t)}</b></span>
+            <span>Students <b>${fmt(p.st)}</b></span>
+            <span>Teachers <b>${fmt(p.tc)}</b></span>
+            <span>Total Participants <b>${fmt(p.pt)}</b></span>
+          ` : '<span>No plantation record for this school.</span>'}
+        </div>
+      </div>
+      <div class="status-card">
+        <h3>Swachhata Hi Seva</h3>
+        ${yn(!!q && q.s === 1)}
+        <div class="stat-list">
+          ${q ? `
+            <span>Students <b>${fmt(q.st)}</b></span>
+            <span>Teachers <b>${fmt(q.tc)}</b></span>
+            <span>Community <b>${fmt(q.cm)}</b></span>
+            <span>Total Participants <b>${fmt(q.p)}</b></span>
+            <span>Bins Installed <b>${q.bins === 1 ? 'Yes' : 'No'}</b></span>
+            <span>Waste Audit <b>${q.audit === 1 ? 'Yes' : 'No'}</b></span>
+          ` : '<span>No Swachhata Hi Seva record for this school.</span>'}
+        </div>
+      </div>
+      <div class="status-card">
+        <h3>E-Waste Collection</h3>
+        ${yn(!!e && e.s === 1)}
+        <div class="stat-list">
+          ${e ? `
+            <span>Participants <b>${fmt(e.p)}</b></span>
+            <span>Items Collected <b>${fmt(e.items)}</b></span>
+            <span>Workshops <b>${fmt(e.w)}</b></span>
+          ` : '<span>No E-Waste record for this school.</span>'}
+        </div>
+      </div>
+    </div>`;
+}
+
+function doSearch() {
+  const raw = document.getElementById('udiseInput').value.trim();
+  if (!raw) return;
+  const u = normUdise(raw);
+  setParam('udise', raw);
+  renderResult(u);
+}
+
+(async function () {
+  const [notifData, plantData, quizData, ewasteData, summary] = await Promise.all([
+    loadJSON('data/notification.json'),
+    loadJSON('data/plantation.json'),
+    loadJSON('data/quiz.json'),
+    loadJSON('data/ewaste.json'),
+    loadJSON('data/summary.json'),
+  ]);
+  notifData.forEach(r => { NOTIF[r.u] = r; });
+  plantData.forEach(r => { PLANT[r.u] = r; });
+  quizData.forEach(r => { QUIZ[r.u] = r; });
+  ewasteData.forEach(r => { EWASTE[r.u] = r; });
+
+  document.getElementById('lastUpdated').textContent = `| Data updated ${summary.generated}`;
+  document.getElementById('updateBar').textContent = `Last Data updated ${summary.generated}`;
+
+  document.getElementById('searchBtn').addEventListener('click', doSearch);
+  document.getElementById('udiseInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doSearch();
+  });
+
+  const urlUdise = getParam('udise');
+  if (urlUdise) {
+    document.getElementById('udiseInput').value = urlUdise;
+    doSearch();
+  }
+})();
+</script>
+<footer class="site-footer">Powered by Alok Mohan (Educate Girls) <span id="lastUpdated"></span> | <span id="visitCounter">Loading visits…</span></footer>
+</body>
+</html>
