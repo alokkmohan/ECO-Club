@@ -45,7 +45,9 @@ def norm_dist(v):
     return DISTRICT_MAP.get(n, n)
 
 print("Loading e-waste data...")
-ew = pd.read_excel(EWASTE_PATH, sheet_name='E-waste reports')
+xl = pd.ExcelFile(EWASTE_PATH)
+sheet = next((s for s in xl.sheet_names if s.strip().lower() == 'e-waste reports'), xl.sheet_names[0])
+ew = pd.read_excel(xl, sheet_name=sheet)
 ew['U'] = ew['UDISE Code'].apply(norm_udise)
 
 print("Loading school master...")

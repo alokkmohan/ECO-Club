@@ -53,7 +53,9 @@ def norm_dist(v):
     return DISTRICT_MAP.get(n, n)
 
 print("Loading Swachhata Hi Seva school activity data...")
-sw = pd.read_excel(SWACHHATA_PATH, sheet_name='School reports')
+xl = pd.ExcelFile(SWACHHATA_PATH)
+sheet = next((s for s in xl.sheet_names if s.strip().lower() == 'school reports'), xl.sheet_names[0])
+sw = pd.read_excel(xl, sheet_name=sheet)
 sw['U'] = sw['UDISE Code'].apply(norm_udise)
 
 print("Loading school master...")
