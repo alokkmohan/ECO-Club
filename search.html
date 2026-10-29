@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Search School | ECO Club Uttar Pradesh</title>
-<meta name="description" content="Search a school by UDISE code and see its Notification, Plantation, Swachhata Hi Seva and E-Waste Collection status in one place.">
+<meta name="description" content="Search a school by UDISE code and see its Notification, Plantation, Swachhata Hi Seva, E-Waste Collection and Special Campaign 6 status in one place.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/style.css?v=3">
 <style>
@@ -63,6 +63,7 @@
       <a href="plantation.html">Plantation</a>
       <a href="quiz.html">Swachhata Hi Seva</a>
       <a href="ewaste.html">E-Waste Collection</a>
+      <a href="special-campaign.html">Special Campaign 6</a>
       <a href="search.html" class="active">Search School</a>
       <div class="nav-dropdown">
         <a href="summary.html" class="dropdown-toggle">Reports <span class="caret">&#9662;</span></a>
@@ -72,6 +73,7 @@
           <a href="plantation-target.html">Plantation Target Summary</a>
           <a href="quiz-summary.html">Swachhata Hi Seva Summary</a>
           <a href="ewaste-summary.html">E-Waste Summary</a>
+          <a href="special-campaign-summary.html">Special Campaign 6 Summary</a>
         </div>
       </div>
     </nav>
@@ -84,7 +86,7 @@
   <header class="page">
     <p class="eyebrow">School-level lookup</p>
     <h1>Search School by UDISE Code</h1>
-    <p class="dek">Enter a UDISE code to see that school's Notification, Plantation, Swachhata Hi Seva and E-Waste Collection status, all in one place.</p>
+    <p class="dek">Enter a UDISE code to see that school's Notification, Plantation, Swachhata Hi Seva, E-Waste Collection and Special Campaign 6 status, all in one place.</p>
   </header>
 
   <div class="search-box">
@@ -103,7 +105,7 @@
 <script src="assets/site.js?v=4"></script>
 <script>
 const CAT_LABEL = { G: 'Government', A: 'Aided', P: 'Private' };
-let NOTIF = {}, PLANT = {}, QUIZ = {}, EWASTE = {};
+let NOTIF = {}, PLANT = {}, QUIZ = {}, EWASTE = {}, CAMPAIGN = {};
 
 function normUdise(v) {
   return String(v).trim().split('.')[0].replace(/^0+/, '');
@@ -125,6 +127,7 @@ function renderResult(u) {
   const p = PLANT[u];
   const q = QUIZ[u];
   const e = EWASTE[u];
+  const sc = CAMPAIGN[u];
 
   document.getElementById('result').innerHTML = `
     <div class="school-card">
@@ -181,6 +184,17 @@ function renderResult(u) {
           ` : '<span>No E-Waste record for this school.</span>'}
         </div>
       </div>
+      <div class="status-card">
+        <h3>Special Campaign 6</h3>
+        ${yn(!!sc && sc.s === 1)}
+        <div class="stat-list">
+          ${sc ? `
+            <span>Participants <b>${fmt(sc.p)}</b></span>
+            <span>Items Collected <b>${fmt(sc.items)}</b></span>
+            <span>Workshops <b>${fmt(sc.w)}</b></span>
+          ` : '<span>No Special Campaign 6 record for this school.</span>'}
+        </div>
+      </div>
     </div>`;
 }
 
@@ -193,17 +207,19 @@ function doSearch() {
 }
 
 (async function () {
-  const [notifData, plantData, quizData, ewasteData, summary] = await Promise.all([
+  const [notifData, plantData, quizData, ewasteData, campaignData, summary] = await Promise.all([
     loadJSON('data/notification.json'),
     loadJSON('data/plantation.json'),
     loadJSON('data/quiz.json'),
     loadJSON('data/ewaste.json'),
+    loadJSON('data/special-campaign.json'),
     loadJSON('data/summary.json'),
   ]);
   notifData.forEach(r => { NOTIF[r.u] = r; });
   plantData.forEach(r => { PLANT[r.u] = r; });
   quizData.forEach(r => { QUIZ[r.u] = r; });
   ewasteData.forEach(r => { EWASTE[r.u] = r; });
+  campaignData.forEach(r => { CAMPAIGN[r.u] = r; });
 
   document.getElementById('lastUpdated').textContent = `| Data updated ${summary.generated}`;
   document.getElementById('updateBar').textContent = `Last Data updated ${summary.generated}`;

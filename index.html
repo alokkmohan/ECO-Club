@@ -93,6 +93,7 @@
       <a href="plantation.html">Plantation</a>
       <a href="quiz.html">Swachhata Hi Seva</a>
       <a href="ewaste.html">E-Waste Collection</a>
+      <a href="special-campaign.html">Special Campaign 6</a>
       <a href="search.html">Search School</a>
       <div class="nav-dropdown">
         <a href="summary.html" class="dropdown-toggle">Reports <span class="caret">&#9662;</span></a>
@@ -102,6 +103,7 @@
           <a href="plantation-target.html">Plantation Target Summary</a>
           <a href="quiz-summary.html">Swachhata Hi Seva Summary</a>
           <a href="ewaste-summary.html">E-Waste Summary</a>
+          <a href="special-campaign-summary.html">Special Campaign 6 Summary</a>
         </div>
       </div>
     </nav>
@@ -163,7 +165,7 @@ function barList(rows, valueKey, colorVar, max, formatter) {
 
 (async function () {
   const s = await loadJSON('data/summary.json');
-  const n = s.notification, p = s.plantation, q = s.quiz || {}, ew = s.ewaste || {};
+  const n = s.notification, p = s.plantation, q = s.quiz || {}, ew = s.ewaste || {}, sc = s.specialCampaign || {};
   document.getElementById('lastUpdated').textContent = `| Data updated ${s.generated}`;
   document.getElementById('updateBar').textContent = `Last Data updated ${s.generated}`;
 
@@ -176,12 +178,14 @@ function barList(rows, valueKey, colorVar, max, formatter) {
     <div class="stat accent"><div class="stat-label">Trees Planted</div><div class="stat-num">${fmt(p.treesPlanted)}</div></div>
     <div class="stat accent"><div class="stat-label">Swachhata Hi Seva Participants</div><div class="stat-num">${fmt(q.totalParticipants || 0)}</div><div class="stat-of">${fmt(q.participatedSchools || 0)} schools</div></div>
     <div class="stat accent"><div class="stat-label">E-Waste Items Collected</div><div class="stat-num">${fmt(ew.totalItemsCollected || 0)}</div><div class="stat-of">${fmt(ew.participatedSchools || 0)} schools</div></div>
+    <div class="stat accent"><div class="stat-label">Special Campaign 6 Items Collected</div><div class="stat-num">${fmt(sc.totalItemsCollected || 0)}</div><div class="stat-of">${fmt(sc.participatedSchools || 0)} schools</div></div>
   `;
 
   const notifPct = Math.round(n.uploaded / n.totalSchools * 100);
   const plantPct = Math.round(p.treesPlanted / p.targetTotal * 100);
   const ewPct = ew.totalSchools ? Math.round(ew.participatedSchools / ew.totalSchools * 100) : 0;
   const quizPct = q.totalSchools ? Math.round(q.participatedSchools / q.totalSchools * 100) : 0;
+  const scPct = sc.totalSchools ? Math.round(sc.participatedSchools / sc.totalSchools * 100) : 0;
 
   document.getElementById('reportGrid').innerHTML = `
     <a class="report-btn" href="notification.html">
@@ -263,6 +267,25 @@ function barList(rows, valueKey, colorVar, max, formatter) {
         <div class="legend-row">
           <span>Total Participants <b>${fmt(ew.totalParticipants || 0)}</b></span>
           <span>Items Collected <b>${fmt(ew.totalItemsCollected || 0)}</b></span>
+        </div>
+        <div class="cta">View school-level report &rarr;</div>
+      </div>
+    </a>
+    <a class="report-btn" href="special-campaign.html">
+      <div class="ring-wrap">
+        ${ring(scPct, 'var(--accent)')}
+        <div class="ring-center"><span class="ring-pct">${scPct}%</span><span class="ring-pct-label">Participated</span></div>
+      </div>
+      <div class="body">
+        <span class="card-eyebrow">Report</span>
+        <h2>Special Campaign 6</h2>
+        <div class="legend-row">
+          <span><span class="dot done"></span>Participated <b>${fmt(sc.participatedSchools || 0)}</b></span>
+          <span><span class="dot pending"></span>Not Participated <b>${fmt(sc.notParticipatedSchools || 0)}</b></span>
+        </div>
+        <div class="legend-row">
+          <span>Total Participants <b>${fmt(sc.totalParticipants || 0)}</b></span>
+          <span>Items Collected <b>${fmt(sc.totalItemsCollected || 0)}</b></span>
         </div>
         <div class="cta">View school-level report &rarr;</div>
       </div>

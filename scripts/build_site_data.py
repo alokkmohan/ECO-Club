@@ -216,6 +216,8 @@ if os.path.exists(summary_path):
         summary['quiz'] = existing['quiz']
     if 'ewaste' in existing:
         summary['ewaste'] = existing['ewaste']
+    if 'specialCampaign' in existing:
+        summary['specialCampaign'] = existing['specialCampaign']
 
 with open(summary_path, 'w', encoding='utf-8') as f:
     json.dump(summary, f, ensure_ascii=False, separators=(',', ':'))

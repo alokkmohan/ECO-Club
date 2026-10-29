@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Special Campaign 6 | ECO Club Uttar Pradesh</title>
+<meta name="description" content="Special Campaign 6 E-Waste drive status for Secondary schools in Uttar Pradesh, filterable by district.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/style.css?v=3">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="leaf">&#127807;</span> ECO Club | Uttar Pradesh</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="notification.html">Notification</a>
+      <a href="plantation.html">Plantation</a>
+      <a href="quiz.html">Swachhata Hi Seva</a>
+      <a href="ewaste.html">E-Waste Collection</a>
+      <a href="special-campaign.html" class="active">Special Campaign 6</a>
+      <a href="search.html">Search School</a>
+      <div class="nav-dropdown">
+        <a href="summary.html" class="dropdown-toggle">Reports <span class="caret">&#9662;</span></a>
+        <div class="dropdown-menu">
+          <a href="summary.html">District Summary</a>
+          <a href="notification-percent.html">Notification % Summary</a>
+          <a href="plantation-target.html">Plantation Target Summary</a>
+          <a href="quiz-summary.html">Swachhata Hi Seva Summary</a>
+          <a href="ewaste-summary.html">E-Waste Summary</a>
+          <a href="special-campaign-summary.html">Special Campaign 6 Summary</a>
+        </div>
+      </div>
+    </nav>
+    <img class="gov-logo" src="assets/samagra-shiksha-logo.jpg" alt="Samagra Shiksha">
+    <span class="topnav-updated" id="updateBar"></span>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="page">
+    <p class="eyebrow">School-level report</p>
+    <h1>Special Campaign 6</h1>
+    <p class="dek">Has each Government, Aided or Private secondary school reported a Special Campaign 6 E-Waste activity, and how many students took part? Pick a district to see its full list.</p>
+  </header>
+
+  <div class="kpi-row" id="kpis"></div>
+
+  <div class="toolbar">
+    <div class="field">
+      <label for="districtSel">District</label>
+      <select id="districtSel"></select>
+    </div>
+    <div class="field">
+      <label for="catSel">Category</label>
+      <select id="catSel">
+        <option value="">All Categories</option>
+        <option value="G">Government</option>
+        <option value="A">Aided</option>
+        <option value="P">Private</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="statusSel">Status</label>
+      <select id="statusSel">
+        <option value="">All</option>
+        <option value="1">Participated</option>
+        <option value="0">Not Participated</option>
+      </select>
+    </div>
+    <div class="field search-field">
+      <label for="search">Search school</label>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="text" placeholder="School name or UDISE code…" autocomplete="off">
+    </div>
+    <div class="legend">
+      <span><span class="dot done"></span>Participated</span>
+      <span><span class="dot pending"></span>Not Participated</span>
+    </div>
+    <button class="btn-pdf" id="excelBtn" type="button">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 19h16"/></svg>
+      Download Excel
+    </button>
+    <button class="btn-pdf" id="pdfBtn" type="button">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 19h16"/></svg>
+      Download PDF
+    </button>
+  </div>
+
+  <div class="district-strip" id="strip"></div>
+
+  <div class="table-scroll">
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th data-key="c">Category</th>
+          <th data-key="d">District</th>
+          <th data-key="n">School Name</th>
+          <th data-key="u" class="num">UDISE Code</th>
+          <th data-key="s">Status</th>
+          <th data-key="p" class="num">Participants</th>
+          <th data-key="items" class="num">Items Collected</th>
+          <th data-key="w" class="num">Workshops</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+      <tfoot id="tfoot"></tfoot>
+    </table>
+  </div>
+
+  <div class="pager" id="pager"></div>
+
+  <footer class="note">
+    <strong>Data note.</strong> Matched by UDISE code between the ECO Club secondary school master list and Special Campaign 6 activity submissions. Scope is Government + Aided + Private secondary schools. This is a separate campaign from the main E-Waste Collection drive.
+  </footer>
+</div>
+
+<script src="assets/site.js?v=4"></script>
+<script>
+const CAT_LABEL = { G: 'Government', A: 'Aided', P: 'Private' };
+let DATA = [];
+let filtered = [];
+let page = 0;
+const PAGE_SIZE = 50;
+let sortKey = 'd', sortDir = 1;
+
+function applyFilters() {
+  const dist = document.getElementById('districtSel').value;
+  const cat = document.getElementById('catSel').value;
+  const status = document.getElementById('statusSel').value;
+  const q = document.getElementById('search').value.trim().toLowerCase();
+
+  filtered = DATA.filter(r =>
+    (!dist || r.d === dist) &&
+    (!cat || r.c === cat) &&
+    (status === '' || String(r.s) === status) &&
+    (!q || r.n.toLowerCase().includes(q) || String(r.u).includes(q))
+  );
+  filtered.sort((a, b) => {
+    const av = a[sortKey], bv = b[sortKey];
+    if (typeof av === 'string') return av.localeCompare(bv) * sortDir;
+    return (av - bv) * sortDir;
+  });
+  page = 0;
+  renderStrip(dist);
+  renderTable();
+}
+
+function renderKpis(dist) {
+  const scope = DATA.filter(r => !dist || r.d === dist);
+  const total = scope.length;
+  const done = scope.filter(r => r.s === 1).length;
+  const totalParticipants = scope.reduce((a, r) => a + r.p, 0);
+  const totalItems = scope.reduce((a, r) => a + r.items, 0);
+  const byCat = c => {
+    const rows = scope.filter(r => r.c === c);
+    return { total: rows.length, done: rows.filter(r => r.s === 1).length };
+  };
+  const g = byCat('G'), a = byCat('A'), p = byCat('P');
+  document.getElementById('kpis').innerHTML = `
+    <div class="kpi"><div class="label">Total Schools</div><div class="value">${fmt(total)}</div></div>
+    <div class="kpi done"><div class="label">Participated</div><div class="value">${fmt(done)}</div></div>
+    <div class="kpi pending"><div class="label">Not Participated</div><div class="value">${fmt(total - done)}</div></div>
+    <div class="kpi"><div class="label">Government</div><div class="value">${fmt(g.done)}<span class="of">/ ${fmt(g.total)}</span></div></div>
+    <div class="kpi"><div class="label">Aided</div><div class="value">${fmt(a.done)}<span class="of">/ ${fmt(a.total)}</span></div></div>
+    <div class="kpi"><div class="label">Private</div><div class="value">${fmt(p.done)}<span class="of">/ ${fmt(p.total)}</span></div></div>
+    <div class="kpi done"><div class="label">Total Participants</div><div class="value">${fmt(totalParticipants)}</div></div>
+    <div class="kpi done"><div class="label">Items Collected</div><div class="value">${fmt(totalItems)}</div></div>
+  `;
+}
+
+function renderStrip(dist) {
+  const total = filtered.length;
+  const done = filtered.filter(r => r.s === 1).length;
+  const totalParticipants = filtered.reduce((a, r) => a + r.p, 0);
+  const totalItems = filtered.reduce((a, r) => a + r.items, 0);
+  const label = dist ? titleCase(dist) : 'All Uttar Pradesh';
+  document.getElementById('strip').innerHTML = `
+    <span class="item">${label} | <b>${fmt(total)}</b> schools shown</span>
+    <span class="item"><b style="color:var(--accent-ink)">${fmt(done)}</b> participated</span>
+    <span class="item"><b style="color:var(--warn)">${fmt(total - done)}</b> not participated</span>
+    <span class="item"><b style="color:var(--accent-ink)">${fmt(totalItems)}</b> items collected</span>
+  `;
+
+  renderKpis(dist);
+}
+
+function downloadExcel(dist) {
+  const label = dist ? titleCase(dist) : 'All Uttar Pradesh';
+  const aoa = [
+    ['Category', 'District', 'School Name', 'UDISE Code', 'Status', 'Participants', 'Items Collected', 'Workshops'],
+    ...filtered.map(r => [CAT_LABEL[r.c] || r.c, titleCase(r.d), r.n, r.u, r.s === 1 ? 'Participated' : 'Not Participated', r.p, r.items, r.w]),
+  ];
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  ws['!cols'] = [{ wch: 12 }, { wch: 20 }, { wch: 45 }, { wch: 14 }, { wch: 16 }, { wch: 12 }, { wch: 14 }, { wch: 10 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Special Campaign 6');
+  XLSX.writeFile(wb, `ECO_Club_UP_SpecialCampaign6_${label.replace(/\s+/g, '_')}.xlsx`);
+}
+
+function downloadPDF(dist) {
+  const label = dist ? titleCase(dist) : 'All Uttar Pradesh';
+  const done = filtered.filter(r => r.s === 1).length;
+  const totalItems = filtered.reduce((a, r) => a + r.items, 0);
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'pt' });
+  doc.setFontSize(14);
+  doc.text('ECO Club | Special Campaign 6', 40, 40);
+  doc.setFontSize(9);
+  doc.setTextColor(100);
+  doc.text(`${label} · ${fmt(filtered.length)} schools · ${fmt(done)} participated, ${fmt(filtered.length - done)} not participated · ${fmt(totalItems)} items collected · generated ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}`, 40, 56);
+  doc.autoTable({
+    startY: 70,
+    head: [['Category', 'District', 'School Name', 'UDISE Code', 'Status', 'Participants', 'Items Collected', 'Workshops']],
+    body: filtered.map(r => [CAT_LABEL[r.c] || r.c, titleCase(r.d), r.n, r.u, r.s === 1 ? 'Participated' : 'Not Participated', fmt(r.p), fmt(r.items), fmt(r.w)]),
+    styles: { fontSize: 7, cellPadding: 3 },
+    headStyles: { fillColor: [31, 78, 121] },
+    margin: { left: 40, right: 40 },
+  });
+  doc.save(`ECO_Club_UP_SpecialCampaign6_${label.replace(/\s+/g, '_')}.pdf`);
+}
+
+function renderTable() {
+  const start = page * PAGE_SIZE;
+  const rows = filtered.slice(start, start + PAGE_SIZE);
+  const tbody = document.getElementById('tbody');
+  if (!rows.length) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="8">No schools match these filters.</td></tr>`;
+  } else {
+    tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td>${CAT_LABEL[r.c] || r.c}</td>
+        <td>${titleCase(r.d)}</td>
+        <td class="name">${r.n}</td>
+        <td class="num">${r.u}</td>
+        <td>${r.s === 1 ? '<span class="status-pill done">Participated</span>' : '<span class="status-pill pending">Not Participated</span>'}</td>
+        <td class="num">${fmt(r.p)}</td>
+        <td class="num">${fmt(r.items)}</td>
+        <td class="num">${fmt(r.w)}</td>
+      </tr>`).join('');
+  }
+
+  const totalDone = filtered.filter(r => r.s === 1).length;
+  const totalParticipants = filtered.reduce((a, r) => a + r.p, 0);
+  const totalItems = filtered.reduce((a, r) => a + r.items, 0);
+  const totalWorkshops = filtered.reduce((a, r) => a + r.w, 0);
+  document.getElementById('tfoot').innerHTML = `
+    <tr>
+      <td colspan="4">Total (${fmt(filtered.length)} school${filtered.length === 1 ? '' : 's'} shown)</td>
+      <td><span style="color:var(--accent-ink)">${fmt(totalDone)} participated</span> / <span style="color:var(--warn)">${fmt(filtered.length - totalDone)} not participated</span></td>
+      <td class="num">${fmt(totalParticipants)}</td>
+      <td class="num">${fmt(totalItems)}</td>
+      <td class="num">${fmt(totalWorkshops)}</td>
+    </tr>`;
+
+  document.querySelectorAll('thead th[data-key]').forEach(th => {
+    th.classList.toggle('sorted', th.dataset.key === sortKey);
+    const ex = th.querySelector('.arrow'); if (ex) ex.remove();
+    if (th.dataset.key === sortKey) {
+      const span = document.createElement('span');
+      span.className = 'arrow'; span.textContent = sortDir === 1 ? '▲' : '▼';
+      th.appendChild(span);
+    }
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  document.getElementById('pager').innerHTML = `
+    <span>${fmt(filtered.length)} result${filtered.length === 1 ? '' : 's'} &middot; page ${page + 1} of ${totalPages}</span>
+    <div class="btns">
+      <button id="prevBtn" ${page === 0 ? 'disabled' : ''}>&larr; Prev</button>
+      <button id="nextBtn" ${page >= totalPages - 1 ? 'disabled' : ''}>Next &rarr;</button>
+    </div>`;
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  if (prevBtn) prevBtn.addEventListener('click', () => { page--; renderTable(); window.scrollTo({top: document.querySelector('.table-scroll').offsetTop - 20, behavior: 'smooth'}); });
+  if (nextBtn) nextBtn.addEventListener('click', () => { page++; renderTable(); window.scrollTo({top: document.querySelector('.table-scroll').offsetTop - 20, behavior: 'smooth'}); });
+}
+
+(async function () {
+  const [data, summary] = await Promise.all([loadJSON('data/special-campaign.json'), loadJSON('data/summary.json')]);
+  DATA = data;
+  document.getElementById('lastUpdated').textContent = `| Data updated ${summary.generated}`;
+  document.getElementById('updateBar').textContent = `Last Data updated ${summary.generated}`;
+
+  const districts = [...new Set(DATA.map(r => r.d))].sort();
+  const urlDist = getParam('district');
+  const sel = document.getElementById('districtSel');
+  populateDistricts(sel, districts, urlDist);
+
+  const urlCat = getParam('category');
+  if (urlCat) document.getElementById('catSel').value = urlCat;
+
+  sel.addEventListener('change', () => { setParam('district', sel.value); applyFilters(); });
+  const catSelEl = document.getElementById('catSel');
+  catSelEl.addEventListener('change', () => { setParam('category', catSelEl.value); applyFilters(); });
+  document.getElementById('statusSel').addEventListener('change', applyFilters);
+  document.getElementById('search').addEventListener('input', applyFilters);
+  document.getElementById('excelBtn').addEventListener('click', () => downloadExcel(sel.value));
+  document.getElementById('pdfBtn').addEventListener('click', () => downloadPDF(sel.value));
+  document.querySelectorAll('thead th[data-key]').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if (sortKey === key) sortDir *= -1;
+      else { sortKey = key; sortDir = 1; }
+      renderTable();
+    });
+  });
+
+  applyFilters();
+})();
+</script>
+<footer class="site-footer">Powered by Alok Mohan (Educate Girls) <span id="lastUpdated"></span> | <span id="visitCounter">Loading visits…</span></footer>
+</body>
+</html>
