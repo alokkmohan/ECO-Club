@@ -42,8 +42,20 @@ def norm_dist(v):
     n = str(v).strip().upper()
     return DISTRICT_MAP.get(n, n)
 
+def find_notification_file(base):
+    exact = os.path.join(base, 'All_Schools_with_Notifications_UTTAR PRADESH.xlsx')
+    candidates = [
+        os.path.join(base, f) for f in os.listdir(base)
+        if f.lower().endswith('.xlsx') and 'notif' in f.lower()
+    ]
+    if not candidates:
+        return exact
+    return max(candidates, key=os.path.getmtime)
+
 print("Loading source data...")
-notif = pd.read_excel(os.path.join(BASE, 'All_Schools_with_Notifications_UTTAR PRADESH.xlsx'))
+notif_path = find_notification_file(BASE)
+print(f"Notification file: {os.path.basename(notif_path)}")
+notif = pd.read_excel(notif_path)
 plant = pd.read_excel(os.path.join(BASE, 'Eco_Clubs_plantation_Uttar_Pradesh_all_schools.xlsx'), sheet_name='Schools')
 govt  = pd.read_excel(os.path.join(BASE, 'Secondary School List .xlsx'), sheet_name='Govt Schools')
 aided = pd.read_excel(os.path.join(BASE, 'Secondary School List .xlsx'), sheet_name='Aided Schools ')
