@@ -47,6 +47,7 @@ def find_notification_file(base):
     candidates = [
         os.path.join(base, f) for f in os.listdir(base)
         if f.lower().endswith('.xlsx') and 'notif' in f.lower()
+        and not f.upper().startswith('ECO_CLUB')
     ]
     if not candidates:
         return exact
